@@ -4,6 +4,7 @@ mod engine;
 
 use std::{env, path};
 
+use engine::sprite_manager::SpriteManager;
 use ggez::{Context, ContextBuilder, GameResult};
 use ggez::graphics::{self, Color, Image};
 use ggez::event::{self, EventHandler};
@@ -43,17 +44,19 @@ fn main() {
 }
 
 struct MyGame {
-    test: graphics::Image
+    sprite_manager: SpriteManager,
+    test: Image
     // Your state here...
 }
 
 impl MyGame {
     pub fn new(context: &mut Context) -> MyGame {
-        
-        let test = Image::from_path(context, "/sprites/player_0001.png").unwrap();
         // Load/create resources such as images here.
-        MyGame {
-            test
+        let test = Image::from_path(context, "/sprites/player_0003.png").unwrap();
+        
+        return MyGame {
+            sprite_manager: SpriteManager::new(context),
+            test: test,
         }
     }
 }
@@ -67,8 +70,12 @@ impl EventHandler for MyGame {
     fn draw(&mut self, context: &mut Context) -> GameResult {
         let mut canvas = graphics::Canvas::from_frame(context, Color::WHITE);
         
-        canvas.draw(&self.test, graphics::DrawParam::new().dest(Vec2::new(10.0, 10.0)));
-        // Draw code here...
+
+        self.sprite_manager.draw_sprite("player_0001.png".to_owned(), 50.0, 50.0, 1);
+        self.sprite_manager.draw_sprite("player_0001.png".to_owned(), 60.0, 50.0, 1);
+
+        self.sprite_manager.draw_buffer_to_canvas(&mut canvas);
+
         canvas.finish(context)
     }
 }
