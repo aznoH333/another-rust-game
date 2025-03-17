@@ -4,16 +4,10 @@ mod engine;
 
 use std::{env, path};
 
-use engine::sprite_manager::SpriteManager;
+use engine::drawing::drawing_manager::DrawingManager;
 use ggez::{Context, ContextBuilder, GameResult};
-use ggez::graphics::{self, Color, Image};
+use ggez::graphics::{self, Color, Sampler};
 use ggez::event::{self, EventHandler};
-use ggez::*;
-
-use ggez::glam::*;
-use ggez::input::keyboard::KeyInput;
-
-
 
 
 fn main() {
@@ -44,19 +38,21 @@ fn main() {
 }
 
 struct MyGame {
-    sprite_manager: SpriteManager,
-    test: Image
+    sprite_manager: DrawingManager,
     // Your state here...
 }
 
 impl MyGame {
     pub fn new(context: &mut Context) -> MyGame {
-        // Load/create resources such as images here.
-        let test = Image::from_path(context, "/sprites/player_0003.png").unwrap();
         
+        let mut sprite_manager = DrawingManager::new(context);
+
+        sprite_manager.set_camera_zoom(5.0);
+
+        
+
         return MyGame {
-            sprite_manager: SpriteManager::new(context),
-            test: test,
+            sprite_manager: sprite_manager,
         }
     }
 }
@@ -68,12 +64,10 @@ impl EventHandler for MyGame {
     }
 
     fn draw(&mut self, context: &mut Context) -> GameResult {
-        let mut canvas = graphics::Canvas::from_frame(context, Color::WHITE);
-        
+        let mut canvas = graphics::Canvas::from_frame(context, Color::BLACK);
+        canvas.set_sampler(Sampler::nearest_clamp());
 
-        self.sprite_manager.draw_sprite("player_0001.png".to_owned(), 50.0, 50.0, 1);
-        self.sprite_manager.draw_sprite("player_0001.png".to_owned(), 60.0, 50.0, 1);
-
+        self.sprite_manager.draw_sprite("player_0001.png".to_owned(), 0.0, 0.0, 1, 1.0);
         self.sprite_manager.draw_buffer_to_canvas(&mut canvas);
 
         canvas.finish(context)

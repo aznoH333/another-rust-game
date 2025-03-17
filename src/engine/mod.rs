@@ -1,2 +1,1 @@
-pub mod sprite_manager;
-mod draw_buffer_data;
+pub mod drawing;

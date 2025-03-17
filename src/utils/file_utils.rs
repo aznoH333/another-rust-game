@@ -17,12 +17,7 @@ pub fn get_files_in_folder(path: &Path, extension: &String) -> Vec<PathBuf>{
             // is file
             output.push(f.path());
         }
-
-        println!("{} == {}", extension, f.path().extension().unwrap().to_str().unwrap());
-
-
     }
-
 
     return output;
 }
