@@ -17,14 +17,13 @@ pub struct GameObjectCore {
     
     // drawing stuff
     pub sprite_name: String,
-
-    // logic stuff
-
+    pub z_index: i32,
+    pub scale: f32,
 }
 
 
 impl GameObjectCore {
-    pub fn new(x: f32, y: f32, sprite_name: &str) -> GameObjectCore {
+    pub fn new(x: f32, y: f32, sprite_name: &str, z_index: i32) -> GameObjectCore {
         return GameObjectCore{
             x: x,
             y: y,
@@ -34,12 +33,16 @@ impl GameObjectCore {
             y_velocity: 0.0,
             gravity: 1.0,
             sprite_name: sprite_name.to_owned(),
+            z_index: z_index,
+            scale: 1.0
         }
     }
 
 
     pub fn update(&mut self, drawing_manager: &mut DrawingManager) {
-        // TODO : movement and stuff
+        // movement
+        self.x += self.x_velocity;
+        self.y += self.y_velocity;
 
         // drawing
         drawing_manager.draw_sprite(&self.sprite_name, self.x, self.y, 0, 1.0);

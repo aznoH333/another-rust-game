@@ -1,4 +1,4 @@
-use crate::engine::objects::{game_object::GameObject, game_object_controller::GameObjectController, game_object_core::GameObjectCore};
+use crate::{engine::objects::{game_object::GameObject, game_object_controller::GameObjectController, game_object_core::GameObjectCore}, game::enums::drawing_layers::DrawingLayer};
 
 pub struct Player{
 
@@ -13,7 +13,7 @@ impl Player{
         let controller = Player{
 
         };
-        let core = GameObjectCore::new(x, y, "player_0001.png");
+        let core = GameObjectCore::new(x, y, "player_0001.png", DrawingLayer::PLAYER as i32);
         
 
         return GameObject::new(
