@@ -50,8 +50,8 @@ impl DrawingManager{
         }
     }
 
-    pub fn draw_sprite(&mut self, sprite_name: String, x: f32, y: f32, z_index: i32, scale: f32){
-        self.draw_buffer.push(DrawBufferData::new(sprite_name, x, y, z_index, scale));
+    pub fn draw_sprite(&mut self, sprite_name: &String, x: f32, y: f32, z_index: i32, scale: f32){
+        self.draw_buffer.push(DrawBufferData::new(sprite_name.clone(), x, y, z_index, scale));
     }
 
     pub fn draw_buffer_to_canvas(&mut self, canvas: &mut Canvas){

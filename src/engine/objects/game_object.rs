@@ -1,15 +1,22 @@
-pub struct GameObject {
-    components: Vec<Box<ObjectComponent>>
+use crate::engine::drawing::drawing_manager::{DrawingManager};
+
+use super::{game_object_controller::GameObjectController, game_object_core::GameObjectCore};
+
+pub struct GameObject{
+    core: GameObjectCore,
+    controller: Box<dyn GameObjectController>,
 }
 
-
-impl GameObject {
-    pub fn get_component_by_index(&mut self, index: i32) -> &mut ObjectComponent{
-        return self.game_objects.get_mut(index);
+impl GameObject{
+    pub fn new(core: GameObjectCore, controller: Box<dyn GameObjectController>) -> GameObject{
+        return GameObject{
+            core,
+            controller
+        }
     }
 
-    pub fn get_component_by_id(&mut self, component_identifier: &str){
-        return self.game_objects.iter().find(|x| x.downcast::<ObjectComponent>().unwrap().get_component_id == component_identifier).unwrap();
+    pub fn update(&mut self, drawing_manager: &mut DrawingManager){
+        self.core.update(drawing_manager);
+        self.controller.update(&mut self.core);
     }
-
 }

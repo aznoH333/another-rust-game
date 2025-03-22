@@ -1,10 +1,12 @@
 mod utils;
 mod engine;
+mod game;
 
 
 use std::{env, path};
-
 use engine::drawing::drawing_manager::DrawingManager;
+use engine::objects::game_object_manager::GameObjectManager;
+use game::entities::player::Player;
 use ggez::{Context, ContextBuilder, GameResult};
 use ggez::graphics::{self, Color, Sampler};
 use ggez::event::{self, EventHandler};
@@ -39,27 +41,33 @@ fn main() {
 
 struct MyGame {
     sprite_manager: DrawingManager,
+    game_object_manager: GameObjectManager,
     // Your state here...
 }
 
 impl MyGame {
     pub fn new(context: &mut Context) -> MyGame {
-        
+        // sprite manager
         let mut sprite_manager = DrawingManager::new(context);
-
         sprite_manager.set_camera_zoom(5.0);
 
-        
+        let mut game_object_manager = GameObjectManager::new();
+
+        game_object_manager.add_object(Player::new(0.0, 0.0));
 
         return MyGame {
             sprite_manager: sprite_manager,
+            game_object_manager: game_object_manager,
+            
         }
     }
 }
 
 impl EventHandler for MyGame {
-   fn update(&mut self, context: &mut Context) -> GameResult {
+   fn update(&mut self, _context: &mut Context) -> GameResult {
         // Update code here...
+        self.game_object_manager.update(&mut self.sprite_manager);
+
         Ok(())
     }
 
@@ -67,7 +75,9 @@ impl EventHandler for MyGame {
         let mut canvas = graphics::Canvas::from_frame(context, Color::BLACK);
         canvas.set_sampler(Sampler::nearest_clamp());
 
-        self.sprite_manager.draw_sprite("player_0001.png".to_owned(), 0.0, 0.0, 1, 1.0);
+
+
+
         self.sprite_manager.draw_buffer_to_canvas(&mut canvas);
 
         canvas.finish(context)
