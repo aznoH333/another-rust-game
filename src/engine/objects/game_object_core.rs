@@ -19,6 +19,7 @@ pub struct GameObjectCore {
     pub sprite_name: String,
     pub z_index: i32,
     pub scale: f32,
+    pub is_camera_target: bool,
 }
 
 
@@ -34,7 +35,8 @@ impl GameObjectCore {
             friction: 0.1,
             sprite_name: sprite_name.to_owned(),
             z_index: z_index,
-            scale: 1.0
+            scale: 1.0,
+            is_camera_target: false,
         }
     }
 

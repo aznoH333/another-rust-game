@@ -19,4 +19,24 @@ impl GameObject{
         self.core.update(drawing_manager);
         self.controller.update(&mut self.core, input);
     }
+
+    pub fn is_camera_target(&self) -> bool {
+        return self.core.is_camera_target;
+    }
+
+    pub fn get_x(&self) -> f32 {
+        return self.core.x;
+    }
+
+    pub fn get_y(&self) -> f32 {
+        return self.core.y;
+    }
+
+    pub fn get_width(&self) -> f32 {
+        return self.core.width;
+    }
+
+    pub fn get_height(&self) -> f32 {
+        return self.core.height;
+    }
 }

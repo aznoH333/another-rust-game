@@ -14,8 +14,8 @@ impl Player{
         let controller = Player{
 
         };
-        let core = GameObjectCore::new(x, y, "player_0001.png", DrawingLayer::PLAYER as i32);
-        
+        let mut core = GameObjectCore::new(x, y, "player_0001.png", DrawingLayer::PLAYER as i32);
+        core.is_camera_target = true;
 
         return GameObject::new(
             core,
@@ -29,19 +29,19 @@ impl Player{
 impl GameObjectController for Player{
     fn update(&mut self, core: &mut GameObjectCore, input: &InputHandler) {
         if input.key_up(){
-            core.y_velocity = -3.0;
+            core.y_velocity = -1.0;
         }
 
         if input.key_down(){
-            core.y_velocity = 3.0;
+            core.y_velocity = 1.0;
         }
 
         if input.key_left(){
-            core.x_velocity = -3.0;
+            core.x_velocity = -1.0;
         }
 
         if input.key_right(){
-            core.x_velocity = 3.0;
+            core.x_velocity = 1.0;
         }
     }
 

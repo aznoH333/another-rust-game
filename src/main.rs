@@ -7,6 +7,7 @@ use std::{env, path};
 use engine::drawing::drawing_manager::DrawingManager;
 use engine::input::input::InputHandler;
 use engine::objects::game_object_manager::GameObjectManager;
+use engine::world::world_manager::WorldManager;
 use game::entities::player::Player;
 use ggez::input::keyboard::KeyCode;
 use ggez::{Context, ContextBuilder, GameResult};
@@ -44,6 +45,7 @@ fn main() {
 struct MyGame {
     sprite_manager: DrawingManager,
     game_object_manager: GameObjectManager,
+    world_manager: WorldManager,
     input: InputHandler,
 }
 
@@ -60,6 +62,7 @@ impl MyGame {
         return MyGame {
             sprite_manager: sprite_manager,
             game_object_manager: game_object_manager,
+            world_manager: WorldManager::new(),
             input: InputHandler::new(),
         }
     }
@@ -69,12 +72,16 @@ impl EventHandler for MyGame {
    fn update(&mut self, _context: &mut Context) -> GameResult {
         // Update code here...
         self.game_object_manager.update(&mut self.sprite_manager, &self.input);
+
         Ok(())
     }
 
     fn draw(&mut self, context: &mut Context) -> GameResult {
         let mut canvas = graphics::Canvas::from_frame(context, Color::BLACK);
         canvas.set_sampler(Sampler::nearest_clamp());
+
+        self.world_manager.draw_world(&mut self.sprite_manager);
+
 
         self.sprite_manager.draw_buffer_to_canvas(&mut canvas);
 
