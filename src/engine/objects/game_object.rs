@@ -1,4 +1,4 @@
-use crate::engine::drawing::drawing_manager::{DrawingManager};
+use crate::engine::{drawing::drawing_manager::DrawingManager, input::input::InputHandler};
 
 use super::{game_object_controller::GameObjectController, game_object_core::GameObjectCore};
 
@@ -15,8 +15,8 @@ impl GameObject{
         }
     }
 
-    pub fn update(&mut self, drawing_manager: &mut DrawingManager){
+    pub fn update(&mut self, drawing_manager: &mut DrawingManager, input: &InputHandler){
         self.core.update(drawing_manager);
-        self.controller.update(&mut self.core);
+        self.controller.update(&mut self.core, input);
     }
 }

@@ -1,4 +1,5 @@
 use crate::{engine::objects::{game_object::GameObject, game_object_controller::GameObjectController, game_object_core::GameObjectCore}, game::enums::drawing_layers::DrawingLayer};
+use crate::InputHandler;
 
 pub struct Player{
 
@@ -26,8 +27,12 @@ impl Player{
 
 
 impl GameObjectController for Player{
-    fn update(&mut self, core: &mut GameObjectCore) {
-        core.x += 0.1;
+    fn update(&mut self, core: &mut GameObjectCore, input: &InputHandler) {
+        if input.key_up(){
+            core.y_velocity = -1.0;
+        }else {
+            core.y_velocity = 0.0;
+        }
     }
 
 }

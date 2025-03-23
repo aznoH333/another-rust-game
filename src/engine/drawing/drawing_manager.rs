@@ -59,7 +59,8 @@ impl DrawingManager{
             let image = self.sprites.get(draw_data.get_sprite_name()).unwrap();
 
             draw_data.draw(image, canvas, &self.drawing_context);                
-        }     
+        }
+        self.draw_buffer.clear();
     }
 
     pub fn reload_context(&mut self, context: &Context){
