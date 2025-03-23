@@ -1,4 +1,4 @@
-use crate::engine::drawing::drawing_manager::DrawingManager;
+use crate::{engine::drawing::drawing_manager::DrawingManager, utils::number_utils::gravitate_number};
 
 use super::game_object_controller::GameObjectController;
 
@@ -13,7 +13,7 @@ pub struct GameObjectCore {
     // movement and physics
     pub x_velocity: f32,
     pub y_velocity: f32,
-    pub gravity: f32,
+    pub friction: f32,
     
     // drawing stuff
     pub sprite_name: String,
@@ -31,7 +31,7 @@ impl GameObjectCore {
             height: 16.0,
             x_velocity: 0.0,
             y_velocity: 0.0,
-            gravity: 1.0,
+            friction: 0.1,
             sprite_name: sprite_name.to_owned(),
             z_index: z_index,
             scale: 1.0
@@ -44,7 +44,11 @@ impl GameObjectCore {
         self.x += self.x_velocity;
         self.y += self.y_velocity;
 
+        // friction
+        self.x_velocity = gravitate_number(self.x_velocity, 0.0, self.friction);
+        self.y_velocity = gravitate_number(self.y_velocity, 0.0, self.friction);
+
         // drawing
-        drawing_manager.draw_sprite(&self.sprite_name, self.x, self.y, 0, 1.0);
+        drawing_manager.draw_sprite(&self.sprite_name, self.x, self.y, self.z_index, self.scale);
     }
 }
