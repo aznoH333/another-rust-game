@@ -71,7 +71,7 @@ impl MyGame {
 impl EventHandler for MyGame {
    fn update(&mut self, _context: &mut Context) -> GameResult {
         // Update code here...
-        self.game_object_manager.update(&mut self.sprite_manager, &self.input);
+        self.game_object_manager.update(&mut self.sprite_manager, &self.input, &self.world_manager);
 
         Ok(())
     }

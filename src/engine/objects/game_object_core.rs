@@ -1,4 +1,4 @@
-use crate::{engine::drawing::drawing_manager::DrawingManager, utils::number_utils::gravitate_number};
+use crate::{engine::{drawing::drawing_manager::DrawingManager, world::world_manager::WorldManager}, utils::number_utils::gravitate_number};
 
 use super::game_object_controller::GameObjectController;
 
@@ -41,10 +41,9 @@ impl GameObjectCore {
     }
 
 
-    pub fn update(&mut self, drawing_manager: &mut DrawingManager) {
+    pub fn update(&mut self, drawing_manager: &mut DrawingManager, world: &WorldManager) {
         // movement
-        self.x += self.x_velocity;
-        self.y += self.y_velocity;
+        world.move_in_world(self);
 
         // friction
         self.x_velocity = gravitate_number(self.x_velocity, 0.0, self.friction);

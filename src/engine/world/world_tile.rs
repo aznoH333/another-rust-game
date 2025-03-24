@@ -1,5 +1,7 @@
 use crate::{engine::drawing::drawing_manager::DrawingManager, game::enums::drawing_layers::DrawingLayer};
 
+use super::world_constants::TILE_SIZE;
+
 pub struct WorldTile {
     solid: bool,
     texture: String,
@@ -37,4 +39,20 @@ impl WorldTile{
     pub fn draw(&self, drawing: &mut DrawingManager){
         drawing.draw_sprite(&self.texture, self.x as f32, self.y as f32, DrawingLayer::WORLD as i32, 1.0);
     } // TODO : world generator
+
+    pub fn get_left(&self) -> f32 {
+        return self.x as f32;
+    }
+
+    pub fn get_right(&self) -> f32 {
+        return (self.x + TILE_SIZE) as f32;
+    }
+
+    pub fn get_top(&self) -> f32 {
+        return self.y as f32;
+    }
+
+    pub fn get_bottom(&self) -> f32 {
+        return (self.y + TILE_SIZE) as f32;
+    }
 }
