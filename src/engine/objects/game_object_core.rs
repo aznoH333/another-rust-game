@@ -14,6 +14,7 @@ pub struct GameObjectCore {
     pub x_velocity: f32,
     pub y_velocity: f32,
     pub friction: f32,
+    pub bouncyness: f32,
     
     // drawing stuff
     pub sprite_name: String,
@@ -33,6 +34,7 @@ impl GameObjectCore {
             x_velocity: 0.0,
             y_velocity: 0.0,
             friction: 0.1,
+            bouncyness: 0.0,
             sprite_name: sprite_name.to_owned(),
             z_index: z_index,
             scale: 1.0,

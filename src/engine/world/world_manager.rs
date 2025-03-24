@@ -80,7 +80,7 @@ impl WorldManager{
             }else {
                 game_object.x = x_colider.unwrap().get_right();
             }
-            game_object.x_velocity = 0.0;
+            game_object.x_velocity = -game_object.x_velocity * game_object.bouncyness;
         }
 
         // y move
@@ -98,7 +98,7 @@ impl WorldManager{
             }else {
                 game_object.y = y_colider.unwrap().get_bottom();
             }
-            game_object.y_velocity = 0.0;
+            game_object.y_velocity = -game_object.y_velocity * game_object.bouncyness;
         }
     }
 
