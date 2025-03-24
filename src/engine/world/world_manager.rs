@@ -3,14 +3,16 @@ use crate::{engine::{drawing::drawing_manager::DrawingManager, objects::game_obj
 use super::{world_constants::TILE_SIZE, world_tile::WorldTile};
 
 pub struct WorldManager{
-    world: Vec<Vec<WorldTile>>
+    world: Vec<Vec<WorldTile>>,
+    out_of_bounds_tile: WorldTile,
 }
 
 impl WorldManager{
     pub fn new() -> WorldManager {
         
         let mut this = WorldManager{
-            world: Vec::new()
+            world: Vec::new(),
+            out_of_bounds_tile: WorldTile::new(true, "a", 0, 0),
         };
         this.generate_test_world();
         return this;
@@ -20,7 +22,7 @@ impl WorldManager{
         self.prepare_world(10, 10);
 
         for y in 0..5{
-            self.set_tile_properties(4, 2+y, "tiles_0001.png", true);
+            self.set_tile_properties(4, 2+y, "tiles_0001", true);
         }
     }
 
@@ -32,7 +34,7 @@ impl WorldManager{
             
             for y in 0..height{
                 self.world.get_mut(x as usize).unwrap().insert(y as usize, 
-                    WorldTile::new(false, "tiles_0005.png", x * TILE_SIZE, y * TILE_SIZE)
+                    WorldTile::new(false, "tiles_0005", x * TILE_SIZE, y * TILE_SIZE)
                 );
             }
         }

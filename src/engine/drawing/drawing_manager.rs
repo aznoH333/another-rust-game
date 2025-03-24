@@ -43,9 +43,11 @@ impl DrawingManager{
             let mut file_path = file.as_path().to_str().to_owned().unwrap().chars();
             file_path.next().unwrap();
 
+
+            let file_name = file.file_name().unwrap().to_str().unwrap();
             
             self.sprites.insert(
-                file.file_name().unwrap().to_str().unwrap().to_owned(), 
+                file_name[..file_name.len()-4].to_owned(), 
                 Image::from_path(context, file_path.as_str()).unwrap());
         }
     }

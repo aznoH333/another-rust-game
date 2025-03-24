@@ -12,7 +12,7 @@ impl Player{
         let controller = Player{
             
         };
-        let mut core = GameObjectCore::new(x, y, "player_0001.png", DrawingLayer::PLAYER as i32);
+        let mut core = GameObjectCore::new(x, y, "player_0001", DrawingLayer::PLAYER as i32);
         core.is_camera_target = true;
 
         return GameObject::new(
