@@ -1,32 +1,33 @@
+use std::error::Error;
+
 use crate::{engine::{drawing::drawing_manager::DrawingManager, objects::game_object_core::GameObjectCore}, game};
 
-use super::{world_constants::TILE_SIZE, world_tile::WorldTile};
+use super::{world_constants::TILE_SIZE, world_generator::WorldGenerator, world_tile::WorldTile};
 
 pub struct WorldManager{
     world: Vec<Vec<WorldTile>>,
-    out_of_bounds_tile: WorldTile,
+    out_of_bounds_tile: WorldTile, // TODO : dont crash the game when going out of bounds
+    is_world_prepared: bool,
 }
 
 impl WorldManager{
-    pub fn new() -> WorldManager {
-        
+    pub fn new(generator: &mut dyn WorldGenerator) -> WorldManager {
         let mut this = WorldManager{
             world: Vec::new(),
             out_of_bounds_tile: WorldTile::new(true, "a", 0, 0),
+            is_world_prepared: false,
         };
-        this.generate_test_world();
+
+        generator.generate_world(&mut this);
         return this;
     }
 
-    pub fn generate_test_world(&mut self){
-        self.prepare_world(10, 10);
 
-        for y in 0..5{
-            self.set_tile_properties(4, 2+y, "tiles_0001", true);
+    pub fn prepare_world(&mut self, width: i32, height: i32){
+        if self.is_world_prepared {
+            panic!("ERROR : called prepare world after it was already initialized")
         }
-    }
 
-    fn prepare_world(&mut self, width: i32, height: i32){
         for x in 0..width{
             if self.world.get(x as usize).is_none() {
                 self.world.insert(x as usize, Vec::new());
@@ -38,13 +39,15 @@ impl WorldManager{
                 );
             }
         }
+
+        self.is_world_prepared = true;
     }
 
     fn get_tile_mut(&mut self, x: i32, y: i32) -> &mut WorldTile{
         return self.world.get_mut(x as usize).unwrap().get_mut(y as usize).unwrap();
     }
 
-    fn get_tile(&self, x: i32, y: i32) -> &WorldTile{
+    pub fn get_tile(&self, x: i32, y: i32) -> &WorldTile{
         return self.world.get(x as usize).unwrap().get(y as usize).unwrap();
     }
 
@@ -52,7 +55,7 @@ impl WorldManager{
         return self.get_tile(x, y).is_solid()
     }
 
-    fn set_tile_properties(&mut self, x: i32, y: i32, texture: &str, is_solid: bool){
+    pub fn set_tile_properties(&mut self, x: i32, y: i32, texture: &str, is_solid: bool){
         let tile = self.get_tile_mut(x, y);
         tile.set_texture(texture);
         tile.set_solid(is_solid);

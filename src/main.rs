@@ -9,6 +9,7 @@ use engine::input::input::InputHandler;
 use engine::objects::game_object_manager::GameObjectManager;
 use engine::world::world_manager::WorldManager;
 use game::entities::player::Player;
+use game::world_generators::test_world_generator::TestWorldGenerator;
 use ggez::input::keyboard::KeyCode;
 use ggez::{Context, ContextBuilder, GameResult};
 use ggez::graphics::{self, Color, Sampler};
@@ -62,7 +63,7 @@ impl MyGame {
         return MyGame {
             sprite_manager: sprite_manager,
             game_object_manager: game_object_manager,
-            world_manager: WorldManager::new(),
+            world_manager: WorldManager::new(&mut TestWorldGenerator::new()),
             input: InputHandler::new(),
         }
     }
