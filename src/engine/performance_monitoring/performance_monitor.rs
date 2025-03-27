@@ -1,4 +1,6 @@
-use std::time::{Duration, Instant};
+use std::time::Instant;
+
+use super::performance_record::PerformanceRecord;
 
 pub struct PerformanceMonitor{
     records: Vec<PerformanceRecord>,
@@ -6,10 +8,7 @@ pub struct PerformanceMonitor{
     last_captured_time: Option<Instant>
 }
 
-struct PerformanceRecord{
-    label: String,
-    seconds_elapsed: Duration
-}
+
 
 
 impl PerformanceMonitor{
@@ -36,10 +35,10 @@ impl PerformanceMonitor{
         }
 
         self.records.push(
-            PerformanceRecord { 
-                label: self.currently_recording.to_owned().unwrap(), 
-                seconds_elapsed: self.last_captured_time.unwrap().elapsed() 
-            }
+            PerformanceRecord::new(
+                self.currently_recording.clone().unwrap(), 
+                self.last_captured_time.unwrap().elapsed()
+            )
         );
     }
 
@@ -50,9 +49,17 @@ impl PerformanceMonitor{
             println!("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
             println!("          Recording results          ");
             println!("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
-            for record in self.records {
-
+            println!("");
+            for iterator in 0..self.records.len() {
+                let record = self.records.get(iterator).unwrap();
+                println!("{}. {} \t \t {}ms", iterator, record.get_label(), record.get_elapsed_time().as_millis())
             }
+            println!("");
+            println!("Report end!");
+            println!("");
+
+
+
 
         }
     }

@@ -7,6 +7,7 @@ use std::{env, path};
 use engine::drawing::drawing_manager::DrawingManager;
 use engine::input::input::InputHandler;
 use engine::objects::game_object_manager::GameObjectManager;
+use engine::performance_monitoring::performance_monitor::{self, PerformanceMonitor};
 use engine::world::world_manager::WorldManager;
 use game::entities::player::Player;
 use game::world_generators::test_world_generator::TestWorldGenerator;
@@ -72,21 +73,43 @@ impl MyGame {
 impl EventHandler for MyGame {
    fn update(&mut self, _context: &mut Context) -> GameResult {
         // Update code here...
-        self.game_object_manager.update(&mut self.sprite_manager, &self.input, &self.world_manager);
+        
+        
+
+
 
         Ok(())
     }
 
     fn draw(&mut self, context: &mut Context) -> GameResult {
+        let mut performance_monitor = PerformanceMonitor::new();
+
+        performance_monitor.record_section("start");
+        
         let mut canvas = graphics::Canvas::from_frame(context, Color::BLACK);
+        
+        performance_monitor.record_section("sampler");
+        
         canvas.set_sampler(Sampler::nearest_clamp());
 
-        self.world_manager.draw_world(&mut self.sprite_manager);
+        performance_monitor.record_section("draw world");
 
+        self.world_manager.draw_world(&mut self.sprite_manager);
+        performance_monitor.record_section("game object update");
+
+        self.game_object_manager.update(&mut self.sprite_manager, &self.input, &self.world_manager);
+
+
+        performance_monitor.record_section("draw buffer to canvas");
 
         self.sprite_manager.draw_buffer_to_canvas(&mut canvas);
+        performance_monitor.record_section("finish");
 
-        return canvas.finish(context);
+        canvas.finish(context)?;
+
+        performance_monitor.end_recording(true);
+
+        return Ok(());
     }
 
     fn key_down_event(
@@ -104,7 +127,11 @@ impl EventHandler for MyGame {
 
 
     fn key_up_event(&mut self, _ctx: &mut Context, input: ggez::input::keyboard::KeyInput) -> Result<(), ggez::GameError> {
+        
+        
+        
         self.input.handle_keyboard_up_events(input);
+
         return Ok(());
     }
 
