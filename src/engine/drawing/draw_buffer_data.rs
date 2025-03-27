@@ -22,7 +22,7 @@ impl DrawBufferData{
         }
     }
 
-    fn convert_to_draw_param(&self, drawing_context: &DrawingContext) -> graphics::DrawParam {
+    pub fn convert_to_draw_param(&self, drawing_context: &DrawingContext) -> graphics::DrawParam {
         return graphics::DrawParam::new()
             .dest(Vec2::new(self.x * drawing_context.get_scale() - drawing_context.get_sprite_x_offset(), self.y * drawing_context.get_scale() - drawing_context.get_sprite_y_offset()))
             .z(self.z_index)
@@ -31,7 +31,6 @@ impl DrawBufferData{
 
     pub fn draw(&self, image: &Image, canvas: &mut Canvas, drawing_context: &DrawingContext){
         canvas.draw(image, self.convert_to_draw_param(drawing_context));
-    
     }
 
     pub fn get_sprite_name(&self) -> &str {

@@ -1,7 +1,7 @@
 
 use std::{collections::HashMap, env, path::Path};
 
-use ggez::{graphics::{Canvas, Image}, Context};
+use ggez::{context::Has, graphics::{self, Canvas, Image, InstanceArray}, Context};
 
 use crate::utils::file_utils::get_files_in_folder;
 
@@ -14,6 +14,7 @@ pub struct DrawingManager{
     sprites: HashMap<String, Image>,
     draw_buffer: Vec<DrawBufferData>,
     drawing_context: DrawingContext,
+    draw_batches: HashMap<String, InstanceArray>,
 }
 
 impl DrawingManager{
@@ -22,6 +23,7 @@ impl DrawingManager{
             sprites: HashMap::new(),
             draw_buffer: Vec::new(),
             drawing_context: DrawingContext::new(&context),
+            draw_batches: HashMap::new()
         };
         // load sprites
         output.load_sprites_in_folder(Path::new("./sprites/"), context);
@@ -46,9 +48,15 @@ impl DrawingManager{
 
             let file_name = file.file_name().unwrap().to_str().unwrap();
             
+            let sprite_name = file_name[..file_name.len()-4].to_owned();
+            let image = Image::from_path(context, file_path.as_str()).unwrap();
+            
             self.sprites.insert(
-                file_name[..file_name.len()-4].to_owned(), 
-                Image::from_path(context, file_path.as_str()).unwrap());
+                sprite_name.to_owned(), 
+                image.to_owned(),
+            );
+
+            self.draw_batches.insert(sprite_name.to_owned(), InstanceArray::new(context, image));
         }
     }
 
@@ -56,14 +64,22 @@ impl DrawingManager{
         self.draw_buffer.push(DrawBufferData::new(sprite_name.clone(), x, y, z_index, scale));
     }
 
-    pub fn draw_buffer_to_canvas(&mut self, canvas: &mut Canvas){
+    pub fn draw_buffer_to_canvas(&mut self, canvas: &mut Canvas){ // TODO : sort to draw batch on first draw call
+        // collect to draw batches
         for draw_data in &self.draw_buffer{
-            let image = self.sprites.get(draw_data.get_sprite_name()).unwrap();
-
-            draw_data.draw(image, canvas, &self.drawing_context);                
+            self.draw_batches.get_mut(draw_data.get_sprite_name()).unwrap().push(draw_data.convert_to_draw_param(&self.drawing_context));
         }
+
+        // draw batches
+        for draw_batch in &mut self.draw_batches{
+            canvas.draw(draw_batch.1, graphics::DrawParam::default());
+            draw_batch.1.clear(); // TODO : z indexes are fucked
+        }
+
         self.draw_buffer.clear();
     }
+
+    
 
     pub fn reload_context(&mut self, context: &Context){
         self.drawing_context.reload_context(context);
