@@ -33,6 +33,10 @@ impl DrawBufferData{
         canvas.draw(image, self.convert_to_draw_param(drawing_context));
     }
 
+    pub fn get_z_index(&self) -> i32 {
+        return self.z_index;
+    }
+
     pub fn get_sprite_name(&self) -> &str {
         return &self.sprite_name
     }

@@ -10,6 +10,7 @@ use engine::objects::game_object_manager::GameObjectManager;
 use engine::performance_monitoring::performance_monitor::{self, PerformanceMonitor};
 use engine::world::world_manager::WorldManager;
 use game::entities::player::Player;
+use game::enums::drawing_layers::DrawingLayer;
 use game::world_generators::test_world_generator::TestWorldGenerator;
 use ggez::input::keyboard::KeyCode;
 use ggez::{Context, ContextBuilder, GameResult};
@@ -53,8 +54,12 @@ struct MyGame {
 
 impl MyGame {
     pub fn new(context: &mut Context) -> MyGame {
+        // collect drawing layers
+
+        
+        
         // sprite manager
-        let mut sprite_manager = DrawingManager::new(context);
+        let mut sprite_manager = DrawingManager::new(context, Vec::from_iter(DrawingLayer::VALUES.iter().map(|it|{return it.get_value()})));
         sprite_manager.set_camera_zoom(5.0);
 
         let mut game_object_manager = GameObjectManager::new();
