@@ -87,32 +87,14 @@ impl EventHandler for MyGame {
     }
 
     fn draw(&mut self, context: &mut Context) -> GameResult {
-        let mut performance_monitor = PerformanceMonitor::new();
-
-        performance_monitor.record_section("start");
         
         let mut canvas = graphics::Canvas::from_frame(context, Color::BLACK);
-        
-        performance_monitor.record_section("sampler");
-        
         canvas.set_sampler(Sampler::nearest_clamp());
-
-        performance_monitor.record_section("draw world");
-
         self.world_manager.draw_world(&mut self.sprite_manager);
-        performance_monitor.record_section("game object update");
-
         self.game_object_manager.update(&mut self.sprite_manager, &self.input, &self.world_manager);
 
-
-        performance_monitor.record_section("draw buffer to canvas");
-
         self.sprite_manager.draw_buffer_to_canvas(&mut canvas);
-        performance_monitor.record_section("finish");
-
         canvas.finish(context)?;
-
-        performance_monitor.end_recording(true);
 
         return Ok(());
     }

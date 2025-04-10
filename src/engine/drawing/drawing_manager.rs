@@ -61,9 +61,9 @@ impl DrawingManager{
 
             self.draw_batches.insert(sprite_name.to_owned(), HashMap::new());
 
+            // init draw batches
             for layer in &self.drawing_layers {
                 self.draw_batches.get_mut(&sprite_name).unwrap().insert(layer.clone(), InstanceArray::new(context, image.to_owned()));
-
             }
         }
     }
@@ -84,12 +84,11 @@ impl DrawingManager{
         for layer in &self.drawing_layers{
 
             for draw_batch in &mut self.draw_batches{
-                println!("{} {} {}", layer, draw_batch.0, draw_batch.1.len());
                 
+                let current_draw_batch = draw_batch.1.get_mut(&layer).unwrap();
                 
-                canvas.draw(draw_batch.1.get(&layer).unwrap(), DrawParam::default());
-                
-                draw_batch.1.clear();
+                canvas.draw(current_draw_batch, DrawParam::default());
+                current_draw_batch.clear();
             }
         }
 
