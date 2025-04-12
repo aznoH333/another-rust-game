@@ -61,6 +61,15 @@ impl WorldManager{
         tile.set_solid(is_solid);
     }
 
+    pub fn make_solid_tile(&mut self, x: i32, y: i32, texture: &str){
+        self.set_tile_properties(x, y, texture,true);
+    }
+
+    pub fn make_floor_tile(&mut self, x: i32, y: i32, texture: &str){
+        self.set_tile_properties(x, y, texture, false);
+    }
+
+
     pub fn draw_world(&mut self, drawing: &mut DrawingManager){
         for v in &self.world {
             for tile in v{
