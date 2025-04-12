@@ -1,4 +1,4 @@
-use crate::engine::world::world_generator::WorldGenerator;
+use crate::engine::{events::event_manager::EventManager, world::world_generator::WorldGenerator};
 
 pub struct TestWorldGenerator{
 
@@ -11,7 +11,7 @@ impl TestWorldGenerator{
 }
 
 impl WorldGenerator for TestWorldGenerator{
-    fn generate_world(&mut self, world: &mut crate::engine::world::world_manager::WorldManager) {
+    fn generate_world(&mut self, world: &mut crate::engine::world::world_manager::WorldManager, _: &mut EventManager) {
         world.prepare_world(100, 100);
 
         for i in 3..5{

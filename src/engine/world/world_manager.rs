@@ -1,6 +1,6 @@
 use std::error::Error;
 
-use crate::{engine::{drawing::drawing_manager::DrawingManager, objects::game_object_core::GameObjectCore}, game};
+use crate::{engine::{drawing::drawing_manager::DrawingManager, events::event_manager::{self, EventManager}, objects::game_object_core::GameObjectCore}, game};
 
 use super::{world_constants::TILE_SIZE, world_generator::WorldGenerator, world_tile::WorldTile};
 
@@ -11,14 +11,14 @@ pub struct WorldManager{
 }
 
 impl WorldManager{
-    pub fn new(generator: &mut dyn WorldGenerator) -> WorldManager {
+    pub fn new(generator: &mut dyn WorldGenerator, event_manager: &mut EventManager) -> WorldManager {
         let mut this = WorldManager{
             world: Vec::new(),
             out_of_bounds_tile: WorldTile::new(true, "a", 0, 0),
             is_world_prepared: false,
         };
 
-        generator.generate_world(&mut this);
+        generator.generate_world(&mut this, event_manager);
         return this;
     }
 

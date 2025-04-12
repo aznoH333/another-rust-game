@@ -5,13 +5,14 @@ mod game;
 
 use std::{env, path};
 use engine::drawing::drawing_manager::DrawingManager;
+use engine::events::event_manager::EventManager;
 use engine::input::input::InputHandler;
 use engine::objects::game_object_manager::GameObjectManager;
 use engine::performance_monitoring::performance_monitor::{self, PerformanceMonitor};
 use engine::world::world_manager::WorldManager;
-use game::entities::player::Player;
 use game::enums::drawing_layers::DrawingLayer;
-use game::world_generators::test_world_generator::TestWorldGenerator;
+use game::world_generators::basic_world_generator::BasicRoomGenerator;
+use ggez::conf::WindowMode;
 use ggez::input::keyboard::KeyCode;
 use ggez::{Context, ContextBuilder, GameResult};
 use ggez::graphics::{self, Color, Sampler};
@@ -33,6 +34,7 @@ fn main() {
     // Make a Context.
     let (mut context, event_loop) = ContextBuilder::new("my_game", "me")
         .add_resource_path(resource_dir)
+        .window_mode( WindowMode::default().fullscreen_type(ggez::conf::FullscreenType::Desktop).dimensions(1920.0, 1080.0) )
         .build()
         .unwrap();
 
@@ -50,27 +52,28 @@ struct MyGame {
     game_object_manager: GameObjectManager,
     world_manager: WorldManager,
     input: InputHandler,
+    event_manager: EventManager,
 }
 
 impl MyGame {
     pub fn new(context: &mut Context) -> MyGame {
-        // collect drawing layers
-
-        
         
         // sprite manager
         let mut sprite_manager = DrawingManager::new(context, Vec::from_iter(DrawingLayer::VALUES.iter().map(|it|{return it.get_value()})));
         sprite_manager.set_camera_zoom(5.0);
-
+        // game object manager
         let mut game_object_manager = GameObjectManager::new();
 
-        game_object_manager.add_object(Player::new(0.0, 0.0));
+        // event manager
+        let mut event_manager = EventManager::new();
 
+        // construct output
         return MyGame {
             sprite_manager: sprite_manager,
             game_object_manager: game_object_manager,
-            world_manager: WorldManager::new(&mut TestWorldGenerator::new()),
+            world_manager: WorldManager::new(&mut BasicRoomGenerator::new(), &mut event_manager),
             input: InputHandler::new(),
+            event_manager: event_manager
         }
     }
 }
@@ -78,9 +81,8 @@ impl MyGame {
 impl EventHandler for MyGame {
    fn update(&mut self, _context: &mut Context) -> GameResult {
         // Update code here...
-        
-        
-
+        self.game_object_manager.update(&mut self.sprite_manager, &self.input, &self.world_manager);
+        self.event_manager.update_events(&mut self.game_object_manager);
 
 
         Ok(())
@@ -91,7 +93,6 @@ impl EventHandler for MyGame {
         let mut canvas = graphics::Canvas::from_frame(context, Color::BLACK);
         canvas.set_sampler(Sampler::nearest_clamp());
         self.world_manager.draw_world(&mut self.sprite_manager);
-        self.game_object_manager.update(&mut self.sprite_manager, &self.input, &self.world_manager);
 
         self.sprite_manager.draw_buffer_to_canvas(&mut canvas);
         canvas.finish(context)?;
