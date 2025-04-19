@@ -15,14 +15,9 @@ impl BasicRoomGenerator{
     pub fn new() -> BasicRoomGenerator {
         return BasicRoomGenerator {  };
     }
-}
 
-impl WorldGenerator for BasicRoomGenerator{
-    fn generate_world(&mut self, world: &mut WorldManager, event_manager: &mut EventManager) {
-        
-        // prepare world
-        world.prepare_world(WORLD_WIDTH, WORLD_WIDTH);
 
+    fn prepare_room(&mut self, world: &mut WorldManager){
         // generate initial square
         for i in 0..WORLD_WIDTH{
             for j in 0..BORDER_WIDTH{
@@ -46,9 +41,10 @@ impl WorldGenerator for BasicRoomGenerator{
                 world.make_floor_tile(x, y, &get_texture_with_index("tiles", random_integer(3, 6)));
             }
         }
+    }
 
 
-
+    fn generate_inner_rooms(&mut self, world: &mut WorldManager){
         // generate room layout
         // add initial points
         let mut valid_wall_start_points: HashMap<(i32, i32), RoomGenerationPoint> = HashMap::new();
@@ -88,6 +84,73 @@ impl WorldGenerator for BasicRoomGenerator{
             }
             eliminate_wall_start_points_around_point(&(x, y), &mut valid_wall_start_points);
         }
+    }
+
+
+    fn find_rooms(&mut self, world: &mut WorldManager) -> Vec<Room> {
+        let mut output = Vec::<Room>::new();
+
+        for x in BORDER_WIDTH..WORLD_WIDTH - BORDER_WIDTH {
+            for y in BORDER_WIDTH..WORLD_WIDTH - BORDER_WIDTH {
+                // skip is wall
+                if world.get_tile(x, y).is_solid(){
+                    continue;
+                }
+
+                // skip if is already in a room
+                let mut is_in_any_room = false;
+                for room in &output {
+                    if room.is_inside_room(x, y){
+                        is_in_any_room = true;
+                    }
+                }
+
+                if is_in_any_room {
+                    continue;
+                }
+
+                let start_x = x;
+                let start_y = y;
+
+                // get room width
+                let mut width = 0;
+                loop {
+                    if world.get_tile(start_x + width, start_y).is_solid() {
+                        break;
+                    }
+                    width += 1;
+                }
+
+                // get room height
+                let mut height = 0;
+                loop {
+                    if world.get_tile(start_x, start_y + height).is_solid() {
+                        break;
+                    }
+                    height += 1;
+                }
+
+                // add room
+                output.push(Room {x: start_x, y: start_y, w: width, h: height});
+            }
+        }
+
+
+        return output;
+    }
+}
+
+impl WorldGenerator for BasicRoomGenerator{
+    fn generate_world(&mut self, world: &mut WorldManager, event_manager: &mut EventManager) {
+        
+        // prepare world
+        world.prepare_world(WORLD_WIDTH, WORLD_WIDTH);
+
+        self.prepare_room(world);
+        self.generate_inner_rooms(world);
+        let rooms = self.find_rooms(world);
+
+        
 
 
         // spawn entities
@@ -133,5 +196,18 @@ fn eliminate_wall_start_points_around_point(point: &(i32, i32), start_points: &m
                 start_points.remove(&(x, y)).unwrap();
             }
         }
+    }
+}
+
+struct Room {
+    x: i32,
+    y: i32,
+    w: i32,
+    h: i32
+}
+
+impl Room {
+    pub fn is_inside_room(&self, x: i32, y: i32) -> bool {
+        return x >= self.x && x < self.x + self.w && y >= self.y && y < self.y + self.h;
     }
 }
