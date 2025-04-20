@@ -1,11 +1,12 @@
 use std::collections::HashMap;
 
-use crate::{engine::{events::{event_manager::EventManager, game_event::GameEvent}, objects::game_object_manager::GameObjectManager, world::{world_generator::WorldGenerator, world_manager::WorldManager}}, game::entities::player::Player, utils::{number_utils::random_integer, textures::get_texture_with_index, vec_utils::{pick_random_element_vec, pick_random_key_map}}};
+use crate::{engine::{events::{event_manager::EventManager, game_event::GameEvent}, objects::game_object_manager::GameObjectManager, world::{world_generator::WorldGenerator, world_manager::WorldManager}}, game::entities::player::Player, utils::{number_utils::random_integer, space_utils::squares_collide, textures::get_texture_with_index, vec_utils::{pick_random_element_vec, pick_random_index_vec, pick_random_key_map}}};
 
 
 const WORLD_WIDTH: i32 = 40;
 const BORDER_WIDTH: i32 = 8;
 const MIN_ROOM_WIDTH: i32 = 3;
+const DOOR_SIZE: i32 = 2;
 
 pub struct BasicRoomGenerator{
 
@@ -131,13 +132,88 @@ impl BasicRoomGenerator{
                 }
 
                 // add room
-                output.push(Room {x: start_x, y: start_y, w: width, h: height});
+                output.push(Room::new( start_x, start_y, width, height ));
             }
         }
 
+        // find neighbors
+        for room_index in 0..output.iter().count() {
+            let room = output.get(room_index).unwrap();
+            let neighbors = room.find_neighbor_indicies(&output);
+            // borrow checker moment 🤡
+            output.get_mut(room_index).unwrap().set_neighbors(neighbors);       
+        }
 
         return output;
     }
+
+    // returns starting room index
+    fn pick_starting_room(&mut self, rooms: &mut Vec<Room>) -> usize {
+        let starting_room_index = pick_random_index_vec(&rooms);
+        rooms.get_mut(starting_room_index).expect(format!("invalid room index {}", starting_room_index).as_str()).mark_as_connected();
+        return starting_room_index;
+    }
+
+    fn create_doors(&mut self, world: &mut WorldManager, starting_room_index: usize, rooms: &mut Vec<Room>) {
+        
+        // add starting room
+        let mut connected_rooms = Vec::<usize>::new();
+        connected_rooms.push(starting_room_index);
+
+        loop {
+
+            // collect possible connections
+            let mut possible_connections = Vec::<(usize, usize)>::new();
+
+            for room_index in &connected_rooms{
+                let room = rooms.get(*room_index).unwrap();
+                
+                for neighbor_index in &room.neighbors {
+                    let neighbor = rooms.get(*neighbor_index).unwrap();
+
+                    if !neighbor.is_connected_to_path {
+                        possible_connections.push((*room_index, *neighbor_index));
+                    }
+                }
+            }
+    
+            // no new connections can be made
+            if possible_connections.is_empty() {
+                break;
+            }
+
+
+            // pick a random connection and make a door
+            let connection = pick_random_element_vec(&possible_connections);
+
+            let origin_room = rooms.get(connection.0).unwrap();
+            let target_room = rooms.get(connection.1).unwrap();
+            let shared_walls = origin_room.find_shared_walls_with_neighbor(target_room);
+
+
+            if shared_walls.iter().count() <= DOOR_SIZE as usize {
+                for (x, y) in shared_walls {
+                    world.make_floor_tile(x, y, "gremlin_0001");
+                }
+            }else {
+                // pick random door location
+                let random_door_index = random_integer(0, shared_walls.iter().count() as i32 - DOOR_SIZE);
+
+                for i in random_door_index..random_door_index + DOOR_SIZE {
+                    let (x, y) = shared_walls.get(i as usize).unwrap();
+
+                    world.make_floor_tile(*x, *y, "gremlin_0001");
+                }
+
+            }
+
+            // mark other as connected
+            rooms.get_mut(connection.1).unwrap().mark_as_connected();
+            connected_rooms.push(connection.1);
+
+        }
+
+    } 
 }
 
 impl WorldGenerator for BasicRoomGenerator{
@@ -148,8 +224,9 @@ impl WorldGenerator for BasicRoomGenerator{
 
         self.prepare_room(world);
         self.generate_inner_rooms(world);
-        let rooms = self.find_rooms(world);
-
+        let mut rooms = self.find_rooms(world);
+        let starting_room_index = self.pick_starting_room(&mut rooms);
+        self.create_doors(world, starting_room_index, &mut rooms);
         
 
 
@@ -203,11 +280,92 @@ struct Room {
     x: i32,
     y: i32,
     w: i32,
-    h: i32
+    h: i32,
+    is_connected_to_path: bool,
+    neighbors: Vec<usize>, 
 }
 
 impl Room {
+    pub fn new(x: i32, y: i32, w: i32, h: i32) -> Room {
+        return Room {
+            x, 
+            y, 
+            w, 
+            h,
+            is_connected_to_path: false,
+            neighbors: Vec::new(),
+        };
+    }
+
+    pub fn mark_as_connected(&mut self) {
+        self.is_connected_to_path = true;
+    }
+
+    pub fn is_connected_to_path(&self) -> bool {
+        return self.is_connected_to_path;
+    }
+    
     pub fn is_inside_room(&self, x: i32, y: i32) -> bool {
         return x >= self.x && x < self.x + self.w && y >= self.y && y < self.y + self.h;
+    }
+
+    pub fn find_neighbor_indicies(&self, rooms: &Vec<Room>) -> Vec<usize>{
+        let mut output = Vec::<usize>::new();
+        
+        for (room_index, room) in rooms.iter().enumerate() {
+            if self.is_neighbor(room){
+                output.push(room_index);
+            }
+        }
+
+        return output
+    }
+
+    pub fn set_neighbors(&mut self, indicies: Vec<usize>){
+        self.neighbors = indicies;
+    }
+
+    pub fn get_neighbors(&mut self) -> &Vec<usize> {
+        return &self.neighbors;
+    }
+
+    fn is_neighbor(&self, other: &Room) -> bool {
+        return 
+            squares_collide(self.x - 2, self.y, 1, self.h, other.x, other.y, other.w, other.h) || // left neighgbor
+            squares_collide(self.x + self.w + 2, self.y, 1, self.h, other.x, other.y, other.w, other.h) || // right neighgbor
+            squares_collide(self.x, self.y - 2, self.w, 1,other.x, other.y, other.w, other.h) || // top neighbor
+            squares_collide(self.x, self.y + self.h + 2, self.w, 1,other.x, other.y, other.w, other.h); // bottom neighbor
+    }
+
+    pub fn find_shared_walls_with_neighbor(&self, other: &Room) -> Vec<(i32, i32)> {
+        let mut output = Vec::<(i32, i32)>::new();
+
+
+        let x_overlap_start = self.x.max(other.x);
+        let x_overlap_end = (self.x + self.w).min(other.x + other.w);
+
+        let y_overlap_start = self.y.max(other.y);
+        let y_overlap_end = (self.y + self.h).min(other.y + other.h);
+
+
+        if x_overlap_end - x_overlap_start > 0 {
+            
+            let y = if self.y > other.y { self.y - 1 } else { other.y - 1 };
+
+            for x in x_overlap_start+1..x_overlap_end-1 {
+                output.push((x, y));
+            }
+
+        }else {
+
+            let x = if self.x > other.x { self.x - 1 } else { other.x - 1 };
+
+            for y in y_overlap_start+1..y_overlap_end-1 {
+                output.push((x, y));
+            }
+
+        }
+
+        return output;
     }
 }
