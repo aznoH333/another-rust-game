@@ -1,12 +1,15 @@
 use std::collections::HashMap;
 
-use crate::{engine::{events::{event_manager::EventManager, game_event::GameEvent}, objects::game_object_manager::GameObjectManager, world::{world_generator::WorldGenerator, world_manager::WorldManager}}, game::entities::player::Player, utils::{number_utils::random_integer, space_utils::squares_collide, textures::get_texture_with_index, vec_utils::{pick_random_element_vec, pick_random_index_vec, pick_random_key_map}}};
+use crate::{engine::{events::{event_manager::EventManager, game_event::GameEvent}, objects::game_object_manager::GameObjectManager, world::{world_generator::WorldGenerator, world_manager::WorldManager}}, game::entities::player::Player, utils::{number_utils::random_integer, textures::get_texture_with_index, vec_utils::{pick_random_element_vec, pick_random_index_vec, pick_random_key_map}}};
+
+use super::data_types::{room::Room, room_generation_point::RoomGenerationPoint};
 
 
 const WORLD_WIDTH: i32 = 40;
 const BORDER_WIDTH: i32 = 8;
 const MIN_ROOM_WIDTH: i32 = 3;
-const DOOR_SIZE: i32 = 2;
+const DOOR_SIZE: i32 = 1;
+
 
 pub struct BasicRoomGenerator{
 
@@ -37,9 +40,9 @@ impl BasicRoomGenerator{
         }
 
         // randomize flor sprite
-        for x in BORDER_WIDTH+1..WORLD_WIDTH-BORDER_WIDTH-1{
-            for y in BORDER_WIDTH+1..WORLD_WIDTH-BORDER_WIDTH-1{
-                world.make_floor_tile(x, y, &get_texture_with_index("tiles", random_integer(3, 6)));
+        for x in BORDER_WIDTH+1..WORLD_WIDTH-BORDER_WIDTH{
+            for y in BORDER_WIDTH+1..WORLD_WIDTH-BORDER_WIDTH{
+                world.make_floor_tile(x, y, &get_texture_with_index("tiles", random_integer(24, 27)));
             }
         }
     }
@@ -50,10 +53,10 @@ impl BasicRoomGenerator{
         // add initial points
         let mut valid_wall_start_points: HashMap<(i32, i32), RoomGenerationPoint> = HashMap::new();
         for i in BORDER_WIDTH + MIN_ROOM_WIDTH + 1 .. WORLD_WIDTH - BORDER_WIDTH - MIN_ROOM_WIDTH {
-            valid_wall_start_points.insert((i, BORDER_WIDTH), RoomGenerationPoint { allow_up: false, allow_down: true, allow_left: false, allow_right: false });
-            valid_wall_start_points.insert((i, WORLD_WIDTH - BORDER_WIDTH), RoomGenerationPoint { allow_up: true, allow_down: false, allow_left: false, allow_right: false });
-            valid_wall_start_points.insert((BORDER_WIDTH, i), RoomGenerationPoint { allow_up: false, allow_down: false, allow_left: false, allow_right: true });
-            valid_wall_start_points.insert((WORLD_WIDTH - BORDER_WIDTH, i), RoomGenerationPoint { allow_up: false, allow_down: false, allow_left: true, allow_right: false });
+            valid_wall_start_points.insert((i, BORDER_WIDTH), RoomGenerationPoint::new( false, true, false,  false ));
+            valid_wall_start_points.insert((i, WORLD_WIDTH - BORDER_WIDTH), RoomGenerationPoint::new(true, false, false, false));
+            valid_wall_start_points.insert((BORDER_WIDTH, i), RoomGenerationPoint::new(false, false, false, true));
+            valid_wall_start_points.insert((WORLD_WIDTH - BORDER_WIDTH, i), RoomGenerationPoint::new(false, false, true, false));
         }
 
         let wall_number = random_integer(4, 7);
@@ -80,7 +83,7 @@ impl BasicRoomGenerator{
                 if iteration_count > MIN_ROOM_WIDTH {
                     valid_wall_start_points.insert((x, y), RoomGenerationPoint::from_direction((x_dir, y_dir)));
                 }
-
+                iteration_count += 1;
                 world.make_solid_tile(x, y, "tiles_0001");
             }
             eliminate_wall_start_points_around_point(&(x, y), &mut valid_wall_start_points);
@@ -168,10 +171,10 @@ impl BasicRoomGenerator{
             for room_index in &connected_rooms{
                 let room = rooms.get(*room_index).unwrap();
                 
-                for neighbor_index in &room.neighbors {
+                for neighbor_index in room.get_neighbors() {
                     let neighbor = rooms.get(*neighbor_index).unwrap();
 
-                    if !neighbor.is_connected_to_path {
+                    if !neighbor.is_connected_to_path() {
                         possible_connections.push((*room_index, *neighbor_index));
                     }
                 }
@@ -193,7 +196,7 @@ impl BasicRoomGenerator{
 
             if shared_walls.iter().count() <= DOOR_SIZE as usize {
                 for (x, y) in shared_walls {
-                    world.make_floor_tile(x, y, "gremlin_0001");
+                    world.make_floor_tile(x, y, "tiles_0003");
                 }
             }else {
                 // pick random door location
@@ -202,7 +205,7 @@ impl BasicRoomGenerator{
                 for i in random_door_index..random_door_index + DOOR_SIZE {
                     let (x, y) = shared_walls.get(i as usize).unwrap();
 
-                    world.make_floor_tile(*x, *y, "gremlin_0001");
+                    world.make_floor_tile(*x, *y, "tiles_0003");
                 }
 
             }
@@ -238,34 +241,6 @@ impl WorldGenerator for BasicRoomGenerator{
 }
 
 
-struct RoomGenerationPoint{
-    allow_up: bool,
-    allow_down: bool,
-    allow_left: bool,
-    allow_right: bool,
-}
-
-impl RoomGenerationPoint {
-    pub fn get_valid_direction(&self) -> (i32, i32){
-        let mut possible_outputs: Vec<(i32, i32)> = Vec::new();
-
-        if self.allow_up { possible_outputs.push((0, -1)); }
-        if self.allow_down { possible_outputs.push((0, 1)); }
-        if self.allow_left { possible_outputs.push((-1, 0)); }
-        if self.allow_right { possible_outputs.push((1, 0)); }
-        
-        return pick_random_element_vec(&possible_outputs).to_owned();
-    }
-
-    pub fn from_direction(direction: (i32, i32)) -> Self {
-        if direction.0 != 0 {
-            return RoomGenerationPoint{allow_up: true, allow_down: true, allow_left: false, allow_right: false };
-        }
-        return RoomGenerationPoint{allow_up: false, allow_down: false, allow_left: true, allow_right: true };
-    }
-}
-
-
 fn eliminate_wall_start_points_around_point(point: &(i32, i32), start_points: &mut HashMap<(i32, i32), RoomGenerationPoint>) {
     for x in point.0 - MIN_ROOM_WIDTH .. point.0 + MIN_ROOM_WIDTH + 1 {
         for y in point.1 - MIN_ROOM_WIDTH .. point.1 + MIN_ROOM_WIDTH + 1 {
@@ -276,96 +251,3 @@ fn eliminate_wall_start_points_around_point(point: &(i32, i32), start_points: &m
     }
 }
 
-struct Room {
-    x: i32,
-    y: i32,
-    w: i32,
-    h: i32,
-    is_connected_to_path: bool,
-    neighbors: Vec<usize>, 
-}
-
-impl Room {
-    pub fn new(x: i32, y: i32, w: i32, h: i32) -> Room {
-        return Room {
-            x, 
-            y, 
-            w, 
-            h,
-            is_connected_to_path: false,
-            neighbors: Vec::new(),
-        };
-    }
-
-    pub fn mark_as_connected(&mut self) {
-        self.is_connected_to_path = true;
-    }
-
-    pub fn is_connected_to_path(&self) -> bool {
-        return self.is_connected_to_path;
-    }
-    
-    pub fn is_inside_room(&self, x: i32, y: i32) -> bool {
-        return x >= self.x && x < self.x + self.w && y >= self.y && y < self.y + self.h;
-    }
-
-    pub fn find_neighbor_indicies(&self, rooms: &Vec<Room>) -> Vec<usize>{
-        let mut output = Vec::<usize>::new();
-        
-        for (room_index, room) in rooms.iter().enumerate() {
-            if self.is_neighbor(room){
-                output.push(room_index);
-            }
-        }
-
-        return output
-    }
-
-    pub fn set_neighbors(&mut self, indicies: Vec<usize>){
-        self.neighbors = indicies;
-    }
-
-    pub fn get_neighbors(&mut self) -> &Vec<usize> {
-        return &self.neighbors;
-    }
-
-    fn is_neighbor(&self, other: &Room) -> bool {
-        return 
-            squares_collide(self.x - 2, self.y, 1, self.h, other.x, other.y, other.w, other.h) || // left neighgbor
-            squares_collide(self.x + self.w + 2, self.y, 1, self.h, other.x, other.y, other.w, other.h) || // right neighgbor
-            squares_collide(self.x, self.y - 2, self.w, 1,other.x, other.y, other.w, other.h) || // top neighbor
-            squares_collide(self.x, self.y + self.h + 2, self.w, 1,other.x, other.y, other.w, other.h); // bottom neighbor
-    }
-
-    pub fn find_shared_walls_with_neighbor(&self, other: &Room) -> Vec<(i32, i32)> {
-        let mut output = Vec::<(i32, i32)>::new();
-
-
-        let x_overlap_start = self.x.max(other.x);
-        let x_overlap_end = (self.x + self.w).min(other.x + other.w);
-
-        let y_overlap_start = self.y.max(other.y);
-        let y_overlap_end = (self.y + self.h).min(other.y + other.h);
-
-
-        if x_overlap_end - x_overlap_start > 0 {
-            
-            let y = if self.y > other.y { self.y - 1 } else { other.y - 1 };
-
-            for x in x_overlap_start+1..x_overlap_end-1 {
-                output.push((x, y));
-            }
-
-        }else {
-
-            let x = if self.x > other.x { self.x - 1 } else { other.x - 1 };
-
-            for y in y_overlap_start+1..y_overlap_end-1 {
-                output.push((x, y));
-            }
-
-        }
-
-        return output;
-    }
-}

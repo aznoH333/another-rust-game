@@ -13,6 +13,10 @@ impl Player{
             
         };
         let mut core = GameObjectCore::new(x, y, "player_0001", DrawingLayer::PLAYER as i32);
+        core.width = 10.0;
+        core.sprite_x_offset = -3.0;
+        core.height = 10.0;
+        core.sprite_y_offset = -6.0;
         core.is_camera_target = true;
 
         return GameObject::new(

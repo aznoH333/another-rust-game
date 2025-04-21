@@ -8,7 +8,6 @@ use engine::drawing::drawing_manager::DrawingManager;
 use engine::events::event_manager::EventManager;
 use engine::input::input::InputHandler;
 use engine::objects::game_object_manager::GameObjectManager;
-use engine::performance_monitoring::performance_monitor::{self, PerformanceMonitor};
 use engine::world::world_manager::WorldManager;
 use game::enums::drawing_layers::DrawingLayer;
 use game::world_generators::basic_world_generator::BasicRoomGenerator;
@@ -62,7 +61,7 @@ impl MyGame {
         let mut sprite_manager = DrawingManager::new(context, Vec::from_iter(DrawingLayer::VALUES.iter().map(|it|{return it.get_value()})));
         sprite_manager.set_camera_zoom(5.0);
         // game object manager
-        let mut game_object_manager = GameObjectManager::new();
+        let game_object_manager = GameObjectManager::new();
 
         // event manager
         let mut event_manager = EventManager::new();
