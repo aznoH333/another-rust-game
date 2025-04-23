@@ -22,3 +22,8 @@ pub fn random_integer(min: i32, max: i32) -> i32{
 
     return rng.random_range(min..max+1);
 }
+
+
+pub fn random_chance(percentage: i32) -> bool {
+    return random_integer(0, 100) < percentage;
+}

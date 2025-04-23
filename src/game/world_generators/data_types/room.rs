@@ -1,4 +1,6 @@
-use crate::utils::space_utils::squares_collide;
+use crate::{engine::{events::event_manager::{self, EventManager}, world::world_manager::{self, WorldManager}}, utils::space_utils::squares_collide};
+
+use super::{door::Door, door_lock::DoorLockType, point_of_interest::PointOfInterest};
 
 pub struct Room {
     x: i32,
@@ -7,6 +9,9 @@ pub struct Room {
     h: i32,
     is_connected_to_path: bool,
     neighbors: Vec<usize>, 
+    doors: Vec<Door>,
+    door_lock: DoorLockType,
+    special_type: PointOfInterest,
 }
 
 impl Room {
@@ -18,6 +23,9 @@ impl Room {
             h,
             is_connected_to_path: false,
             neighbors: Vec::new(),
+            doors: Vec::new(),
+            door_lock: DoorLockType::None,
+            special_type: PointOfInterest::None,
         };
     }
 
@@ -89,7 +97,30 @@ impl Room {
             }
 
         }
-
         return output;
+    }
+
+    pub fn add_door(&mut self, door: Door) {
+        self.doors.push(door);
+    }
+
+    pub fn generate_contents(&self, world_manager: WorldManager){
+
+    }
+
+    pub fn spawn_contents(&self, event_manager: &mut EventManager){
+        todo!("this")
+    }
+
+    pub fn make_room_special(&mut self, special: PointOfInterest){
+        self.special_type = special;
+    }
+
+    pub fn lock_room(&mut self, lock: DoorLockType){
+        self.door_lock = lock;
+    }
+
+    pub fn get_special(&self) -> &PointOfInterest {
+        return &self.special_type;
     }
 }
