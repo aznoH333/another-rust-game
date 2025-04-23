@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use crate::{engine::{events::{event_manager::EventManager, game_event::GameEvent}, objects::game_object_manager::GameObjectManager, world::{world_generator::WorldGenerator, world_manager::WorldManager}}, game::entities::player::Player, utils::{number_utils::{random_chance, random_integer}, textures::get_texture_with_index, vec_utils::{pick_random_element_vec, pick_random_index_vec, pick_random_key_map}}};
 
-use super::data_types::{door::Door, door_lock::DoorLockType, point_of_interest::PointOfInterest, room::Room, room_generation_point::RoomGenerationPoint};
+use super::{data_types::{door::Door, door_lock::DoorLockType, point_of_interest::PointOfInterest, room::Room, room_generation_point::RoomGenerationPoint}, temes::world_theme::WorldTheme};
 
 
 const WORLD_WIDTH: i32 = 40;
@@ -12,12 +12,12 @@ const DOOR_SIZE: i32 = 1;
 
 
 pub struct BasicRoomGenerator{
-
+    theme: WorldTheme
 }
 
 impl BasicRoomGenerator{
-    pub fn new() -> BasicRoomGenerator {
-        return BasicRoomGenerator {  };
+    pub fn new(theme: WorldTheme) -> BasicRoomGenerator {
+        return BasicRoomGenerator { theme };
     }
 
 
@@ -25,7 +25,7 @@ impl BasicRoomGenerator{
         // generate initial square
         for i in 0..WORLD_WIDTH{
             for j in 0..BORDER_WIDTH{
-                world.set_tile_properties(i, j, "tiles_0002", true);
+                world.set_tile_properties(i, j, "tiles_0002", true); // TODO use tiles from theme
                 world.set_tile_properties(i, WORLD_WIDTH - j - 1, "tiles_0002", true);
                 world.set_tile_properties(j,i, "tiles_0002", true);
                 world.set_tile_properties(WORLD_WIDTH - j - 1, i, "tiles_0002", true);
@@ -255,7 +255,7 @@ impl BasicRoomGenerator{
 
             shop_index = *special_room_candidates.get(chosen_room_index).unwrap() as i32;
 
-            let mut shop_room = rooms.get_mut(shop_index as usize).unwrap();
+            let shop_room = rooms.get_mut(shop_index as usize).unwrap();
 
             shop_room.make_room_special(PointOfInterest::Shop);
 

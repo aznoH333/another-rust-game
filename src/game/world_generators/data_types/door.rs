@@ -1,4 +1,3 @@
-use super::door_lock::DoorLockType;
 
 pub struct Door{
     x: i32,
