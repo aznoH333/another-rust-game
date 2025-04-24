@@ -25,24 +25,24 @@ impl BasicRoomGenerator{
         // generate initial square
         for i in 0..WORLD_WIDTH{
             for j in 0..BORDER_WIDTH{
-                world.set_tile_properties(i, j, "tiles_0002", true); // TODO use tiles from theme
-                world.set_tile_properties(i, WORLD_WIDTH - j - 1, "tiles_0002", true);
-                world.set_tile_properties(j,i, "tiles_0002", true);
-                world.set_tile_properties(WORLD_WIDTH - j - 1, i, "tiles_0002", true);
+                world.set_tile_properties(i, j, &self.theme.get_wall_tile(), true); // TODO use tiles from theme
+                world.set_tile_properties(i, WORLD_WIDTH - j - 1, &self.theme.get_wall_tile(), true);
+                world.set_tile_properties(j,i, &self.theme.get_wall_tile(), true);
+                world.set_tile_properties(WORLD_WIDTH - j - 1, i, &self.theme.get_wall_tile(), true);
             }
         }
 
         for i in BORDER_WIDTH..WORLD_WIDTH-BORDER_WIDTH+1{
-            world.set_tile_properties(i, BORDER_WIDTH, "tiles_0001", true);
-            world.set_tile_properties(i, WORLD_WIDTH - BORDER_WIDTH, "tiles_0001", true);
-            world.set_tile_properties(BORDER_WIDTH, i, "tiles_0001", true);
-            world.set_tile_properties(WORLD_WIDTH - BORDER_WIDTH, i, "tiles_0001", true);
+            world.set_tile_properties(i, BORDER_WIDTH, &self.theme.get_border_tile(), true);
+            world.set_tile_properties(i, WORLD_WIDTH - BORDER_WIDTH, &self.theme.get_border_tile(), true);
+            world.set_tile_properties(BORDER_WIDTH, i, &self.theme.get_border_tile(), true);
+            world.set_tile_properties(WORLD_WIDTH - BORDER_WIDTH, i, &self.theme.get_border_tile(), true);
         }
 
         // randomize flor sprite
         for x in BORDER_WIDTH+1..WORLD_WIDTH-BORDER_WIDTH{
             for y in BORDER_WIDTH+1..WORLD_WIDTH-BORDER_WIDTH{
-                world.make_floor_tile(x, y, &get_texture_with_index("tiles", random_integer(24, 27)));
+                world.make_floor_tile(x, y, &self.theme.get_floor_tile());
             }
         }
     }
@@ -84,7 +84,7 @@ impl BasicRoomGenerator{
                     valid_wall_start_points.insert((x, y), RoomGenerationPoint::from_direction((x_dir, y_dir)));
                 }
                 iteration_count += 1;
-                world.make_solid_tile(x, y, "tiles_0001");
+                world.make_solid_tile(x, y, &self.theme.get_border_tile());
             }
             eliminate_wall_start_points_around_point(&(x, y), &mut valid_wall_start_points);
         }
@@ -199,7 +199,7 @@ impl BasicRoomGenerator{
                     rooms.get_mut(connection.0).unwrap().add_door(Door::new(x, y));
                     rooms.get_mut(connection.1).unwrap().add_door(Door::new(x, y));
 
-                    world.make_floor_tile(x, y, "tiles_0003");
+                    world.make_floor_tile(x, y, &self.theme.get_door_tile());
                 }
             }else {
                 // pick random door location
@@ -208,7 +208,7 @@ impl BasicRoomGenerator{
                 for i in random_door_index..random_door_index + DOOR_SIZE {
                     let (x, y) = shared_walls.get(i as usize).unwrap();
 
-                    world.make_floor_tile(*x, *y, "tiles_0003");
+                    world.make_floor_tile(*x, *y, &self.theme.get_door_tile());
 
                     rooms.get_mut(connection.0).unwrap().add_door(Door::new(*x, *y));
                     rooms.get_mut(connection.1).unwrap().add_door(Door::new(*x, *y));
@@ -315,7 +315,7 @@ impl WorldGenerator for BasicRoomGenerator{
         let mut rooms = self.find_rooms(world);
         let starting_room_index = self.pick_starting_room(&mut rooms);
         self.create_doors(world, starting_room_index, &mut rooms);
-        self.assign_special_rooms(starting_room_index, &mut rooms);
+        // self.assign_special_rooms(starting_room_index, &mut rooms);
 
 
         // spawn entities

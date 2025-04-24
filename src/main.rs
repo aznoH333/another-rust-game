@@ -11,6 +11,9 @@ use engine::objects::game_object_manager::GameObjectManager;
 use engine::world::world_manager::WorldManager;
 use game::enums::drawing_layers::DrawingLayer;
 use game::world_generators::basic_world_generator::BasicRoomGenerator;
+use game::world_generators::temes::theme_tile::ThemeTile;
+use game::world_generators::temes::tile_collection::TileCollection;
+use game::world_generators::temes::world_theme::WorldTheme;
 use ggez::conf::WindowMode;
 use ggez::input::keyboard::KeyCode;
 use ggez::{Context, ContextBuilder, GameResult};
@@ -66,11 +69,34 @@ impl MyGame {
         // event manager
         let mut event_manager = EventManager::new();
 
+
+        // world theme
+        let theme = WorldTheme::new(
+            // wall tiles
+            TileCollection::new(Vec::<ThemeTile>::from([
+                ThemeTile::new("tiles_0002", 10)
+            ])),
+            TileCollection::new(Vec::<ThemeTile>::from([
+                ThemeTile::new("tiles_0001", 10)
+            ])),
+            TileCollection::new(Vec::<ThemeTile>::from([
+                ThemeTile::new("tiles_0024", 10),
+                ThemeTile::new("tiles_0025", 10),
+                ThemeTile::new("tiles_0026", 10),
+                ThemeTile::new("tiles_0027", 90),
+
+            ])),
+            TileCollection::new(Vec::<ThemeTile>::from([
+                ThemeTile::new("tiles_0003", 10),
+            ]))
+        );
+
+
         // construct output
         return MyGame {
             sprite_manager: sprite_manager,
             game_object_manager: game_object_manager,
-            world_manager: WorldManager::new(&mut BasicRoomGenerator::new(), &mut event_manager),
+            world_manager: WorldManager::new(&mut BasicRoomGenerator::new(theme), &mut event_manager),
             input: InputHandler::new(),
             event_manager: event_manager
         }
