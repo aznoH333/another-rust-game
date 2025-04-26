@@ -284,7 +284,7 @@ impl BasicRoomGenerator{
             special_room_candidates.remove(chosen_room_index);
             rooms.get_mut(button_index as usize).unwrap().make_room_special(PointOfInterest::Button);
 
-            if random_chance(50) && !is_shop_locked {
+            if random_chance(50) && !is_shop_locked && shop_index != -1 {
                 rooms.get_mut(shop_index as usize).unwrap().lock_room(DoorLockType::Button);
             }else {
                 button_lock_shop = true;
