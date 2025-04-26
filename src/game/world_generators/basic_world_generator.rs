@@ -233,11 +233,19 @@ impl BasicRoomGenerator{
                 continue;
             }    
 
-            if room.get_neighbors().iter().count() == 1 && room.get_special() == &PointOfInterest::None {
+            if room.get_doors().iter().count() == 1 && room.get_special() == &PointOfInterest::None {
                 special_room_candidates.push(index);
             }
         }
-        
+
+        // no special room candidates found failsafe
+        while special_room_candidates.is_empty() {
+            let index = pick_random_index_vec(rooms);
+
+            if index != starting_room_index {
+                special_room_candidates.push(index);
+            }
+        }
 
         // assign specials
         rooms.get_mut(starting_room_index).unwrap().make_room_special(PointOfInterest::PlayerSpawn);
@@ -315,7 +323,7 @@ impl WorldGenerator for BasicRoomGenerator{
         let mut rooms = self.find_rooms(world);
         let starting_room_index = self.pick_starting_room(&mut rooms);
         self.create_doors(world, starting_room_index, &mut rooms);
-        // self.assign_special_rooms(starting_room_index, &mut rooms);
+        self.assign_special_rooms(starting_room_index, &mut rooms);
 
 
         // spawn entities

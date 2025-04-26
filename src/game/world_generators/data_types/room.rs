@@ -69,6 +69,10 @@ impl Room {
             squares_collide(self.x, self.y + self.h + 2, self.w, 1,other.x, other.y, other.w, other.h); // bottom neighbor
     }
 
+    pub fn get_doors(&self) -> &Vec<Door> {
+        return &self.doors;
+    }
+
     pub fn find_shared_walls_with_neighbor(&self, other: &Room) -> Vec<(i32, i32)> {
         let mut output = Vec::<(i32, i32)>::new();
 
