@@ -192,7 +192,19 @@ impl BasicRoomGenerator{
             let origin_room = rooms.get(connection.0).unwrap();
             let target_room = rooms.get(connection.1).unwrap();
             let shared_walls = origin_room.find_shared_walls_with_neighbor(target_room);
+            println!("shared walls {}", shared_walls.iter().count());
 
+
+            if shared_walls.iter().count() == 0 {
+                // debug
+                for x in target_room.get_x()..target_room.get_x() + target_room.get_width() {
+                    world.make_floor_tile(x, target_room.get_y(), "gremlin_0001");
+                }
+
+                for x in origin_room.get_x()..origin_room.get_x() + origin_room.get_width() {
+                    world.make_floor_tile(x, origin_room.get_y(), "gremlin_0001");
+                }
+            }
 
             if shared_walls.iter().count() <= DOOR_SIZE as usize {
                 for (x, y) in shared_walls {
@@ -337,7 +349,7 @@ impl WorldGenerator for BasicRoomGenerator{
         let starting_room_index = self.pick_starting_room(&mut rooms);
         self.create_doors(world, starting_room_index, &mut rooms);
         self.assign_special_rooms(starting_room_index, &mut rooms);
-        self.decorate_rooms(world, &mut rooms);
+        //self.decorate_rooms(world, &mut rooms);
 
 
         // spawn entities

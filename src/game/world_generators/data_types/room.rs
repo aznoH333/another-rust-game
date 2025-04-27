@@ -63,10 +63,10 @@ impl Room {
 
     fn is_neighbor(&self, other: &Room) -> bool {
         return 
-            squares_collide(self.x - 2, self.y, 1, self.h, other.x, other.y, other.w, other.h) || // left neighgbor
-            squares_collide(self.x + self.w + 2, self.y, 1, self.h, other.x, other.y, other.w, other.h) || // right neighgbor
-            squares_collide(self.x, self.y - 2, self.w, 1,other.x, other.y, other.w, other.h) || // top neighbor
-            squares_collide(self.x, self.y + self.h + 2, self.w, 1,other.x, other.y, other.w, other.h); // bottom neighbor
+            squares_collide(self.x - 2, self.y + 1, 1, self.h - 2, other.x, other.y, other.w, other.h) || // left neighgbor
+            squares_collide(self.x + self.w + 2, self.y + 1, 1, self.h - 2, other.x, other.y, other.w, other.h) || // right neighgbor
+            squares_collide(self.x + 1, self.y - 2, self.w - 2, 1,other.x, other.y, other.w, other.h) || // top neighbor
+            squares_collide(self.x + 1, self.y + self.h + 2, self.w - 2, 1,other.x, other.y, other.w, other.h); // bottom neighbor
     }
 
     pub fn get_doors(&self) -> &Vec<Door> {
