@@ -127,4 +127,24 @@ impl Room {
     pub fn get_special(&self) -> &PointOfInterest {
         return &self.special_type;
     }
+
+    pub fn get_x(&self) -> i32 {
+        return self.x;
+    }
+
+    pub fn get_y(&self) -> i32 {
+        return self.y;
+    }
+
+    pub fn get_width(&self) -> i32 {
+        return self.w;
+    }
+
+    pub fn get_height(&self) -> i32 {
+        return self.h;
+    }
+
+    pub fn get_surface(&self) -> i32 {
+        return self.w * self.h;
+    }
 }

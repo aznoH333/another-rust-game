@@ -11,6 +11,7 @@ use engine::objects::game_object_manager::GameObjectManager;
 use engine::world::world_manager::WorldManager;
 use game::enums::drawing_layers::DrawingLayer;
 use game::world_generators::basic_world_generator::BasicRoomGenerator;
+use game::world_generators::temes::theme_initializers::blue_dungeon_theme::initialize_blue_dungeon_theme;
 use game::world_generators::temes::theme_tile::ThemeTile;
 use game::world_generators::temes::tile_collection::TileCollection;
 use game::world_generators::temes::world_theme::WorldTheme;
@@ -71,26 +72,7 @@ impl MyGame {
 
 
         // world theme
-        let theme = WorldTheme::new(
-            // wall tiles
-            TileCollection::new(Vec::<ThemeTile>::from([
-                ThemeTile::new("tiles_0002", 10)
-            ])),
-            TileCollection::new(Vec::<ThemeTile>::from([
-                ThemeTile::new("tiles_0001", 10)
-            ])),
-            TileCollection::new(Vec::<ThemeTile>::from([
-                ThemeTile::new("tiles_0024", 10),
-                ThemeTile::new("tiles_0025", 10),
-                ThemeTile::new("tiles_0026", 10),
-                ThemeTile::new("tiles_0027", 90),
-
-            ])),
-            TileCollection::new(Vec::<ThemeTile>::from([
-                ThemeTile::new("tiles_0003", 10),
-            ]))
-        );
-
+        let theme = initialize_blue_dungeon_theme();
 
         // construct output
         return MyGame {

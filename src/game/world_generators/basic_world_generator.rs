@@ -310,6 +310,19 @@ impl BasicRoomGenerator{
             }
         }
     }
+
+
+    fn decorate_rooms(&mut self, world: &mut WorldManager, rooms: &mut Vec<Room>) {
+        for room in rooms{
+            let decorations_to_spawn = ((room.get_surface() as f32) / 9.0).floor() as i32 + 1;
+
+            for _ in 0..decorations_to_spawn {
+                let decorate_function = self.theme.pick_random_decorator();
+
+                decorate_function(world, room);
+            }
+        }
+    }
 }
 
 impl WorldGenerator for BasicRoomGenerator{
@@ -324,6 +337,7 @@ impl WorldGenerator for BasicRoomGenerator{
         let starting_room_index = self.pick_starting_room(&mut rooms);
         self.create_doors(world, starting_room_index, &mut rooms);
         self.assign_special_rooms(starting_room_index, &mut rooms);
+        self.decorate_rooms(world, &mut rooms);
 
 
         // spawn entities

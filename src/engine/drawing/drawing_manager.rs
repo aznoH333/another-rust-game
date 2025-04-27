@@ -75,7 +75,7 @@ impl DrawingManager{
     pub fn draw_buffer_to_canvas(&mut self, canvas: &mut Canvas){
         // collect to draw batches
         for draw_data in &self.draw_buffer{
-            let target_batch = self.draw_batches.get_mut(draw_data.get_sprite_name()).unwrap();//.push(draw_data.convert_to_draw_param(&self.drawing_context));
+            let target_batch = self.draw_batches.get_mut(draw_data.get_sprite_name()).expect(format!("Sprite not found {}", draw_data.get_sprite_name()).as_str());//.push(draw_data.convert_to_draw_param(&self.drawing_context));
             
             target_batch.get_mut(&draw_data.get_z_index()).unwrap().push(draw_data.convert_to_draw_param(&self.drawing_context));
         }

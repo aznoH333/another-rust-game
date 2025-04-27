@@ -130,4 +130,16 @@ impl WorldManager{
 
         return None;
     }
+
+    pub fn is_space_empty(&self, x: i32, y: i32, w: i32, h: i32) -> bool {
+        for a in x..x+w {
+            for b in y..y+h{
+                if self.is_tile_solid(a, b){
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
 }

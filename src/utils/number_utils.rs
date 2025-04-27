@@ -24,6 +24,12 @@ pub fn random_integer(min: i32, max: i32) -> i32{
 }
 
 
+pub fn random_integer_from_array(array: &[i32]) -> i32 {
+    return array[random_integer(0, array.iter().count() as i32 - 1) as usize];
+}
+
+
+
 pub fn random_chance(percentage: i32) -> bool {
     return random_integer(0, 100) < percentage;
 }
