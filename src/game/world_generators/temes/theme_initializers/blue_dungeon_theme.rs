@@ -11,7 +11,6 @@ pub fn initialize_blue_dungeon_theme() -> WorldTheme{
     functions.push(Box::new(decorate_horizontal_crates));
     functions.push(Box::new(decorate_vertical_crates));
 
-
     
     return WorldTheme::new(
         // wall tiles
@@ -32,6 +31,8 @@ pub fn initialize_blue_dungeon_theme() -> WorldTheme{
             ThemeTile::new("tiles_0003", 10),
         ])),
         functions,
+        40,
+        5..7,
     );
 
 }

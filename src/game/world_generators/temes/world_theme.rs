@@ -1,4 +1,6 @@
-use crate::{engine::world::world_manager::WorldManager, game::world_generators::data_types::room::Room, utils::vec_utils::pick_random_element_vec};
+use std::ops::Range;
+
+use crate::{engine::world::world_manager::WorldManager, game::world_generators::data_types::room::Room, utils::{number_utils::random_integer, vec_utils::pick_random_element_vec}};
 
 use super::tile_collection::TileCollection;
 
@@ -7,7 +9,9 @@ pub struct WorldTheme{
     border_tiles: TileCollection,
     floor_tiles: TileCollection,
     door_tiles: TileCollection,
-    decorate_functions: Vec::<Box<dyn Fn(&mut WorldManager, &Room) -> bool>>
+    decorate_functions: Vec::<Box<dyn Fn(&mut WorldManager, &Room) -> bool>>,
+    tiles_per_decoration: i32,
+    number_of_walls: Range<i32>,
 }
 
 
@@ -17,8 +21,9 @@ impl WorldTheme{
         border_tiles: TileCollection,
         floor_tiles: TileCollection,
         door_tiles: TileCollection,
-        decorate_functions: Vec::<Box<dyn Fn(&mut WorldManager, &Room) -> bool>>
-
+        decorate_functions: Vec::<Box<dyn Fn(&mut WorldManager, &Room) -> bool>>,
+        decorations_per_room: i32,
+        number_of_walls: Range<i32>,
     ) -> WorldTheme {
 
         return WorldTheme { 
@@ -27,6 +32,8 @@ impl WorldTheme{
             floor_tiles,
             door_tiles,
             decorate_functions,
+            tiles_per_decoration: decorations_per_room,
+            number_of_walls,
         };
 
     }
@@ -49,5 +56,13 @@ impl WorldTheme{
 
     pub fn pick_random_decorator(&self) -> &Box<dyn Fn(&mut WorldManager, &Room) -> bool> {
         return pick_random_element_vec(&self.decorate_functions);
+    }
+
+    pub fn get_number_of_tiles_per_decoration(&self) -> i32 {
+        return self.tiles_per_decoration;
+    }
+
+    pub fn get_number_of_walls(&self) -> i32 {
+        return random_integer(self.number_of_walls.start, self.number_of_walls.end);
     }
 }

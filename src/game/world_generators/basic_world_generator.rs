@@ -59,7 +59,9 @@ impl BasicRoomGenerator{
             valid_wall_start_points.insert((WORLD_WIDTH - BORDER_WIDTH, i), RoomGenerationPoint::new(false, false, true, false));
         }
 
-        let wall_number = random_integer(4, 7);
+        let wall_number = self.theme.get_number_of_walls();
+        println!("{}", wall_number);
+
 
         for _ in 0..wall_number{
             // pick point
@@ -324,14 +326,12 @@ impl BasicRoomGenerator{
 
     fn decorate_rooms(&mut self, world: &mut WorldManager, rooms: &mut Vec<Room>) {
         for room in rooms{
-            let decorations_to_spawn = ((room.get_surface() as f32) / 40.0).floor() as i32 + 1;
+            let decorations_to_spawn = ((room.get_surface() as f32) / (self.theme.get_number_of_tiles_per_decoration() as f32)).floor() as i32 + 1;
 
-            println!("{}", decorations_to_spawn);
 
             for _ in 0..decorations_to_spawn {
                 loop {
                     let decorate_function = self.theme.pick_random_decorator();
-                    println!("decorating");
 
                     if decorate_function(world, room) {
                         break;
