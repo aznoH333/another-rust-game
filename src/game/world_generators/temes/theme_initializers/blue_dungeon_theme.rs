@@ -32,7 +32,7 @@ pub fn initialize_blue_dungeon_theme() -> WorldTheme{
             ThemeTile::new("tiles_0003", 10),
         ])),
         functions,
-        40,
+        20,
         5..7,
     );
 
@@ -188,7 +188,7 @@ fn decorate_bone_pile(world: &mut WorldManager, room: &Room) -> bool {
         let bone_x = random_integer(x - BONE_MAX_OFFSET, x + BONE_MAX_OFFSET);
         let bone_y = random_integer(y - BONE_MAX_OFFSET, y + BONE_MAX_OFFSET);
 
-        if room.is_inside_room(bone_x, bone_y) && world.is_tile_empty(x, y){
+        if room.is_inside_room(bone_x, bone_y) && world.is_tile_empty(bone_x, bone_y){
             world.make_floor_tile(bone_x, bone_y, &get_texture_with_index("tiles", random_integer(33, 37)));
         }
     }

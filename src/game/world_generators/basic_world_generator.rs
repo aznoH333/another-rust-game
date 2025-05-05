@@ -330,7 +330,7 @@ impl BasicRoomGenerator{
 
 
             for _ in 0..decorations_to_spawn {
-                loop {
+                for _ in 0..10 {
                     let decorate_function = self.theme.pick_random_decorator();
 
                     if decorate_function(world, room) {
