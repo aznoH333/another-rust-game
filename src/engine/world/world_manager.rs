@@ -142,4 +142,9 @@ impl WorldManager{
 
         return true;
     }
+
+
+    pub fn is_tile_empty(&self, x: i32, y: i32) -> bool {
+        return !self.is_tile_solid(x, y);
+    }
 }

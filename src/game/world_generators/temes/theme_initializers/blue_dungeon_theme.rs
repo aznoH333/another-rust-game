@@ -10,6 +10,7 @@ pub fn initialize_blue_dungeon_theme() -> WorldTheme{
     functions.push(Box::new(decorate_vertical_table));
     functions.push(Box::new(decorate_horizontal_crates));
     functions.push(Box::new(decorate_vertical_crates));
+    functions.push(Box::new(decorate_bone_pile));
 
     
     return WorldTheme::new(
@@ -176,4 +177,21 @@ fn decorate_vertical_crates(world: &mut WorldManager, room: &Room) -> bool {
     }
 
     return placed_tiles != 0;
+}
+
+const BONE_MAX_OFFSET: i32 = 2;
+fn decorate_bone_pile(world: &mut WorldManager, room: &Room) -> bool {
+    let x = random_integer(room.get_x(), room.get_x() + room.get_width());
+    let y = random_integer(room.get_y(), room.get_y() + room.get_height());
+
+    for _ in 0..6 {
+        let bone_x = random_integer(x - BONE_MAX_OFFSET, x + BONE_MAX_OFFSET);
+        let bone_y = random_integer(y - BONE_MAX_OFFSET, y + BONE_MAX_OFFSET);
+
+        if room.is_inside_room(bone_x, bone_y) && world.is_tile_empty(x, y){
+            world.make_floor_tile(bone_x, bone_y, &get_texture_with_index("tiles", random_integer(33, 37)));
+        }
+    }
+
+    return true;
 }
