@@ -7,7 +7,7 @@ pub struct WorldTheme{
     border_tiles: TileCollection,
     floor_tiles: TileCollection,
     door_tiles: TileCollection,
-    decorate_functions: Vec::<Box<dyn Fn(&mut WorldManager, &Room)>>
+    decorate_functions: Vec::<Box<dyn Fn(&mut WorldManager, &Room) -> bool>>
 }
 
 
@@ -17,7 +17,7 @@ impl WorldTheme{
         border_tiles: TileCollection,
         floor_tiles: TileCollection,
         door_tiles: TileCollection,
-        decorate_functions: Vec::<Box<dyn Fn(&mut WorldManager, &Room)>>
+        decorate_functions: Vec::<Box<dyn Fn(&mut WorldManager, &Room) -> bool>>
 
     ) -> WorldTheme {
 
@@ -47,7 +47,7 @@ impl WorldTheme{
         return self.door_tiles.get_tile().get_texture_name().to_owned();
     }
 
-    pub fn pick_random_decorator(&self) -> &Box<dyn Fn(&mut WorldManager, &Room)> {
+    pub fn pick_random_decorator(&self) -> &Box<dyn Fn(&mut WorldManager, &Room) -> bool> {
         return pick_random_element_vec(&self.decorate_functions);
     }
 }

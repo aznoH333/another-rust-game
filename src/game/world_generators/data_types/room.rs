@@ -1,4 +1,4 @@
-use crate::{engine::{events::event_manager::{self, EventManager}, world::world_manager::{self, WorldManager}}, utils::space_utils::squares_collide};
+use crate::{engine::{events::event_manager::{self, EventManager}, world::world_manager::{self, WorldManager}}, utils::space_utils::{pythagoras, squares_collide}};
 
 use super::{door::Door, door_lock::DoorLockType, point_of_interest::PointOfInterest};
 
@@ -63,10 +63,11 @@ impl Room {
 
     fn is_neighbor(&self, other: &Room) -> bool {
         return 
-            squares_collide(self.x - 2, self.y + 1, 1, self.h - 2, other.x, other.y, other.w, other.h) || // left neighgbor
+            (squares_collide(self.x - 2, self.y + 1, 1, self.h - 2, other.x, other.y, other.w, other.h) || // left neighgbor
             squares_collide(self.x + self.w + 2, self.y + 1, 1, self.h - 2, other.x, other.y, other.w, other.h) || // right neighgbor
             squares_collide(self.x + 1, self.y - 2, self.w - 2, 1,other.x, other.y, other.w, other.h) || // top neighbor
-            squares_collide(self.x + 1, self.y + self.h + 2, self.w - 2, 1,other.x, other.y, other.w, other.h); // bottom neighbor
+            squares_collide(self.x + 1, self.y + self.h + 2, self.w - 2, 1,other.x, other.y, other.w, other.h)) // bottom neighbor
+            && !self.find_shared_walls_with_neighbor(other).is_empty(); // have a shared wall
     }
 
     pub fn get_doors(&self) -> &Vec<Door> {
@@ -146,5 +147,32 @@ impl Room {
 
     pub fn get_surface(&self) -> i32 {
         return self.w * self.h;
+    }
+
+    pub fn get_left(&self) -> i32 {
+        return self.x;
+    }
+
+    pub fn get_top(&self) -> i32 {
+        return self.y;
+    }
+
+    pub fn get_right(&self) -> i32 {
+        return self.x + self.w;
+    }
+
+    pub fn get_bottom(&self) -> i32 {
+        return self.y + self.h;
+    }
+
+    pub fn calculate_distance_to_door(&self, x: i32, y: i32) -> f32 {
+        let mut output: f32 = 9999.0;
+
+        for door in &self.doors {
+            let distance_to_door = pythagoras(door.get_x() as f32, door.get_y() as f32, x as f32, y as f32);
+            output = output.min(distance_to_door);
+        }
+
+        return output;
     }
 }

@@ -192,8 +192,6 @@ impl BasicRoomGenerator{
             let origin_room = rooms.get(connection.0).unwrap();
             let target_room = rooms.get(connection.1).unwrap();
             let shared_walls = origin_room.find_shared_walls_with_neighbor(target_room);
-            println!("shared walls {}", shared_walls.iter().count());
-
 
             if shared_walls.iter().count() == 0 {
                 // debug
@@ -326,12 +324,19 @@ impl BasicRoomGenerator{
 
     fn decorate_rooms(&mut self, world: &mut WorldManager, rooms: &mut Vec<Room>) {
         for room in rooms{
-            let decorations_to_spawn = ((room.get_surface() as f32) / 9.0).floor() as i32 + 1;
+            let decorations_to_spawn = ((room.get_surface() as f32) / 40.0).floor() as i32 + 1;
+
+            println!("{}", decorations_to_spawn);
 
             for _ in 0..decorations_to_spawn {
-                let decorate_function = self.theme.pick_random_decorator();
+                loop {
+                    let decorate_function = self.theme.pick_random_decorator();
+                    println!("decorating");
 
-                decorate_function(world, room);
+                    if decorate_function(world, room) {
+                        break;
+                    }
+                }
             }
         }
     }
@@ -349,7 +354,7 @@ impl WorldGenerator for BasicRoomGenerator{
         let starting_room_index = self.pick_starting_room(&mut rooms);
         self.create_doors(world, starting_room_index, &mut rooms);
         self.assign_special_rooms(starting_room_index, &mut rooms);
-        //self.decorate_rooms(world, &mut rooms);
+        self.decorate_rooms(world, &mut rooms);
 
 
         // spawn entities
