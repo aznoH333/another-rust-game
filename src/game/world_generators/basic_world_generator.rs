@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use crate::{engine::{events::{event_manager::EventManager, game_event::GameEvent}, objects::game_object_manager::GameObjectManager, world::{world_generator::WorldGenerator, world_manager::WorldManager}}, game::entities::player::Player, utils::{number_utils::{random_chance, random_integer}, textures::get_texture_with_index, vec_utils::{pick_random_element_vec, pick_random_index_vec, pick_random_key_map}}};
+use crate::{engine::{events::{event_manager::{self, EventManager}, game_event::GameEvent}, objects::game_object_manager::GameObjectManager, world::{world_generator::WorldGenerator, world_manager::WorldManager}}, game::entities::player::Player, utils::{number_utils::{random_chance, random_integer}, textures::get_texture_with_index, vec_utils::{pick_random_element_vec, pick_random_index_vec, pick_random_key_map}}};
 
 use super::{data_types::{door::Door, door_lock::DoorLockType, point_of_interest::PointOfInterest, room::Room, room_generation_point::RoomGenerationPoint}, temes::world_theme::WorldTheme};
 
@@ -60,7 +60,6 @@ impl BasicRoomGenerator{
         }
 
         let wall_number = self.theme.get_number_of_walls();
-        println!("{}", wall_number);
 
 
         for _ in 0..wall_number{
@@ -340,6 +339,17 @@ impl BasicRoomGenerator{
             }
         }
     }
+
+    fn spawn_entities(&mut self, world: &mut WorldManager, event_manager: &mut EventManager, rooms: &mut Vec<Room>) {
+        for room in rooms {
+            self.populate_room(room, world, event_manager);
+        }
+    }
+
+
+    fn populate_room(&mut self, room: &Room, world: &mut WorldManager, event_manager: &mut EventManager){
+        room.get_special().populate_room(room, world, event_manager);
+    }
 }
 
 impl WorldGenerator for BasicRoomGenerator{
@@ -355,15 +365,15 @@ impl WorldGenerator for BasicRoomGenerator{
         self.create_doors(world, starting_room_index, &mut rooms);
         self.assign_special_rooms(starting_room_index, &mut rooms);
         self.decorate_rooms(world, &mut rooms);
+        self.spawn_entities(world, event_manager, &mut rooms);
 
-
+        /*
         // spawn entities
-        event_manager.push_event(GameEvent::SpawnObject { spawn_function: |object_manager: &mut GameObjectManager| {
-            object_manager.add_object(Player::new(128.0, 128.0));
-        } });
+        event_manager.push_event( GameEvent::SpawnObject { spawn_function: Box::new(|game_object_manager| {
+            game_object_manager.add_object(Player::new(128.0, 128.0));
+        }) }); */
     }
 }
-
 
 fn eliminate_wall_start_points_around_point(point: &(i32, i32), start_points: &mut HashMap<(i32, i32), RoomGenerationPoint>) {
     for x in point.0 - MIN_ROOM_WIDTH .. point.0 + MIN_ROOM_WIDTH + 1 {

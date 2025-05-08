@@ -1,4 +1,4 @@
-use crate::{engine::{events::event_manager::{self, EventManager}, world::world_manager::{self, WorldManager}}, utils::space_utils::{pythagoras, squares_collide}};
+use crate::{engine::{events::event_manager::{self, EventManager}, world::{world_constants::TILE_SIZE, world_manager::{self, WorldManager}}}, utils::{number_utils::random_integer, space_utils::{pythagoras, squares_collide}, vec_utils::pick_random_element_vec}};
 
 use super::{door::Door, door_lock::DoorLockType, point_of_interest::PointOfInterest};
 
@@ -109,14 +109,6 @@ impl Room {
         self.doors.push(door);
     }
 
-    pub fn generate_contents(&self, world_manager: WorldManager){
-
-    }
-
-    pub fn spawn_contents(&self, event_manager: &mut EventManager){
-        todo!("this")
-    }
-
     pub fn make_room_special(&mut self, special: PointOfInterest){
         self.special_type = special;
     }
@@ -174,5 +166,42 @@ impl Room {
         }
 
         return output;
+    }
+
+    pub fn pick_random_empty_spot_in_room(&self, world_manager: &mut WorldManager) -> (f32, f32) {
+        return self.pick_random_empty_spot_with_distance(world_manager, 0.0);
+    }
+
+    pub fn pick_random_empty_spot_with_distance(&self, world_manager: &mut WorldManager, desired_dist: f32) -> (f32, f32) {
+
+        let mut valid_spots = Vec::<(f32, f32, f32)>::new();
+        let mut min_dist: f32 = 9000.0;
+        let mut max_dist: f32 = 0.0;
+        for x in self.get_left()..self.get_right()+1 {
+            for y in self.get_top()..self.get_bottom()+1 {
+                if !world_manager.is_tile_empty(x, y) {
+                    continue;
+                }
+
+                let dist = self.calculate_distance_to_door(x, y);
+                min_dist = min_dist.min(dist);
+                max_dist = max_dist.max(dist);
+                println!("{}, {}: dist {}", x, y, dist);
+                valid_spots.push(((x * TILE_SIZE) as f32, (y * TILE_SIZE) as f32, dist));
+            }
+        }
+
+        if valid_spots.is_empty() {
+            panic!("Shit just hit the fan! Room generated with no valid spawn points!!!!");
+        }else {
+            let acceptable_distance = (max_dist - min_dist) * desired_dist;
+            println!("acceptable distance {}", acceptable_distance);
+            let filtered: Vec::<(f32, f32)> = valid_spots.iter().filter(|it|{
+                return it.2 >= acceptable_distance
+            }).map(|it|{return (it.0, it.1)}).collect();
+
+            return pick_random_element_vec(&filtered).to_owned();
+        }
+
     }
 }
