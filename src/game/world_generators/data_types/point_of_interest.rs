@@ -27,7 +27,7 @@ impl PointOfInterest{
     }
 
     fn populate_player_spawn(&self, room: &Room, world_manager: &mut WorldManager, event_manager: &mut EventManager){
-        let (x, y) = room.pick_random_empty_spot_with_distance(world_manager, 0.80);
+        let (x, y) = room.pick_random_empty_spot_with_distance( 0.80);
         
         // spawn entities
         event_manager.push_event( GameEvent::SpawnObject { spawn_function: Box::new(move |game_object_manager| {

@@ -342,6 +342,7 @@ impl BasicRoomGenerator{
 
     fn spawn_entities(&mut self, world: &mut WorldManager, event_manager: &mut EventManager, rooms: &mut Vec<Room>) {
         for room in rooms {
+            room.calculare_distances_to_doors(&world);
             self.populate_room(room, world, event_manager);
         }
     }

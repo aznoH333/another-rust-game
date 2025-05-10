@@ -51,8 +51,8 @@ impl Room {
             door_lock: DoorLockType::None,
             special_type: PointOfInterest::None,
             tile_distance_weights: Vec::new(),
-            min_dist_to_door: -1.0,
-            max_dist_to_door: 999.9,
+            min_dist_to_door: 999.9,
+            max_dist_to_door: -1.0,
         };
     }
 
@@ -217,7 +217,7 @@ impl Room {
         return output;
     }
 
-    pub fn calculare_distancec_to_doors(&mut self, world_manager: &WorldManager){
+    pub fn calculare_distances_to_doors(&mut self, world_manager: &WorldManager){
         for x in self.get_left()..self.get_right()+1 {
             for y in self.get_top()..self.get_bottom()+1 {
                 if !world_manager.is_tile_empty(x, y) {
@@ -244,10 +244,12 @@ impl Room {
         if self.tile_distance_weights.is_empty() {
             panic!("Shit just hit the fan! Room generated with no valid spawn points!!!!");
         }else {
+            println!("{}, {}, {}", self.tile_distance_weights.iter().count(), self.max_dist_to_door, self.min_dist_to_door);
             let acceptable_distance = (self.max_dist_to_door - self.min_dist_to_door) * desired_dist;
             let filtered: Vec::<(f32, f32)> = self.tile_distance_weights.iter().filter(|it|{
                 return it.2 >= acceptable_distance
             }).map(|it|{return (it.0, it.1)}).collect();
+            println!("{}", filtered.iter().count());
 
             return pick_random_element_vec(&filtered).to_owned();
         }
