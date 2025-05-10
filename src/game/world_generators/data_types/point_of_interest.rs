@@ -1,4 +1,4 @@
-use crate::{engine::{events::{event_manager::EventManager, game_event::GameEvent}, objects::game_object_manager::GameObjectManager, world::world_manager::WorldManager}, game::entities::player::Player};
+use crate::{engine::{events::{event_manager::EventManager, game_event::GameEvent}, objects::game_object_manager::GameObjectManager, world::world_manager::WorldManager}, game::entities::objects::player::Player};
 
 use super::room::Room;
 
