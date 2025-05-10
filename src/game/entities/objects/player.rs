@@ -8,7 +8,7 @@ pub struct Player{
 
 impl Player{
     pub fn new(x: f32, y: f32) -> GameObject{
-        return GameObjectBuilder::new(x, y, "player_0001", DrawingLayer::PLAYER.get_value())
+        return GameObjectBuilder::new(x, y, "player_0001", DrawingLayer::Player.get_value())
         // set core values
         .set_dimensions(10.0, 10.0)
         .set_sprite_offset(-3.0, -6.0)

@@ -63,6 +63,7 @@ impl DrawingManager{
 
             // init draw batches
             for layer in &self.drawing_layers {
+                println!("initializing layer {}", layer);
                 self.draw_batches.get_mut(&sprite_name).unwrap().insert(layer.clone(), InstanceArray::new(context, image.to_owned()));
             }
         }

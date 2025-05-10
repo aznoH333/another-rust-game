@@ -1,4 +1,4 @@
-use crate::{engine::{drawing::drawing_manager::DrawingManager, world::world_manager::WorldManager}, utils::number_utils::gravitate_number};
+use crate::{engine::{drawing::drawing_manager::DrawingManager, world::{world_constants::TILE_SIZE, world_manager::WorldManager}}, utils::number_utils::gravitate_number};
 
 pub struct GameObjectCore {
     
@@ -29,8 +29,8 @@ impl GameObjectCore {
         return GameObjectCore{
             x,
             y,
-            width: 16.0,
-            height: 16.0,
+            width: TILE_SIZE as f32,
+            height: TILE_SIZE as f32,
             sprite_x_offset: 0.0, 
             sprite_y_offset: 0.0,
             x_velocity: 0.0,
