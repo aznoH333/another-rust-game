@@ -2,19 +2,43 @@ use crate::{engine::{events::event_manager::{self, EventManager}, world::{world_
 
 use super::{door::Door, door_lock::DoorLockType, point_of_interest::PointOfInterest};
 
+/**
+ An object representing a room inside a dungeon.
+ This object doesn't store the content's of a room, It just holds information about the placement of the room
+ and some other relevant information that is usefull when constructing a room.
+ */
 pub struct Room {
     x: i32,
     y: i32,
+    // width of a room
     w: i32,
+    // height of a room
     h: i32,
+    /// a variable used only during dungeon generation
     is_connected_to_path: bool,
     neighbors: Vec<usize>, 
     doors: Vec<Door>,
     door_lock: DoorLockType,
+    /// determines the purpose of a room
     special_type: PointOfInterest,
+    /// an array with a distance to closest door calculated for each non solid tile (x, y, distance to nearest door)
+    tile_distance_weights: Vec<(f32, f32, f32)>, 
+    /// the smallest distance between a door and any non solid tile
+    min_dist_to_door: f32, 
+    /// the largest distance between a door and any non solid tile
+    max_dist_to_door: f32, 
 }
 
 impl Room {
+    /**
+     Creates a new room object with specified x/y and width/height.
+     Positions are stored in tiles not pixels. \
+     **Parameters:**
+     * x - the x position of a room (left side)
+     * y - the y position of a room (top side)
+     * w - the width of a room
+     * h - the height of a room
+     */
     pub fn new(x: i32, y: i32, w: i32, h: i32) -> Room {
         return Room {
             x, 
@@ -26,6 +50,9 @@ impl Room {
             doors: Vec::new(),
             door_lock: DoorLockType::None,
             special_type: PointOfInterest::None,
+            tile_distance_weights: Vec::new(),
+            min_dist_to_door: -1.0,
+            max_dist_to_door: 999.9,
         };
     }
 
@@ -36,11 +63,27 @@ impl Room {
     pub fn is_connected_to_path(&self) -> bool {
         return self.is_connected_to_path;
     }
-    
+    /**
+     Checks if a tile is positioned inside the room \
+     **Parameters:**
+     * x - the x position of the tile
+     * y - the y position of the tile
+     \
+     **Returns:** a boolean indicating if a tile is inside a room
+
+     */
     pub fn is_inside_room(&self, x: i32, y: i32) -> bool {
         return x >= self.x && x < self.x + self.w && y >= self.y && y < self.y + self.h;
     }
 
+    /**
+     Looks for neighboring rooms in a given rooms array.
+     Returns the result as an array due to some dumb borrow checker fuckery. \
+     **Parameters:**
+     * rooms - an array containing all rooms inside a dungeon
+     \
+     **Returns:** An array with the indicies of the neighboring rooms. Indicies point to the array passed as parameter.
+     */
     pub fn find_neighbor_indicies(&self, rooms: &Vec<Room>) -> Vec<usize>{
         let mut output = Vec::<usize>::new();
         
@@ -73,7 +116,13 @@ impl Room {
     pub fn get_doors(&self) -> &Vec<Door> {
         return &self.doors;
     }
-
+    /**
+     Returns a list of shared walls with a given room. These are tiles where a door could generate. \
+     **Parameters:**
+     * other - The neighboring room.
+     \
+     **Returns:** A list of shared walls (returned as an (x, y) vec)
+     */
     pub fn find_shared_walls_with_neighbor(&self, other: &Room) -> Vec<(i32, i32)> {
         let mut output = Vec::<(i32, i32)>::new();
 
@@ -168,15 +217,7 @@ impl Room {
         return output;
     }
 
-    pub fn pick_random_empty_spot_in_room(&self, world_manager: &mut WorldManager) -> (f32, f32) {
-        return self.pick_random_empty_spot_with_distance(world_manager, 0.0);
-    }
-
-    pub fn pick_random_empty_spot_with_distance(&self, world_manager: &mut WorldManager, desired_dist: f32) -> (f32, f32) {
-
-        let mut valid_spots = Vec::<(f32, f32, f32)>::new();
-        let mut min_dist: f32 = 9000.0;
-        let mut max_dist: f32 = 0.0;
+    pub fn calculare_distancec_to_doors(&mut self, world_manager: &WorldManager){
         for x in self.get_left()..self.get_right()+1 {
             for y in self.get_top()..self.get_bottom()+1 {
                 if !world_manager.is_tile_empty(x, y) {
@@ -184,19 +225,27 @@ impl Room {
                 }
 
                 let dist = self.calculate_distance_to_door(x, y);
-                min_dist = min_dist.min(dist);
-                max_dist = max_dist.max(dist);
-                println!("{}, {}: dist {}", x, y, dist);
-                valid_spots.push(((x * TILE_SIZE) as f32, (y * TILE_SIZE) as f32, dist));
+                self.min_dist_to_door = self.min_dist_to_door.min(dist);
+                self.max_dist_to_door = self.max_dist_to_door.max(dist);
+                self.tile_distance_weights.push(((x * TILE_SIZE) as f32, (y * TILE_SIZE) as f32, dist));
             }
         }
+    }
 
-        if valid_spots.is_empty() {
+
+    pub fn pick_random_empty_spot_in_room(&self, world_manager: &mut WorldManager) -> (f32, f32) {
+        return self.pick_random_empty_spot_with_distance( 0.0);
+    }
+
+
+    
+
+    pub fn pick_random_empty_spot_with_distance(&self, desired_dist: f32) -> (f32, f32) {
+        if self.tile_distance_weights.is_empty() {
             panic!("Shit just hit the fan! Room generated with no valid spawn points!!!!");
         }else {
-            let acceptable_distance = (max_dist - min_dist) * desired_dist;
-            println!("acceptable distance {}", acceptable_distance);
-            let filtered: Vec::<(f32, f32)> = valid_spots.iter().filter(|it|{
+            let acceptable_distance = (self.max_dist_to_door - self.min_dist_to_door) * desired_dist;
+            let filtered: Vec::<(f32, f32)> = self.tile_distance_weights.iter().filter(|it|{
                 return it.2 >= acceptable_distance
             }).map(|it|{return (it.0, it.1)}).collect();
 
