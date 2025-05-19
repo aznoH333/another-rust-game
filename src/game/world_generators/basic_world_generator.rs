@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use crate::{engine::{events::{event_manager::{self, EventManager}, game_event::GameEvent}, objects::game_object_manager::GameObjectManager, world::{world_generator::WorldGenerator, world_manager::WorldManager}}, game::entities::objects::player::Player, utils::{number_utils::{random_chance, random_integer}, textures::get_texture_with_index, vec_utils::{pick_random_element_vec, pick_random_index_vec, pick_random_key_map}}};
+use crate::{engine::{events::event_manager::EventManager, world::{world_generator::WorldGenerator, world_manager::WorldManager}}, utils::{number_utils::NumberUtils, vec_utils::VecUtils}};
 
 use super::{data_types::{door::Door, door_lock::DoorLockType, point_of_interest::PointOfInterest, room::Room, room_generation_point::RoomGenerationPoint}, temes::world_theme::WorldTheme};
 
@@ -64,7 +64,7 @@ impl BasicRoomGenerator{
 
         for _ in 0..wall_number{
             // pick point
-            let random_point = pick_random_key_map(&valid_wall_start_points).to_owned();
+            let random_point = VecUtils::pick_random_key_map(&valid_wall_start_points).to_owned();
             // pick dirrection
             let point_attributes = valid_wall_start_points.get(&random_point).unwrap();
             let (x_dir, y_dir) = point_attributes.get_valid_direction();
@@ -153,7 +153,7 @@ impl BasicRoomGenerator{
 
     // returns starting room index
     fn pick_starting_room(&mut self, rooms: &mut Vec<Room>) -> usize {
-        let starting_room_index = pick_random_index_vec(&rooms);
+        let starting_room_index = VecUtils::pick_random_index_vec(&rooms);
         rooms.get_mut(starting_room_index).expect(format!("invalid room index {}", starting_room_index).as_str()).mark_as_connected();
         return starting_room_index;
     }
@@ -188,7 +188,7 @@ impl BasicRoomGenerator{
 
 
             // pick a random connection and make a door
-            let connection = pick_random_element_vec(&possible_connections);
+            let connection = VecUtils::pick_random_element_vec(&possible_connections);
 
             let origin_room = rooms.get(connection.0).unwrap();
             let target_room = rooms.get(connection.1).unwrap();
@@ -214,7 +214,7 @@ impl BasicRoomGenerator{
                 }
             }else {
                 // pick random door location
-                let random_door_index = random_integer(0, shared_walls.iter().count() as i32 - DOOR_SIZE);
+                let random_door_index = NumberUtils::random_integer(0, shared_walls.iter().count() as i32 - DOOR_SIZE);
 
                 for i in random_door_index..random_door_index + DOOR_SIZE {
                     let (x, y) = shared_walls.get(i as usize).unwrap();
@@ -251,7 +251,7 @@ impl BasicRoomGenerator{
 
         // no special room candidates found failsafe
         while special_room_candidates.is_empty() {
-            let index = pick_random_index_vec(rooms);
+            let index = VecUtils::pick_random_index_vec(rooms);
 
             if index != starting_room_index {
                 special_room_candidates.push(index);
@@ -268,9 +268,9 @@ impl BasicRoomGenerator{
         let mut button_lock_shop = false;
 
         // shop room
-        if special_room_candidates.iter().count() > 1 && random_chance(40) {
+        if special_room_candidates.iter().count() > 1 && NumberUtils::random_chance(40) {
             // choose room at random
-            let chosen_room_index = pick_random_index_vec(&special_room_candidates);
+            let chosen_room_index = VecUtils::pick_random_index_vec(&special_room_candidates);
 
             shop_index = *special_room_candidates.get(chosen_room_index).unwrap() as i32;
 
@@ -279,7 +279,7 @@ impl BasicRoomGenerator{
             shop_room.make_room_special(PointOfInterest::Shop);
 
 
-            if random_chance(33) {
+            if NumberUtils::random_chance(33) {
                 shop_room.lock_room(DoorLockType::Key);
                 is_shop_locked = true;
             }
@@ -289,13 +289,13 @@ impl BasicRoomGenerator{
 
 
         // button room
-        if special_room_candidates.iter().count() > 1 && random_chance(70){
-            let chosen_room_index = pick_random_index_vec(&special_room_candidates);
+        if special_room_candidates.iter().count() > 1 && NumberUtils::random_chance(70){
+            let chosen_room_index = VecUtils::pick_random_index_vec(&special_room_candidates);
             button_index = *special_room_candidates.get(chosen_room_index).unwrap() as i32;
             special_room_candidates.remove(chosen_room_index);
             rooms.get_mut(button_index as usize).unwrap().make_room_special(PointOfInterest::Button);
 
-            if random_chance(50) && !is_shop_locked && shop_index != -1 {
+            if NumberUtils::random_chance(50) && !is_shop_locked && shop_index != -1 {
                 rooms.get_mut(shop_index as usize).unwrap().lock_room(DoorLockType::Button);
             }else {
                 button_lock_shop = true;
@@ -303,7 +303,7 @@ impl BasicRoomGenerator{
         }
 
         // exit room
-        let exit_room_index = pick_random_element_vec(&special_room_candidates);
+        let exit_room_index = VecUtils::pick_random_element_vec(&special_room_candidates);
         let exit_room = rooms.get_mut(*exit_room_index).unwrap();
         exit_room.make_room_special(PointOfInterest::Exit);
         if button_lock_shop {
@@ -313,9 +313,9 @@ impl BasicRoomGenerator{
         // assign common specials
         for (index, room) in rooms.iter_mut().enumerate() {
             if index != *exit_room_index && index != starting_room_index && index as i32 != shop_index && index as i32 != button_index {
-                if random_chance(33){
+                if NumberUtils::random_chance(33){
                     room.make_room_special(PointOfInterest::BigFight);
-                }else if random_chance(50){
+                }else if NumberUtils::random_chance(50){
                     room.make_room_special(PointOfInterest::Treasure);
                 }
             }

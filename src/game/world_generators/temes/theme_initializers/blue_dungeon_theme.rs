@@ -1,6 +1,5 @@
-use rand::random_bool;
 
-use crate::{engine::world::world_manager::WorldManager, game::world_generators::{data_types::room::Room, temes::{theme_tile::ThemeTile, tile_collection::TileCollection, world_theme::WorldTheme}}, utils::{number_utils::{random_chance, random_integer, random_integer_from_array}, space_utils::squares_collide, textures::get_texture_with_index}};
+use crate::{engine::world::world_manager::WorldManager, game::world_generators::{data_types::room::Room, temes::{theme_tile::ThemeTile, tile_collection::TileCollection, world_theme::WorldTheme}}, utils::{number_utils::NumberUtils, textures::TextureUtils}};
 
 pub fn initialize_blue_dungeon_theme() -> WorldTheme{
     
@@ -41,13 +40,13 @@ pub fn initialize_blue_dungeon_theme() -> WorldTheme{
 fn make_chair(world:&mut WorldManager, x: i32, y: i32, intended_index: i32){
     let mut index = intended_index;
 
-    if random_chance(20){
-        index = random_integer_from_array(&[8, 9]);
+    if NumberUtils::random_chance(20){
+        index = NumberUtils::random_integer_from_array(&[8, 9]);
     }
 
 
 
-    world.make_floor_tile(x, y, &get_texture_with_index("tiles", index));
+    world.make_floor_tile(x, y, &TextureUtils::get_texture_with_index("tiles", index));
 
 }
 
@@ -59,9 +58,9 @@ fn decorate_horizontal_table(world: &mut WorldManager, room: &Room) -> bool{
     }
 
     // pick coordinates to attempt
-    let width = random_integer(3, room.get_width() - 3);
-    let x = random_integer(1, room.get_width() - 1 - width) + room.get_x();
-    let y = random_integer(1, room.get_height() - 2) + room.get_y();
+    let width = NumberUtils::random_integer(3, room.get_width() - 3);
+    let x = NumberUtils::random_integer(1, room.get_width() - 1 - width) + room.get_x();
+    let y = NumberUtils::random_integer(1, room.get_height() - 2) + room.get_y();
 
     // check if there are no tiles clipping with the table
     if !world.is_space_empty(x - 1, y - 2, width + 2, 5) {
@@ -74,11 +73,11 @@ fn decorate_horizontal_table(world: &mut WorldManager, room: &Room) -> bool{
         world.make_solid_tile(i, y, "tiles_0011");
 
         // generate chairs
-        if random_chance(30){
+        if NumberUtils::random_chance(30){
             make_chair(world, i, y - 1, 6);
         }
 
-        if random_chance(30){
+        if NumberUtils::random_chance(30){
             make_chair(world, i, y + 1, 7);
         }
     }
@@ -97,9 +96,9 @@ fn decorate_vertical_table(world: &mut WorldManager, room: &Room) -> bool{
     }
 
     // pick coordinates to attempt
-    let height = random_integer(3, room.get_height() - 3);
-    let y = random_integer(1, room.get_height() - 1 - height) + room.get_y();
-    let x = random_integer(1, room.get_width() - 2) + room.get_x();
+    let height = NumberUtils::random_integer(3, room.get_height() - 3);
+    let y = NumberUtils::random_integer(1, room.get_height() - 1 - height) + room.get_y();
+    let x = NumberUtils::random_integer(1, room.get_width() - 2) + room.get_x();
 
     // check if there are no tiles clipping with the table
     if !world.is_space_empty(x - 2, y - 1, 5, height + 2) {
@@ -112,11 +111,11 @@ fn decorate_vertical_table(world: &mut WorldManager, room: &Room) -> bool{
         world.make_solid_tile(x, i, "tiles_0014");
 
         // generate chairs
-        if random_chance(30){
+        if NumberUtils::random_chance(30){
             make_chair(world, x - 1, i, 4);
         }
 
-        if random_chance(30){
+        if NumberUtils::random_chance(30){
             make_chair(world, x + 1, i, 5);
         }
     }
@@ -129,14 +128,14 @@ fn decorate_vertical_table(world: &mut WorldManager, room: &Room) -> bool{
 
 const CRATE_SPREAD_DISTANCE: i32 = 7;
 fn decorate_horizontal_crates(world: &mut WorldManager, room: &Room) -> bool{
-    let x = random_integer(0, room.get_width()) + room.get_x();
-    let y = if random_chance(50) { room.get_y() } else { room.get_y() + room.get_height() - 1 };
+    let x = NumberUtils::random_integer(0, room.get_width()) + room.get_x();
+    let y = if NumberUtils::random_chance(50) { room.get_y() } else { room.get_y() + room.get_height() - 1 };
 
     let mut placed_tiles = 0;
     for i in (x - CRATE_SPREAD_DISTANCE).max(room.get_left()) .. (x + CRATE_SPREAD_DISTANCE).min(room.get_right()) {
-        if room.calculate_distance_to_door(i, y) > 5.0 && random_chance((CRATE_SPREAD_DISTANCE - (i-x).abs()).max(1) * 10) { // TODO : possibly unknown doors?
+        if room.calculate_distance_to_door(i, y) > 5.0 && NumberUtils::random_chance((CRATE_SPREAD_DISTANCE - (i-x).abs()).max(1) * 10) { // TODO : possibly unknown doors?
 
-            if random_chance(60) {
+            if NumberUtils::random_chance(60) {
                 // place crate
                 world.make_solid_tile(i, y, "tiles_0016");
             }else {
@@ -155,15 +154,15 @@ fn decorate_horizontal_crates(world: &mut WorldManager, room: &Room) -> bool{
 
 
 fn decorate_vertical_crates(world: &mut WorldManager, room: &Room) -> bool {
-    let x = if random_chance(50) { room.get_x() } else { room.get_x() + room.get_width() - 1 };
-    let y = random_integer(0, room.get_height()) + room.get_y();
+    let x = if NumberUtils::random_chance(50) { room.get_x() } else { room.get_x() + room.get_width() - 1 };
+    let y = NumberUtils::random_integer(0, room.get_height()) + room.get_y();
 
     let mut placed_tiles = 0;
 
     for i in (y - CRATE_SPREAD_DISTANCE).max(room.get_top()) .. (y + CRATE_SPREAD_DISTANCE).min(room.get_bottom()) {
-        if room.calculate_distance_to_door(x, i) > 2.0 && random_chance((CRATE_SPREAD_DISTANCE - (i-y).abs()).max(1) * 10) {
+        if room.calculate_distance_to_door(x, i) > 2.0 && NumberUtils::random_chance((CRATE_SPREAD_DISTANCE - (i-y).abs()).max(1) * 10) {
 
-            if random_chance(60) {
+            if NumberUtils::random_chance(60) {
                 // place crate
                 world.make_solid_tile(x, i, "tiles_0016");
             }else {
@@ -181,15 +180,15 @@ fn decorate_vertical_crates(world: &mut WorldManager, room: &Room) -> bool {
 
 const BONE_MAX_OFFSET: i32 = 2;
 fn decorate_bone_pile(world: &mut WorldManager, room: &Room) -> bool {
-    let x = random_integer(room.get_x(), room.get_x() + room.get_width());
-    let y = random_integer(room.get_y(), room.get_y() + room.get_height());
+    let x = NumberUtils::random_integer(room.get_x(), room.get_x() + room.get_width());
+    let y = NumberUtils::random_integer(room.get_y(), room.get_y() + room.get_height());
 
     for _ in 0..6 {
-        let bone_x = random_integer(x - BONE_MAX_OFFSET, x + BONE_MAX_OFFSET);
-        let bone_y = random_integer(y - BONE_MAX_OFFSET, y + BONE_MAX_OFFSET);
+        let bone_x = NumberUtils::random_integer(x - BONE_MAX_OFFSET, x + BONE_MAX_OFFSET);
+        let bone_y = NumberUtils::random_integer(y - BONE_MAX_OFFSET, y + BONE_MAX_OFFSET);
 
         if room.is_inside_room(bone_x, bone_y) && world.is_tile_empty(bone_x, bone_y){
-            world.make_floor_tile(bone_x, bone_y, &get_texture_with_index("tiles", random_integer(33, 37)));
+            world.make_floor_tile(bone_x, bone_y, &TextureUtils::get_texture_with_index("tiles", NumberUtils::random_integer(33, 37)));
         }
     }
 

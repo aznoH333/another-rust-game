@@ -1,4 +1,4 @@
-use crate::{engine::{events::event_manager::{self, EventManager}, world::{world_constants::TILE_SIZE, world_manager::{self, WorldManager}}}, utils::{number_utils::random_integer, space_utils::{pythagoras, squares_collide}, vec_utils::pick_random_element_vec}};
+use crate::{engine::world::{world_constants::TILE_SIZE, world_manager::WorldManager}, utils::{space_utils::SpaceUtils, vec_utils::VecUtils}};
 
 use super::{door::Door, door_lock::DoorLockType, point_of_interest::PointOfInterest};
 
@@ -106,10 +106,10 @@ impl Room {
 
     fn is_neighbor(&self, other: &Room) -> bool {
         return 
-            (squares_collide(self.x - 2, self.y + 1, 1, self.h - 2, other.x, other.y, other.w, other.h) || // left neighgbor
-            squares_collide(self.x + self.w + 2, self.y + 1, 1, self.h - 2, other.x, other.y, other.w, other.h) || // right neighgbor
-            squares_collide(self.x + 1, self.y - 2, self.w - 2, 1,other.x, other.y, other.w, other.h) || // top neighbor
-            squares_collide(self.x + 1, self.y + self.h + 2, self.w - 2, 1,other.x, other.y, other.w, other.h)) // bottom neighbor
+            (SpaceUtils::squares_collide(self.x - 2, self.y + 1, 1, self.h - 2, other.x, other.y, other.w, other.h) || // left neighgbor
+            SpaceUtils::squares_collide(self.x + self.w + 2, self.y + 1, 1, self.h - 2, other.x, other.y, other.w, other.h) || // right neighgbor
+            SpaceUtils::squares_collide(self.x + 1, self.y - 2, self.w - 2, 1,other.x, other.y, other.w, other.h) || // top neighbor
+            SpaceUtils::squares_collide(self.x + 1, self.y + self.h + 2, self.w - 2, 1,other.x, other.y, other.w, other.h)) // bottom neighbor
             && !self.find_shared_walls_with_neighbor(other).is_empty(); // have a shared wall
     }
 
@@ -210,7 +210,7 @@ impl Room {
         let mut output: f32 = 9999.0;
 
         for door in &self.doors {
-            let distance_to_door = pythagoras(door.get_x() as f32, door.get_y() as f32, x as f32, y as f32);
+            let distance_to_door = SpaceUtils::pythagoras(door.get_x() as f32, door.get_y() as f32, x as f32, y as f32);
             output = output.min(distance_to_door);
         }
 
@@ -253,7 +253,7 @@ impl Room {
                 return it.2 >= acceptable_distance
             }).map(|it|{return (it.0, it.1)}).collect();
 
-            return pick_random_element_vec(&filtered).to_owned();
+            return VecUtils::pick_random_element_vec(&filtered).to_owned();
         }
 
     }

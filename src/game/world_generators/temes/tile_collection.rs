@@ -1,4 +1,5 @@
-use crate::utils::number_utils::random_integer;
+
+use crate::utils::number_utils::NumberUtils;
 
 use super::theme_tile::ThemeTile;
 
@@ -21,7 +22,7 @@ impl TileCollection{
     }
 
     pub fn get_tile(&self) -> &ThemeTile {
-        let chosen_weight = random_integer(0, self.combined_weight);
+        let chosen_weight = NumberUtils::random_integer(0, self.combined_weight);
 
         let mut current_weight = 0;
         for tile in &self.tiles {

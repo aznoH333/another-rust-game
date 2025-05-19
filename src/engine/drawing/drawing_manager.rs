@@ -3,7 +3,8 @@ use std::{collections::HashMap, env, path::Path};
 
 use ggez::{graphics::{Canvas, DrawParam, Image, InstanceArray}, Context};
 
-use crate::utils::file_utils::get_files_in_folder;
+
+use crate::utils::file_utils::FileUtils;
 
 use super::{draw_buffer_data::DrawBufferData, drawing_context::DrawingContext};
 
@@ -39,7 +40,7 @@ impl DrawingManager{
         // move current context to assets
         // this is done because of ggez resource paths
         env::set_current_dir("./assets/").unwrap();
-        let folder_contents = get_files_in_folder(folder, &String::from("png"));
+        let folder_contents = FileUtils::get_files_in_folder(folder, &String::from("png"));
         env::set_current_dir("../").unwrap();
 
         for file in folder_contents {

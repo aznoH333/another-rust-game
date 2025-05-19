@@ -1,4 +1,4 @@
-use crate::{engine::{drawing::drawing_manager::DrawingManager, world::{world_constants::TILE_SIZE, world_manager::WorldManager}}, utils::number_utils::gravitate_number};
+use crate::{engine::{drawing::drawing_manager::DrawingManager, world::{world_constants::TILE_SIZE, world_manager::WorldManager}}, utils::number_utils::NumberUtils};
 
 pub struct GameObjectCore {
     
@@ -50,8 +50,8 @@ impl GameObjectCore {
         world.move_in_world(self);
 
         // friction
-        self.x_velocity = gravitate_number(self.x_velocity, 0.0, self.friction);
-        self.y_velocity = gravitate_number(self.y_velocity, 0.0, self.friction);
+        self.x_velocity = NumberUtils::gravitate_number(self.x_velocity, 0.0, self.friction);
+        self.y_velocity = NumberUtils::gravitate_number(self.y_velocity, 0.0, self.friction);
 
         // drawing
         drawing_manager.draw_sprite(&self.sprite_name, self.x + self.sprite_x_offset, self.y + self.sprite_y_offset, self.z_index, self.scale);

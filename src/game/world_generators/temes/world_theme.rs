@@ -1,6 +1,6 @@
 use std::ops::Range;
 
-use crate::{engine::world::world_manager::WorldManager, game::world_generators::data_types::room::Room, utils::{number_utils::random_integer, vec_utils::pick_random_element_vec}};
+use crate::{engine::world::world_manager::WorldManager, game::world_generators::data_types::room::Room, utils::{number_utils::NumberUtils, vec_utils::VecUtils}};
 
 use super::tile_collection::TileCollection;
 
@@ -55,7 +55,7 @@ impl WorldTheme{
     }
 
     pub fn pick_random_decorator(&self) -> &Box<dyn Fn(&mut WorldManager, &Room) -> bool> {
-        return pick_random_element_vec(&self.decorate_functions);
+        return VecUtils::pick_random_element_vec(&self.decorate_functions);
     }
 
     pub fn get_number_of_tiles_per_decoration(&self) -> i32 {
@@ -63,6 +63,6 @@ impl WorldTheme{
     }
 
     pub fn get_number_of_walls(&self) -> i32 {
-        return random_integer(self.number_of_walls.start, self.number_of_walls.end);
+        return NumberUtils::random_integer(self.number_of_walls.start, self.number_of_walls.end);
     }
 }

@@ -1,4 +1,5 @@
-use crate::utils::vec_utils::pick_random_element_vec;
+use crate::utils::vec_utils::VecUtils;
+
 
 pub struct RoomGenerationPoint{
     allow_up: bool,
@@ -20,7 +21,7 @@ impl RoomGenerationPoint {
         if self.allow_left { possible_outputs.push((-1, 0)); }
         if self.allow_right { possible_outputs.push((1, 0)); }
         
-        return pick_random_element_vec(&possible_outputs).to_owned();
+        return VecUtils::pick_random_element_vec(&possible_outputs).to_owned();
     }
 
     pub fn from_direction(direction: (i32, i32)) -> Self {
