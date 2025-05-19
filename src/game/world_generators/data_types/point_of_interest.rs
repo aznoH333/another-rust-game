@@ -1,4 +1,4 @@
-use crate::{engine::{events::{event_manager::EventManager, game_event::GameEvent}, objects::game_object_manager::GameObjectManager, world::world_manager::WorldManager}, game::entities::objects::{enemies::gremlin::Gremlin, exit_stairs::ExitStairs, player::Player, treasure::Treasure}, utils::number_utils::NumberUtils};
+use crate::{engine::{events::{event_manager::EventManager, game_event::GameEvent}, world::{world_constants::TILE_SIZE, world_manager::WorldManager}}, game::entities::objects::{enemies::gremlin::Gremlin, player::Player, world_objects::{exit_stairs::ExitStairs, shop::{shop_item::ShopItem, shop_keeper::ShopKeeper}, treasure::Treasure}}, utils::{number_utils::NumberUtils, space_utils::SpaceUtils}};
 
 use super::room::Room;
 
@@ -20,7 +20,7 @@ impl PointOfInterest{
             PointOfInterest::PlayerSpawn => self.populate_player_spawn(room, event_manager),
             PointOfInterest::Exit => { self.populate_exit_room(room, event_manager); self.populate_with_enemies(room, event_manager); },
             PointOfInterest::Button => {},
-            PointOfInterest::Shop => {},
+            PointOfInterest::Shop => {self.spawn_shop(room, world_manager, event_manager);},
             PointOfInterest::Treasure => { self.populate_with_enemies(room, event_manager); self.populate_with_treasure(room, event_manager); },
             PointOfInterest::BigFight => { self.populate_with_enemies(room, event_manager); self.populate_with_enemies(room, event_manager); },
         }
@@ -63,6 +63,21 @@ impl PointOfInterest{
                 game_object_manager.add_object(Treasure::new(x, y));
             })});
         }
+    }
 
+    fn spawn_shop(&self, room: &Room, world_manager: &mut WorldManager, event_manager: &mut EventManager){
+        for _ in 0..100 {
+            let (x, y) = room.pick_random_empty_spot_with_distance( 0.05);
+
+            if world_manager.is_space_empty(SpaceUtils::game_units_to_world_units(x) - 1, SpaceUtils::game_units_to_world_units(y), 3 , 3) {
+                event_manager.push_event( GameEvent::SpawnObject { spawn_function: Box::new(move |game_object_manager|{
+                    game_object_manager.add_object(ShopKeeper::new(x, y));
+                    game_object_manager.add_object(ShopItem::new(x - TILE_SIZE as f32, y + TILE_SIZE as f32));
+                    game_object_manager.add_object(ShopItem::new(x + TILE_SIZE as f32, y + TILE_SIZE as f32));
+                })});
+                break;
+            }
+        }
+        
     }
 }

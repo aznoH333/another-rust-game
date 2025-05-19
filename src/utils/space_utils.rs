@@ -1,3 +1,5 @@
+use crate::engine::world::world_constants::TILE_SIZE;
+
 pub struct SpaceUtils{
 
 }
@@ -14,5 +16,13 @@ impl SpaceUtils {
 
     pub fn pythagoras(x1: f32, y1: f32, x2: f32, y2: f32) -> f32 {
         return ((x1 - x2).abs().powf(2.0) + (y1 - y2).abs().powf(2.0)).sqrt();
+    }
+
+    pub fn game_units_to_world_units(value: f32) -> i32{
+        return (value as i32) / TILE_SIZE;
+    }
+
+    pub fn world_units_to_game_units(value: i32) -> f32 {
+        return (value * TILE_SIZE) as f32;
     }
 }
