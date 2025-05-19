@@ -1,4 +1,4 @@
-use crate::{engine::{events::{event_manager::EventManager, game_event::GameEvent}, objects::game_object_manager::GameObjectManager, world::world_manager::WorldManager}, game::entities::objects::{enemies::gremlin::Gremlin, exit_stairs::ExitStairs, player::Player}};
+use crate::{engine::{events::{event_manager::EventManager, game_event::GameEvent}, objects::game_object_manager::GameObjectManager, world::world_manager::WorldManager}, game::entities::objects::{enemies::gremlin::Gremlin, exit_stairs::ExitStairs, player::Player, treasure::Treasure}, utils::number_utils::NumberUtils};
 
 use super::room::Room;
 
@@ -21,7 +21,7 @@ impl PointOfInterest{
             PointOfInterest::Exit => { self.populate_exit_room(room, event_manager); self.populate_with_enemies(room, event_manager); },
             PointOfInterest::Button => {},
             PointOfInterest::Shop => {},
-            PointOfInterest::Treasure => { self.populate_with_enemies(room, event_manager); },
+            PointOfInterest::Treasure => { self.populate_with_enemies(room, event_manager); self.populate_with_treasure(room, event_manager); },
             PointOfInterest::BigFight => { self.populate_with_enemies(room, event_manager); self.populate_with_enemies(room, event_manager); },
         }
     }
@@ -52,5 +52,17 @@ impl PointOfInterest{
                 game_object_manager.add_object(Gremlin::new(x, y));
             })});
         }
+    }
+
+    fn populate_with_treasure(&self, room: &Room, event_manager: &mut EventManager){
+        let ammount_of_treasure_to_spawn = NumberUtils::random_integer(1, 3);
+
+        for _ in 0..ammount_of_treasure_to_spawn {
+            let (x, y) = room.pick_random_empty_spot_with_distance( 0.05);
+            event_manager.push_event( GameEvent::SpawnObject { spawn_function: Box::new(move |game_object_manager|{
+                game_object_manager.add_object(Treasure::new(x, y));
+            })});
+        }
+
     }
 }
