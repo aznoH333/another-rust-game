@@ -12,9 +12,6 @@ use engine::world::world_manager::WorldManager;
 use game::enums::drawing_layers::DrawingLayer;
 use game::world_generators::basic_world_generator::BasicRoomGenerator;
 use game::world_generators::temes::theme_initializers::blue_dungeon_theme::initialize_blue_dungeon_theme;
-use game::world_generators::temes::theme_tile::ThemeTile;
-use game::world_generators::temes::tile_collection::TileCollection;
-use game::world_generators::temes::world_theme::WorldTheme;
 use ggez::conf::WindowMode;
 use ggez::input::keyboard::KeyCode;
 use ggez::{Context, ContextBuilder, GameResult};
@@ -88,7 +85,7 @@ impl MyGame {
 impl EventHandler for MyGame {
    fn update(&mut self, _context: &mut Context) -> GameResult {
         // Update code here...
-        self.game_object_manager.update(&mut self.sprite_manager, &self.input, &self.world_manager);
+        self.game_object_manager.update(&mut self.sprite_manager, &self.input, &self.world_manager, &mut self.event_manager);
         self.event_manager.update_events(&mut self.game_object_manager);
 
 

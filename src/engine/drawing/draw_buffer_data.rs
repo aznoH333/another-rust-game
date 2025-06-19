@@ -1,4 +1,4 @@
-use ggez::{glam::Vec2, graphics::{self, BlendMode, Canvas, Image}};
+use ggez::{glam::Vec2, graphics::{self, Canvas, Image}};
 
 use super::drawing_context::DrawingContext;
 

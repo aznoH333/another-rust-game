@@ -1,4 +1,4 @@
-use crate::engine::{drawing::drawing_manager::DrawingManager, input::input::InputHandler, world::world_manager::WorldManager};
+use crate::engine::{drawing::drawing_manager::DrawingManager, events::event_manager::{self, EventManager}, input::input::InputHandler, world::world_manager::WorldManager};
 
 use super::{game_object::GameObject, game_object_controller::GameObjectController};
 
@@ -15,11 +15,11 @@ impl GameObjectManager{
     }
 
 
-    pub fn update(&mut self, drawing_manager: &mut DrawingManager, input: &InputHandler, world: &WorldManager) {
+    pub fn update(&mut self, drawing_manager: &mut DrawingManager, input: &InputHandler, world: &WorldManager, event_manager: &mut EventManager) {
         let mut camera_target: Option<&GameObject> = None;
 
         for object in &mut self.game_objects{
-            object.update(drawing_manager, input, world);
+            object.update(drawing_manager, input, world, event_manager);
 
             if object.is_camera_target(){
                 camera_target = Some(object);

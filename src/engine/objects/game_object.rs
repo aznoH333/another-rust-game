@@ -1,4 +1,4 @@
-use crate::engine::{drawing::drawing_manager::DrawingManager, input::input::InputHandler, world::world_manager::WorldManager};
+use crate::engine::{drawing::drawing_manager::DrawingManager, events::event_manager::{self, EventManager}, input::input::InputHandler, world::world_manager::WorldManager};
 
 use super::{game_object_controller::GameObjectController, game_object_core::GameObjectCore};
 
@@ -15,10 +15,10 @@ impl GameObject{
         }
     }
 
-    pub fn update(&mut self, drawing_manager: &mut DrawingManager, input: &InputHandler, world: &WorldManager){
+    pub fn update(&mut self, drawing_manager: &mut DrawingManager, input: &InputHandler, world: &WorldManager, event_manager: &mut EventManager){
         self.core.update(drawing_manager, world);
         for controller in &mut self.controllers {
-            controller.update(&mut self.core, input);
+            controller.update(&mut self.core, input, event_manager);
         }
         
     }
