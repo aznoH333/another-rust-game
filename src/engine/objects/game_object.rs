@@ -1,26 +1,37 @@
-use crate::engine::{drawing::drawing_manager::DrawingManager, events::event_manager::{self, EventManager}, input::input::InputHandler, types::vector::Vector, world::world_manager::WorldManager};
+use std::{collections::HashMap, iter::Map};
+
+use crate::engine::{drawing::drawing_manager::DrawingManager, events::event_manager::EventManager, input::input::InputHandler, types::{object_event::ObjectEvent, vector::Vector}, world::world_manager::WorldManager};
 
 use super::{game_object_controller::GameObjectController, game_object_core::GameObjectCore};
 
 pub struct GameObject{
     core: GameObjectCore,
-    controllers: Vec::<Box<dyn GameObjectController>>,
+    controllers: HashMap<u8, Vec::<Box<dyn GameObjectController>>>,
 }
 
 impl GameObject{
-    pub fn new(core: GameObjectCore, controllers: Vec::<Box<dyn GameObjectController>>) -> GameObject{
+    pub fn new(core: GameObjectCore, controllers: HashMap<u8, Vec::<Box<dyn GameObjectController>>>) -> GameObject{
         return GameObject{
             core,
             controllers,
         }
     }
 
-    pub fn update(&mut self, drawing_manager: &mut DrawingManager, input: &InputHandler, world: &WorldManager, event_manager: &mut EventManager){
+    pub fn update(&mut self, drawing_manager: &mut DrawingManager, world: &WorldManager){
         self.core.update(drawing_manager, world);
-        for controller in &mut self.controllers {
-            controller.update(&mut self.core, input, event_manager);
-        }
+    }
+
+    pub fn activate_event(&mut self, event: &ObjectEvent, input: &InputHandler, event_manager: &mut EventManager) {
         
+        let controllers_to_update = self.controllers.get_mut(&event.event_type);
+
+        if controllers_to_update.is_none() {
+            return;
+        }
+
+        for controller in controllers_to_update.unwrap(){
+            controller.update(&mut self.core, event, input, event_manager);
+        }
     }
 
     pub fn is_camera_target(&self) -> bool {
@@ -59,7 +70,7 @@ impl GameObject{
 
 pub struct GameObjectBuilder{
     core: GameObjectCore,
-    controllers: Vec::<Box<dyn GameObjectController>>,
+    controllers: HashMap<u8, Vec::<Box<dyn GameObjectController>>>,
 }
 
 
@@ -67,7 +78,7 @@ impl GameObjectBuilder{
     pub fn new(x: f32, y: f32, sprite_name: &str, z_index: i32) -> GameObjectBuilder {
         return GameObjectBuilder { 
             core: GameObjectCore::new(x, y, sprite_name, z_index),
-            controllers: Vec::new(),
+            controllers: HashMap::new(),
         };
     }
 
@@ -92,8 +103,12 @@ impl GameObjectBuilder{
     }
 
 
-    pub fn add_controller(mut self, controller: Box::<dyn GameObjectController>) -> GameObjectBuilder{
-        self.controllers.push(controller);
+    pub fn add_controller(mut self, controller_type: u8, controller: Box::<dyn GameObjectController>) -> GameObjectBuilder{
+        
+        if !self.controllers.contains_key(&controller_type) {
+            self.controllers.insert(controller_type, Vec::new());
+        }
+        self.controllers.get_mut(&controller_type).unwrap().push(controller);
         return self;
     }
 

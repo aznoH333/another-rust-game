@@ -1,4 +1,4 @@
-use crate::{engine::{events::{event_manager::{self, EventManager}, game_event::GameEvent}, input::input::InputHandler, objects::{game_object_controller::GameObjectController, game_object_core::GameObjectCore}}, game::entities::objects::projectiles::bullet::Bullet};
+use crate::{engine::{events::{event_manager::{EventManager}, game_event::GameEvent}, input::input::InputHandler, objects::{game_object_controller::GameObjectController, game_object_core::GameObjectCore}, types::object_event::ObjectEvent}, game::entities::objects::projectiles::bullet::Bullet};
 
 pub struct PlayerInputController{
 
@@ -13,7 +13,7 @@ impl PlayerInputController{
 
 
 impl GameObjectController for PlayerInputController{
-    fn update(&mut self, core: &mut GameObjectCore, input: &InputHandler, event_manager: &mut EventManager) {
+    fn update(&mut self, core: &mut GameObjectCore, _event: &ObjectEvent, input: &InputHandler, event_manager: &mut EventManager) {
         if input.key_up(){
             core.y_velocity = -1.0;
         }
@@ -38,9 +38,5 @@ impl GameObjectController for PlayerInputController{
                 game_object_manager.add_object(Bullet::new(rust_x, rust_y, 0.0,"bow_0001", 4.0));
             })});
         }
-    }
-    
-    fn on_world_collide(&mut self, core: &mut GameObjectCore, event_manager: &mut EventManager) {
-        // do nothing
     }
 }

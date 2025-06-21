@@ -1,4 +1,4 @@
-use crate::engine::{drawing::drawing_manager::DrawingManager, events::event_manager::{self, EventManager}, input::input::InputHandler, world::world_manager::WorldManager};
+use crate::engine::{drawing::drawing_manager::DrawingManager, events::event_manager::{self, EventManager}, input::input::InputHandler, types::{controller_type::CONTROLLER_TYPE_UPDATE, object_event::ObjectEvent}, world::world_manager::WorldManager};
 
 use super::{game_object::GameObject, game_object_controller::GameObjectController};
 
@@ -25,7 +25,12 @@ impl GameObjectManager{
 
     fn update_objects(&mut self, drawing_manager: &mut DrawingManager, input: &InputHandler, world: &WorldManager, event_manager: &mut EventManager) {
         for object in &mut self.game_objects{
-            object.update(drawing_manager, input, world, event_manager);
+            object.update(drawing_manager, world);
+
+            // regular update
+            let object_update_event = ObjectEvent::new(CONTROLLER_TYPE_UPDATE);
+            object.activate_event(&object_update_event, input, event_manager);
+            
         }
     }
 

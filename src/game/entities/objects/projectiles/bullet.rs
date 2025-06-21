@@ -1,4 +1,4 @@
-use crate::{engine::objects::game_object::{GameObject, GameObjectBuilder}, game::{entities::controllers::projectile_controller::ProjectileController, enums::drawing_layers::DrawingLayer}};
+use crate::{engine::{objects::game_object::{GameObject, GameObjectBuilder}, types::controller_type::CONTROLLER_TYPE_UPDATE}, game::{entities::controllers::projectile_controller::ProjectileController, enums::drawing_layers::DrawingLayer}};
 
 pub struct Bullet{}
 
@@ -7,6 +7,6 @@ impl Bullet {
         return GameObjectBuilder::new(x, y, sprite, DrawingLayer::WorldObjects.get_value())
         .set_dimensions(10.0, 10.0)
         .set_sprite_offset(-3.0, -3.0)
-        .add_controller(Box::new(ProjectileController::new(direction, speed))).build();
+        .add_controller(CONTROLLER_TYPE_UPDATE,Box::new(ProjectileController::new(direction, speed))).build();
     }
 }
