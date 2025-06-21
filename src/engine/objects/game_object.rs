@@ -65,6 +65,11 @@ impl GameObject{
     pub fn get_center_position(&self) -> Vector {
         return self.core.get_center_position();
     }
+    
+    pub fn collided_with_world(&self) -> bool {
+        return self.core.collided_with_world();
+    }
+
 }
 
 
@@ -116,4 +121,5 @@ impl GameObjectBuilder{
     pub fn build(self) -> GameObject{
         return GameObject { core: self.core, controllers: self.controllers }
     }
+
 }

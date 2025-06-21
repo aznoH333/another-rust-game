@@ -74,7 +74,9 @@ impl WorldManager{
         }
     }
 
-    pub fn move_in_world(&self, game_object: &mut GameObjectCore) {
+    pub fn move_in_world(&self, game_object: &mut GameObjectCore) -> bool {
+        let mut collided = false;
+        
         // x move
         let x_colider = self.check_world_square_collisions(
             game_object.x + game_object.x_velocity, 
@@ -91,6 +93,7 @@ impl WorldManager{
                 game_object.x = x_colider.unwrap().get_right();
             }
             game_object.x_velocity = -game_object.x_velocity * game_object.bouncyness;
+            collided = true;
         }
 
         // y move
@@ -109,7 +112,10 @@ impl WorldManager{
                 game_object.y = y_colider.unwrap().get_bottom();
             }
             game_object.y_velocity = -game_object.y_velocity * game_object.bouncyness;
+            collided = true;
         }
+
+        return collided;
     }
 
     fn check_world_square_collisions(&self, x: f32, y: f32, w: f32, h: f32) -> Option<&WorldTile> {

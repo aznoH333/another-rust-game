@@ -24,6 +24,7 @@ pub struct GameObjectCore {
 
     // state controll
     pub wants_to_live: bool,
+    collided_with_world: bool,
 }
 
 
@@ -45,13 +46,14 @@ impl GameObjectCore {
             scale: 1.0,
             is_camera_target: false,
             wants_to_live: true,
+            collided_with_world: false,
         }
     }
 
 
     pub fn update(&mut self, drawing_manager: &mut DrawingManager, world: &WorldManager) {
         // movement
-        world.move_in_world(self);
+        self.collided_with_world = world.move_in_world(self);
 
         // friction
         self.x_velocity = NumberUtils::gravitate_number(self.x_velocity, 0.0, self.friction);
@@ -77,5 +79,9 @@ impl GameObjectCore {
             x: self.x, 
             y: self.y
         };
+    }
+
+    pub fn collided_with_world(&self) -> bool {
+        return self.collided_with_world;
     }
 }

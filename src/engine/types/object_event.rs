@@ -1,6 +1,6 @@
 
 pub struct WorldCollisionEvent {
-    tile_x: i32,
+    tile_x: i32, // TOOD : implement this
     tile_y: i32,
 }
 

@@ -1,4 +1,4 @@
-use crate::engine::{drawing::drawing_manager::DrawingManager, events::event_manager::{self, EventManager}, input::input::InputHandler, types::{controller_type::CONTROLLER_TYPE_UPDATE, object_event::ObjectEvent}, world::world_manager::WorldManager};
+use crate::engine::{drawing::drawing_manager::DrawingManager, events::event_manager::{self, EventManager}, input::input::InputHandler, types::{controller_type::{CONTROLLER_TYPE_UPDATE, CONTROLLER_TYPE_WORLD_COLLIDE}, object_event::ObjectEvent}, world::world_manager::WorldManager};
 
 use super::{game_object::GameObject, game_object_controller::GameObjectController};
 
@@ -31,6 +31,9 @@ impl GameObjectManager{
             let object_update_event = ObjectEvent::new(CONTROLLER_TYPE_UPDATE);
             object.activate_event(&object_update_event, input, event_manager);
             
+            if object.collided_with_world() {
+                object.activate_event(&ObjectEvent::new(CONTROLLER_TYPE_WORLD_COLLIDE), input, event_manager);
+            }
         }
     }
 
