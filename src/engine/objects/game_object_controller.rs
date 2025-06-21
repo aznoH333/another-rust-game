@@ -5,4 +5,7 @@ use super::game_object_core::GameObjectCore;
 
 pub trait GameObjectController{
     fn update(&mut self, core: &mut GameObjectCore, input: &InputHandler, event_manager: &mut EventManager);
+
+
+    fn on_world_collide(&mut self, core: &mut GameObjectCore, event_manager: &mut EventManager);
 }

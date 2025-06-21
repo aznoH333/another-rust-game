@@ -1,4 +1,4 @@
-use crate::engine::{drawing::drawing_manager::DrawingManager, events::event_manager::{self, EventManager}, input::input::InputHandler, world::world_manager::WorldManager};
+use crate::engine::{drawing::drawing_manager::DrawingManager, events::event_manager::{self, EventManager}, input::input::InputHandler, types::vector::Vector, world::world_manager::WorldManager};
 
 use super::{game_object_controller::GameObjectController, game_object_core::GameObjectCore};
 
@@ -41,6 +41,18 @@ impl GameObject{
 
     pub fn get_height(&self) -> f32 {
         return self.core.height;
+    }
+
+    pub fn is_alive(&self) -> bool {
+        return self.core.wants_to_live;
+    }
+
+    pub fn get_position(&self) -> Vector {
+        return self.core.get_position();
+    }
+
+    pub fn get_center_position(&self) -> Vector {
+        return self.core.get_center_position();
     }
 }
 

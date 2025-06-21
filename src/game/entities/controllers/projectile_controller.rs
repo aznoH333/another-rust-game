@@ -21,4 +21,8 @@ impl GameObjectController for ProjectileController {
         core.x_velocity = self.direction.cos() * self.speed;
         core.y_velocity = self.direction.sin() * self.speed;
     }
+    
+    fn on_world_collide(&mut self, core: &mut crate::engine::objects::game_object_core::GameObjectCore, event_manager: &mut crate::engine::events::event_manager::EventManager) {
+        core.die();
+    }
 }

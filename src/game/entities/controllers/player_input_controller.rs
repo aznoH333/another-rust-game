@@ -39,4 +39,8 @@ impl GameObjectController for PlayerInputController{
             })});
         }
     }
+    
+    fn on_world_collide(&mut self, core: &mut GameObjectCore, event_manager: &mut EventManager) {
+        // do nothing
+    }
 }

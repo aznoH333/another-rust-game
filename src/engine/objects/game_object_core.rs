@@ -1,4 +1,4 @@
-use crate::{engine::{drawing::drawing_manager::DrawingManager, world::{world_constants::TILE_SIZE, world_manager::WorldManager}}, utils::number_utils::NumberUtils};
+use crate::{engine::{drawing::drawing_manager::DrawingManager, types::vector::Vector, world::{world_constants::TILE_SIZE, world_manager::WorldManager}}, utils::number_utils::NumberUtils};
 
 pub struct GameObjectCore {
     
@@ -21,6 +21,9 @@ pub struct GameObjectCore {
     pub z_index: i32,
     pub scale: f32,
     pub is_camera_target: bool,
+
+    // state controll
+    pub wants_to_live: bool,
 }
 
 
@@ -41,6 +44,7 @@ impl GameObjectCore {
             z_index,
             scale: 1.0,
             is_camera_target: false,
+            wants_to_live: true,
         }
     }
 
@@ -55,5 +59,23 @@ impl GameObjectCore {
 
         // drawing
         drawing_manager.draw_sprite(&self.sprite_name, self.x + self.sprite_x_offset, self.y + self.sprite_y_offset, self.z_index, self.scale);
+    }
+
+    pub fn die(&mut self) {
+        self.wants_to_live = false;
+    }
+
+    pub fn get_center_position(&self) -> Vector{
+        return Vector{
+            x: self.x + (self.width / 2.0), 
+            y: self.y + (self.height / 2.0)
+        };
+    }
+
+    pub fn get_position(&self) -> Vector {
+        return Vector{
+            x: self.x, 
+            y: self.y
+        };
     }
 }
