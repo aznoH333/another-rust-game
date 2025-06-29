@@ -61,9 +61,19 @@ impl GameObjectCore {
     }
 
 
-    // TODO : split update and draw into 2 functions
-    // too many draw calls hurts performance for no reason
-    pub fn update(&mut self, drawing_manager: &mut DrawingManager, world: &WorldManager, delta: f32) {
+    pub fn draw(&mut self, drawing_manager: &mut DrawingManager) {
+        let mut sprite_name = &self.sprite_name;
+
+        if self.use_animations {
+            let mut animation = self.animations.get_mut(self.current_animation).expect(format!("Animation not found {}", self.current_animation).as_str());
+
+            sprite_name = animation.get_current_frame();
+        }
+        // drawing
+        drawing_manager.draw_sprite(sprite_name, self.x + self.sprite_x_offset, self.y + self.sprite_y_offset, self.z_index, self.scale, self.flip_sprite);
+    }
+
+    pub fn update(&mut self, world: &WorldManager, delta: f32) {
         self.delta = delta;
         // movement
         self.collided_with_world = world.move_in_world(self, delta);
@@ -72,16 +82,11 @@ impl GameObjectCore {
         self.x_velocity = NumberUtils::gravitate_number(self.x_velocity, 0.0, self.friction * delta);
         self.y_velocity = NumberUtils::gravitate_number(self.y_velocity, 0.0, self.friction * delta);
 
-        let mut sprite_name = &self.sprite_name;
-
+        // animation
         if self.use_animations {
             let mut animation = self.animations.get_mut(self.current_animation).expect(format!("Animation not found {}", self.current_animation).as_str());
-
             animation.update_animation(delta);
-            sprite_name = animation.get_current_frame();
         }
-        // drawing
-        drawing_manager.draw_sprite(sprite_name, self.x + self.sprite_x_offset, self.y + self.sprite_y_offset, self.z_index, self.scale, self.flip_sprite);
     }
 
     pub fn die(&mut self) {

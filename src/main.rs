@@ -99,6 +99,7 @@ impl EventHandler for MyGame {
         let mut canvas = graphics::Canvas::from_frame(context, Color::BLACK);
         canvas.set_sampler(Sampler::nearest_clamp());
         self.world_manager.draw_world(&mut self.sprite_manager);
+        self.game_object_manager.draw_objects(&mut self.sprite_manager);
 
         self.sprite_manager.draw_buffer_to_canvas(&mut canvas);
         canvas.finish(context)?;

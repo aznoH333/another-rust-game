@@ -16,17 +16,23 @@ impl GameObjectManager{
     }
 
 
+    pub fn draw_objects(&mut self, drawing_manager: &mut DrawingManager) {
+        for object in &mut self.game_objects {
+            object.draw(drawing_manager);
+        }
+    }
+
     pub fn update(&mut self, drawing_manager: &mut DrawingManager, input: &InputHandler, world: &WorldManager, event_manager: &mut EventManager, delta: f32) {
 
-        self.update_objects(drawing_manager, input, world, event_manager, delta);
+        self.update_objects(input, world, event_manager, delta);
         self.cull_dead_objects();
         self.update_camera(drawing_manager);
 
     }
 
-    fn update_objects(&mut self, drawing_manager: &mut DrawingManager, input: &InputHandler, world: &WorldManager, event_manager: &mut EventManager, delta: f32) {
+    fn update_objects(&mut self, input: &InputHandler, world: &WorldManager, event_manager: &mut EventManager, delta: f32) {
         for object in &mut self.game_objects{
-            object.update(drawing_manager, world, delta);
+            object.update(world, delta);
 
             // regular update
             let object_update_event = ObjectEvent::new(CONTROLLER_TYPE_UPDATE);
