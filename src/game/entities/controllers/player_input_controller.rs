@@ -14,6 +14,7 @@ impl PlayerInputController{
 
 impl GameObjectController for PlayerInputController{
     fn update(&mut self, core: &mut GameObjectCore, _event: &ObjectEvent, input: &InputHandler, event_manager: &mut EventManager) {
+        
         if input.key_up(){
             core.y_velocity = -1.0;
         }
@@ -30,9 +31,14 @@ impl GameObjectController for PlayerInputController{
         if input.key_right(){
             core.x_velocity = 1.0;
             core.flip_sprite = false;
-
         }
 
+
+        if core.x_velocity.abs() > 0.0 || core.y_velocity.abs() > 0.0 {
+            core.play_animation(1, false);
+        }else {
+            core.play_animation(0, false);
+        }
 
         if input.key_action1() {
             let rust_x = core.x;

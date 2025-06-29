@@ -1,4 +1,4 @@
-use crate::{engine::{drawing::drawing_manager::DrawingManager, types::vector::Vector, world::{world_constants::TILE_SIZE, world_manager::WorldManager}}, utils::number_utils::NumberUtils};
+use crate::{engine::{drawing::drawing_manager::DrawingManager, objects::game_object_animation::GameObjectAnimation, types::vector::Vector, world::{world_constants::TILE_SIZE, world_manager::WorldManager}}, utils::number_utils::NumberUtils};
 
 pub struct GameObjectCore {
     
@@ -23,6 +23,9 @@ pub struct GameObjectCore {
     pub is_camera_target: bool,
     pub flip_sprite: bool,
 
+    pub current_animation: usize,
+    pub animations: Vec<GameObjectAnimation>,
+    pub use_animations: bool,
     // state controll
     pub wants_to_live: bool,
     collided_with_world: bool,
@@ -46,6 +49,9 @@ impl GameObjectCore {
             sprite_name: sprite_name.to_owned(),
             z_index,
             scale: 1.0,
+            current_animation: 0,
+            animations: Vec::new(),
+            use_animations: false,
             is_camera_target: false,
             flip_sprite: false,
             wants_to_live: true,
@@ -55,6 +61,8 @@ impl GameObjectCore {
     }
 
 
+    // TODO : split update and draw into 2 functions
+    // too many draw calls hurts performance for no reason
     pub fn update(&mut self, drawing_manager: &mut DrawingManager, world: &WorldManager, delta: f32) {
         self.delta = delta;
         // movement
@@ -64,8 +72,16 @@ impl GameObjectCore {
         self.x_velocity = NumberUtils::gravitate_number(self.x_velocity, 0.0, self.friction * delta);
         self.y_velocity = NumberUtils::gravitate_number(self.y_velocity, 0.0, self.friction * delta);
 
+        let mut sprite_name = &self.sprite_name;
+
+        if self.use_animations {
+            let mut animation = self.animations.get_mut(self.current_animation).expect(format!("Animation not found {}", self.current_animation).as_str());
+
+            animation.update_animation(delta);
+            sprite_name = animation.get_current_frame();
+        }
         // drawing
-        drawing_manager.draw_sprite(&self.sprite_name, self.x + self.sprite_x_offset, self.y + self.sprite_y_offset, self.z_index, self.scale, self.flip_sprite);
+        drawing_manager.draw_sprite(sprite_name, self.x + self.sprite_x_offset, self.y + self.sprite_y_offset, self.z_index, self.scale, self.flip_sprite);
     }
 
     pub fn die(&mut self) {
@@ -96,5 +112,12 @@ impl GameObjectCore {
 
     pub fn get_y_velocity(&self) -> f32 {
         return self.y_velocity * self.delta;
+    }
+
+    pub fn play_animation(&mut self, animation: usize, reset: bool) {
+        self.current_animation = animation;
+        if reset {
+            self.animations.get_mut(animation).unwrap().reset_animation();
+        }
     }
 }

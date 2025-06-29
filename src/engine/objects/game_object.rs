@@ -1,6 +1,6 @@
 use std::{collections::HashMap, iter::Map};
 
-use crate::engine::{drawing::drawing_manager::DrawingManager, events::event_manager::EventManager, input::input::InputHandler, types::{object_event::ObjectEvent, vector::Vector}, world::world_manager::WorldManager};
+use crate::engine::{drawing::drawing_manager::DrawingManager, events::event_manager::EventManager, input::input::InputHandler, objects::game_object_animation::GameObjectAnimation, types::{object_event::ObjectEvent, vector::Vector}, world::world_manager::WorldManager};
 
 use super::{game_object_controller::GameObjectController, game_object_core::GameObjectCore};
 
@@ -117,6 +117,12 @@ impl GameObjectBuilder{
         return self;
     }
 
+    pub fn add_animation(mut self, animation: GameObjectAnimation) -> GameObjectBuilder {
+        self.core.animations.push(animation);
+        self.core.use_animations = true;
+
+        return self
+    }
 
     pub fn build(self) -> GameObject{
         return GameObject { core: self.core, controllers: self.controllers }
