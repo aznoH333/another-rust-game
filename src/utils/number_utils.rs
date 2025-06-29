@@ -40,6 +40,22 @@ impl NumberUtils {
     pub fn random_chance(percentage: i32) -> bool {
         return Self::random_integer(0, 100) < percentage;
     }
+
+    pub fn bool_to_minus_plus(input: bool) -> i32 {
+        return input as i32 * 2 - 1;
+    }
+
+    pub fn bool_to_minus_plus_f32(input: bool) -> f32 {
+        return NumberUtils::bool_to_minus_plus(input) as f32;
+    }
+
+    pub fn bool_to_i32(input: bool) -> i32 {
+        return input as i32;
+    }
+
+    pub fn bool_to_f32(input: bool) -> f32 {
+        return NumberUtils::bool_to_i32(input) as f32;
+    }
 }
 
 

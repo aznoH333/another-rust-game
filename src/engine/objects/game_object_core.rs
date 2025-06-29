@@ -21,6 +21,7 @@ pub struct GameObjectCore {
     pub z_index: i32,
     pub scale: f32,
     pub is_camera_target: bool,
+    pub flip_sprite: bool,
 
     // state controll
     pub wants_to_live: bool,
@@ -46,6 +47,7 @@ impl GameObjectCore {
             z_index,
             scale: 1.0,
             is_camera_target: false,
+            flip_sprite: false,
             wants_to_live: true,
             collided_with_world: false,
             delta: 0.0,
@@ -63,7 +65,7 @@ impl GameObjectCore {
         self.y_velocity = NumberUtils::gravitate_number(self.y_velocity, 0.0, self.friction * delta);
 
         // drawing
-        drawing_manager.draw_sprite(&self.sprite_name, self.x + self.sprite_x_offset, self.y + self.sprite_y_offset, self.z_index, self.scale);
+        drawing_manager.draw_sprite(&self.sprite_name, self.x + self.sprite_x_offset, self.y + self.sprite_y_offset, self.z_index, self.scale, self.flip_sprite);
     }
 
     pub fn die(&mut self) {

@@ -54,7 +54,6 @@ impl DrawingManager{
             
             let sprite_name = file_name[..file_name.len()-4].to_owned();
             let image = Image::from_path(context, file_path.as_str()).unwrap();
-            
             self.sprites.insert(
                 sprite_name.to_owned(), 
                 image.to_owned(),
@@ -69,16 +68,17 @@ impl DrawingManager{
         }
     }
 
-    pub fn draw_sprite(&mut self, sprite_name: &String, x: f32, y: f32, z_index: i32, scale: f32){
-        self.draw_buffer.push(DrawBufferData::new(sprite_name.clone(), x, y, z_index, scale));
+    pub fn draw_sprite(&mut self, sprite_name: &String, x: f32, y: f32, z_index: i32, scale: f32, fliped: bool){
+        self.draw_buffer.push(DrawBufferData::new(sprite_name.clone(), x, y, z_index, scale, fliped));
     }
 
     pub fn draw_buffer_to_canvas(&mut self, canvas: &mut Canvas){
         // collect to draw batches
         for draw_data in &self.draw_buffer{
+            let sprite = self.sprites.get(draw_data.get_sprite_name()).expect(format!("Sprite not found {}", draw_data.get_sprite_name()).as_str());
             let target_batch = self.draw_batches.get_mut(draw_data.get_sprite_name()).expect(format!("Sprite not found {}", draw_data.get_sprite_name()).as_str());//.push(draw_data.convert_to_draw_param(&self.drawing_context));
             
-            target_batch.get_mut(&draw_data.get_z_index()).unwrap().push(draw_data.convert_to_draw_param(&self.drawing_context));
+            target_batch.get_mut(&draw_data.get_z_index()).unwrap().push(draw_data.convert_to_draw_param(&self.drawing_context, sprite.width(), sprite.height()));
         }
 
         // draw batches

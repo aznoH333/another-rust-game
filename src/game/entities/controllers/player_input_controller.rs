@@ -24,10 +24,13 @@ impl GameObjectController for PlayerInputController{
 
         if input.key_left(){
             core.x_velocity = -1.0;
+            core.flip_sprite = true;
         }
 
         if input.key_right(){
             core.x_velocity = 1.0;
+            core.flip_sprite = false;
+
         }
 
 
