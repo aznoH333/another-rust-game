@@ -25,6 +25,7 @@ pub struct GameObjectCore {
     // state controll
     pub wants_to_live: bool,
     collided_with_world: bool,
+    delta: f32,
 }
 
 
@@ -47,17 +48,19 @@ impl GameObjectCore {
             is_camera_target: false,
             wants_to_live: true,
             collided_with_world: false,
+            delta: 0.0,
         }
     }
 
 
-    pub fn update(&mut self, drawing_manager: &mut DrawingManager, world: &WorldManager) {
+    pub fn update(&mut self, drawing_manager: &mut DrawingManager, world: &WorldManager, delta: f32) {
+        self.delta = delta;
         // movement
-        self.collided_with_world = world.move_in_world(self);
+        self.collided_with_world = world.move_in_world(self, delta);
 
         // friction
-        self.x_velocity = NumberUtils::gravitate_number(self.x_velocity, 0.0, self.friction);
-        self.y_velocity = NumberUtils::gravitate_number(self.y_velocity, 0.0, self.friction);
+        self.x_velocity = NumberUtils::gravitate_number(self.x_velocity, 0.0, self.friction * delta);
+        self.y_velocity = NumberUtils::gravitate_number(self.y_velocity, 0.0, self.friction * delta);
 
         // drawing
         drawing_manager.draw_sprite(&self.sprite_name, self.x + self.sprite_x_offset, self.y + self.sprite_y_offset, self.z_index, self.scale);
@@ -83,5 +86,13 @@ impl GameObjectCore {
 
     pub fn collided_with_world(&self) -> bool {
         return self.collided_with_world;
+    }
+
+    pub fn get_x_velocity(&self) -> f32 {
+        return self.x_velocity * self.delta;
+    }
+
+    pub fn get_y_velocity(&self) -> f32 {
+        return self.y_velocity * self.delta;
     }
 }

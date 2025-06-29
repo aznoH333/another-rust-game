@@ -83,9 +83,11 @@ impl MyGame {
 }
 
 impl EventHandler for MyGame {
-   fn update(&mut self, _context: &mut Context) -> GameResult {
+   fn update(&mut self, context: &mut Context) -> GameResult {
+ 
+        let delta = (context.time.delta().as_millis() as f32) / 16.6666;
         // Update code here...
-        self.game_object_manager.update(&mut self.sprite_manager, &self.input, &self.world_manager, &mut self.event_manager);
+        self.game_object_manager.update(&mut self.sprite_manager, &self.input, &self.world_manager, &mut self.event_manager, delta);
         self.event_manager.update_events(&mut self.game_object_manager);
 
 

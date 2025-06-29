@@ -17,8 +17,8 @@ impl GameObject{
         }
     }
 
-    pub fn update(&mut self, drawing_manager: &mut DrawingManager, world: &WorldManager){
-        self.core.update(drawing_manager, world);
+    pub fn update(&mut self, drawing_manager: &mut DrawingManager, world: &WorldManager, delta: f32){
+        self.core.update(drawing_manager, world, delta);
     }
 
     pub fn activate_event(&mut self, event: &ObjectEvent, input: &InputHandler, event_manager: &mut EventManager) {
