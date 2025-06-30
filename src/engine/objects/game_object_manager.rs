@@ -27,6 +27,7 @@ impl GameObjectManager{
         self.update_objects(input, world, event_manager, delta);
         self.cull_dead_objects();
         self.update_camera(drawing_manager);
+        self.update_object_collisions(input, event_manager);
 
     }
 

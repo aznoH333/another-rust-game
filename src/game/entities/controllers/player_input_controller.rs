@@ -1,4 +1,5 @@
 use crate::{engine::{events::{event_manager::{EventManager}, game_event::GameEvent}, input::input::InputHandler, objects::{game_object_controller::GameObjectController, game_object_core::GameObjectCore}, types::object_event::ObjectEvent}, game::entities::objects::projectiles::bullet::Bullet};
+use crate::game::entities::factions::FACTION_PLAYER;
 
 pub struct PlayerInputController{
 
@@ -43,7 +44,7 @@ impl GameObjectController for PlayerInputController{
             let rust_x = core.x;
             let rust_y = core.y;
             event_manager.push_event(GameEvent::SpawnObject { spawn_function: Box::new(move |game_object_manager|{
-                game_object_manager.add_object(Bullet::new(rust_x, rust_y, 0.0,"bow_0001", 4.0));
+                game_object_manager.add_object(Bullet::new(rust_x, rust_y, 0.0,"bow_0001", 4.0, FACTION_PLAYER, 10.0));
             })});
         }
     }

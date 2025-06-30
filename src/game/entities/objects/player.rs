@@ -1,5 +1,5 @@
 use crate::{engine::{objects::{game_object::{GameObject, GameObjectBuilder}, game_object_animation::GameObjectAnimation}, types::controller_type::CONTROLLER_TYPE_UPDATE}, game::{entities::controllers::player_input_controller::PlayerInputController, enums::drawing_layers::DrawingLayer}};
-
+use crate::game::entities::factions::FACTION_PLAYER;
 pub struct Player{
 
 }
@@ -13,6 +13,11 @@ impl Player{
         .set_dimensions(10.0, 10.0)
         .set_sprite_offset(-3.0, -6.0)
         .set_camera_target()
+
+        // combat
+        .set_faction(FACTION_PLAYER)
+        .set_health(100.0)
+
         // animations
         // idle animation
         .add_animation(GameObjectAnimation::new(16.0).add_frame("player_0001"))

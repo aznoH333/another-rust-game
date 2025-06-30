@@ -161,6 +161,11 @@ impl GameObjectBuilder{
         return self;
     }
 
+    pub fn set_health(mut self, health: f32) -> GameObjectBuilder {
+        self.core.health = health;
+        return self;
+    }
+
     pub fn build(self) -> GameObject{
         return GameObject { core: self.core, controllers: self.controllers }
     }
