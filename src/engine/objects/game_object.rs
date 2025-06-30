@@ -1,6 +1,6 @@
 use std::{collections::HashMap, iter::Map};
 
-use crate::engine::{drawing::drawing_manager::DrawingManager, events::event_manager::EventManager, input::input::InputHandler, objects::game_object_animation::GameObjectAnimation, types::{object_event::ObjectEvent, vector::Vector}, world::world_manager::WorldManager};
+use crate::{engine::{drawing::drawing_manager::DrawingManager, events::event_manager::EventManager, input::input::InputHandler, objects::game_object_animation::GameObjectAnimation, types::{object_event::ObjectEvent, vector::Vector}, world::world_manager::WorldManager}, utils::space_utils::SpaceUtils};
 
 use super::{game_object_controller::GameObjectController, game_object_core::GameObjectCore};
 
@@ -74,6 +74,29 @@ impl GameObject{
         return self.core.collided_with_world();
     }
 
+    pub fn collides_with_object(&self, other: &GameObject) -> bool {
+        return SpaceUtils::squares_collide_f32(
+            self.core.x, 
+            self.core.y, 
+            self.core.width, 
+            self.core.height, 
+            other.core.x, 
+            other.core.y, 
+            other.core.width, 
+            other.core.height);
+    }
+
+    pub fn equals(&self, other: &GameObject) -> bool {
+        return self.core.id == other.core.id;
+    }
+
+    pub fn get_damage(&self) -> f32 {
+        return self.core.damage;
+    }
+
+    pub fn get_faction(&self) -> u32 {
+        return self.core.faction;
+    }
 }
 
 
@@ -126,6 +149,16 @@ impl GameObjectBuilder{
         self.core.use_animations = true;
 
         return self
+    }
+
+    pub fn set_damage(mut self, damage: f32) -> GameObjectBuilder {
+        self.core.damage = damage;
+        return self;
+    }
+
+    pub fn set_faction(mut self, faction: u32) -> GameObjectBuilder {
+        self.core.faction = faction;
+        return self;
     }
 
     pub fn build(self) -> GameObject{

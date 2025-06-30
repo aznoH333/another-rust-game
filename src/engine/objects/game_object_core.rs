@@ -16,6 +16,11 @@ pub struct GameObjectCore {
     pub friction: f32,
     pub bouncyness: f32,
     
+    // combat logic
+    pub faction: u32,
+    pub damage: f32,
+    pub health: f32,
+
     // drawing stuff
     pub sprite_name: String,
     pub z_index: i32,
@@ -30,6 +35,8 @@ pub struct GameObjectCore {
     pub wants_to_live: bool,
     collided_with_world: bool,
     delta: f32,
+    pub id: u32,
+
 }
 
 
@@ -57,6 +64,10 @@ impl GameObjectCore {
             wants_to_live: true,
             collided_with_world: false,
             delta: 0.0,
+            faction: 0,
+            damage: 0.0,
+            health: 1.0,
+            id: 0,
         }
     }
 

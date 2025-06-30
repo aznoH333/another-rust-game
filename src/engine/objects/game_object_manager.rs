@@ -1,5 +1,5 @@
 
-use crate::engine::{drawing::drawing_manager::DrawingManager, events::event_manager::{self, EventManager}, input::input::InputHandler, types::{controller_type::{CONTROLLER_TYPE_UPDATE, CONTROLLER_TYPE_WORLD_COLLIDE}, object_event::ObjectEvent}, world::world_manager::WorldManager};
+use crate::engine::{drawing::drawing_manager::DrawingManager, events::event_manager::{self, EventManager}, input::input::InputHandler, performance_monitoring::performance_monitor::PerformanceMonitor, types::{controller_type::{CONTROLLER_TYPE_OBJECT_COLLIDE, CONTROLLER_TYPE_UPDATE, CONTROLLER_TYPE_WORLD_COLLIDE}, object_event::ObjectEvent}, world::world_manager::WorldManager};
 
 use super::{game_object::GameObject, game_object_controller::GameObjectController};
 
@@ -40,6 +40,32 @@ impl GameObjectManager{
             
             if object.collided_with_world() {
                 object.activate_event(&ObjectEvent::new(CONTROLLER_TYPE_WORLD_COLLIDE), input, event_manager);
+            }
+
+        }
+    }
+
+    fn update_object_collisions(&mut self, input: &InputHandler, event_manager: &mut EventManager) {
+        let count = self.game_objects.iter().count();
+        
+        for object_index in 0..count {
+
+            let object = self.game_objects.get(object_index).unwrap();
+            
+
+            for other_index in 0..count {
+                if other_index == object_index {
+                    continue;
+                }
+
+                let other_object = self.game_objects.get(other_index).unwrap();
+
+                if self.game_objects.get(object_index).unwrap().collides_with_object(self.game_objects.get(other_index).unwrap()) {
+                    // fire collision event
+                    let object_update_event = ObjectEvent::new_object_collision(self.game_objects.get(other_index).unwrap());
+                    let mut object_mut = self.game_objects.get_mut(object_index).unwrap();
+                    object_mut.activate_event(&object_update_event, input, event_manager);
+                }
             }
         }
     }

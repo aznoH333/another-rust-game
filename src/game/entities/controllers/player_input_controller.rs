@@ -13,8 +13,7 @@ impl PlayerInputController{
 
 
 impl GameObjectController for PlayerInputController{
-    fn update(&mut self, core: &mut GameObjectCore, _event: &ObjectEvent, input: &InputHandler, event_manager: &mut EventManager) {
-        
+    fn update(&mut self, core: &mut GameObjectCore, _event: &ObjectEvent, input: &InputHandler, event_manager: &mut EventManager) {        
         if input.key_up(){
             core.y_velocity = -1.0;
         }
