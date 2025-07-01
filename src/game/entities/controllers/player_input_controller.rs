@@ -1,14 +1,22 @@
 use crate::{engine::{events::{event_manager::{EventManager}, game_event::GameEvent}, input::input::InputHandler, objects::{game_object_controller::GameObjectController, game_object_core::GameObjectCore}, types::object_event::ObjectEvent}, game::entities::objects::projectiles::bullet::Bullet};
 use crate::game::entities::factions::FACTION_PLAYER;
+use crate::engine::utils::timer::Timer;
+use std::f32::consts::PI;
 
 pub struct PlayerInputController{
-
+    fire_cooldown: Timer,
+    shoot_direction: f32,
 }
+
+const HALF_PI: f32 = PI / 2.0;
 
 
 impl PlayerInputController{
     pub fn new() -> PlayerInputController {
-        return PlayerInputController {  };
+        return PlayerInputController { 
+            fire_cooldown: Timer::new(500),
+            shoot_direction: 0.0,
+        };
     }
 }
 
@@ -17,20 +25,24 @@ impl GameObjectController for PlayerInputController{
     fn update(&mut self, core: &mut GameObjectCore, _event: &ObjectEvent, input: &InputHandler, event_manager: &mut EventManager) {        
         if input.key_up(){
             core.y_velocity = -1.0;
+            self.shoot_direction = -HALF_PI;
         }
 
         if input.key_down(){
             core.y_velocity = 1.0;
+            self.shoot_direction = HALF_PI;
         }
 
         if input.key_left(){
             core.x_velocity = -1.0;
             core.flip_sprite = true;
+            self.shoot_direction = PI;
         }
 
         if input.key_right(){
             core.x_velocity = 1.0;
             core.flip_sprite = false;
+            self.shoot_direction = 0.0;
         }
 
 
@@ -40,11 +52,13 @@ impl GameObjectController for PlayerInputController{
             core.play_animation(0, false);
         }
 
-        if input.key_action1() {
+        if input.key_action1() && self.fire_cooldown.can_activate() {
             let rust_x = core.x;
             let rust_y = core.y;
+            let rust_direction = self.shoot_direction;
+            self.fire_cooldown.activate();
             event_manager.push_event(GameEvent::SpawnObject { spawn_function: Box::new(move |game_object_manager|{
-                game_object_manager.add_object(Bullet::new(rust_x, rust_y, 0.0,"bow_0001", 4.0, FACTION_PLAYER, 10.0));
+                game_object_manager.add_object(Bullet::new(rust_x, rust_y, rust_direction,"bow_0001", 4.0, FACTION_PLAYER, 10.0));
             })});
         }
     }

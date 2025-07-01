@@ -23,4 +23,8 @@ impl Timer {
             .duration_since(UNIX_EPOCH)
             .expect("time should go forward").as_millis();
     }
+
+    pub fn set_cooldown(&mut self, cooldown: u128) {
+        self.timeout = cooldown;
+    }
 }
