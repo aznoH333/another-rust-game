@@ -33,8 +33,6 @@ impl GameObjectManager{
 
     fn update_objects(&mut self, input: &InputHandler, world: &WorldManager, event_manager: &mut EventManager, delta: f32) {
         for object in &mut self.game_objects{
-            object.update(world, delta);
-
             // regular update
             let object_update_event = ObjectEvent::new(CONTROLLER_TYPE_UPDATE);
             object.activate_event(&object_update_event, input, event_manager);
@@ -42,7 +40,9 @@ impl GameObjectManager{
             if object.collided_with_world() {
                 object.activate_event(&ObjectEvent::new(CONTROLLER_TYPE_WORLD_COLLIDE), input, event_manager);
             }
-
+            
+            // update core
+            object.update(world, delta);
         }
     }
 

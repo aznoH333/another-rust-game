@@ -27,6 +27,7 @@ pub struct GameObjectCore {
     pub scale: f32,
     pub is_camera_target: bool,
     pub flip_sprite: bool,
+    pub rotation: f32,
 
     pub current_animation: usize,
     pub animations: Vec<GameObjectAnimation>,
@@ -36,6 +37,7 @@ pub struct GameObjectCore {
     collided_with_world: bool,
     delta: f32,
     pub id: u32,
+    is_ready_to_draw: bool,
 
 }
 
@@ -68,11 +70,17 @@ impl GameObjectCore {
             damage: 0.0,
             health: 1.0,
             id: 0,
+            rotation: 0.0,
+            is_ready_to_draw: false,
         }
     }
 
 
     pub fn draw(&mut self, drawing_manager: &mut DrawingManager) {
+        if !self.is_ready_to_draw {
+            return;
+        }
+        
         let mut sprite_name = &self.sprite_name;
 
         if self.use_animations {
@@ -81,10 +89,11 @@ impl GameObjectCore {
             sprite_name = animation.get_current_frame();
         }
         // drawing
-        drawing_manager.draw_sprite(sprite_name, self.x + self.sprite_x_offset, self.y + self.sprite_y_offset, self.z_index, self.scale, self.flip_sprite);
+        drawing_manager.draw_sprite(sprite_name, self.x + self.sprite_x_offset, self.y + self.sprite_y_offset, self.z_index, self.scale, self.flip_sprite, self.rotation);
     }
 
     pub fn update(&mut self, world: &WorldManager, delta: f32) {
+        self.is_ready_to_draw = true;
         self.delta = delta;
         // movement
         self.collided_with_world = world.move_in_world(self, delta);

@@ -37,7 +37,7 @@ impl WorldTile{
     }
 
     pub fn draw(&self, drawing: &mut DrawingManager){
-        drawing.draw_sprite(&self.texture, self.x as f32, self.y as f32, DrawingLayer::World as i32, 1.0, false);
+        drawing.draw_sprite(&self.texture, self.x as f32, self.y as f32, DrawingLayer::World as i32, 1.0, false, 0.0);
     } // TODO : world generator
 
     pub fn get_left(&self) -> f32 {
