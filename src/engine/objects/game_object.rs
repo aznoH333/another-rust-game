@@ -76,12 +76,12 @@ impl GameObject{
 
     pub fn collides_with_object(&self, other: &GameObject) -> bool {
         return SpaceUtils::squares_collide_f32(
-            self.core.x, 
-            self.core.y, 
+            self.core.left(), 
+            self.core.top(), 
             self.core.width, 
             self.core.height, 
-            other.core.x, 
-            other.core.y, 
+            other.core.left(), 
+            other.core.top(), 
             other.core.width, 
             other.core.height);
     }
@@ -129,8 +129,6 @@ impl GameObjectBuilder{
     pub fn set_sprite_offset(mut self, x_offset: f32, y_offset: f32) -> GameObjectBuilder {
         self.core.sprite_x_offset = x_offset;
         self.core.sprite_y_offset = y_offset;
-        self.core.x += x_offset / 2.0;
-        self.core.y -= y_offset / 2.0; // TODO : this math is fucked
         return self;
     }
 
