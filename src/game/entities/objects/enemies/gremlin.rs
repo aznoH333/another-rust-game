@@ -15,7 +15,8 @@ impl Gremlin {
             // combat
             .set_faction(FACTION_ENEMY)
             .set_health(25.0)
-            
+            .set_name("gremlin")
+
             // controllers
             .add_controller(CONTROLLER_TYPE_OBJECT_COLLIDE, Box::new(TakeDamageOnHostileCollisionController::new(200)))
 

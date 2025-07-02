@@ -9,6 +9,7 @@ impl Bullet {
         .set_sprite_offset(-7.0, -7.0)
         .set_faction(faction)
         .set_damage(damage)
+        .set_name("projectile")
         .add_controller(CONTROLLER_TYPE_UPDATE,Box::new(ProjectileController::new(direction, speed)))
         .add_controller(CONTROLLER_TYPE_WORLD_COLLIDE, Box::new(DestroyOnEvent::new()))
         .add_controller(CONTROLLER_TYPE_OBJECT_COLLIDE, Box::new(DestroyOnHostileCollision::new()))

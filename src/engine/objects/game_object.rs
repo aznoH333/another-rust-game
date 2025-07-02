@@ -164,6 +164,11 @@ impl GameObjectBuilder{
         return self;
     }
 
+    pub fn set_name(mut self, name: &str) -> GameObjectBuilder {
+        self.core.name = name.to_owned();
+        return self;
+    }
+
     pub fn build(mut self) -> GameObject{
         return GameObject { core: self.core, controllers: self.controllers }
     }

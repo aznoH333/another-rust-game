@@ -17,6 +17,7 @@ impl Player{
         // combat
         .set_faction(FACTION_PLAYER)
         .set_health(100.0)
+        .set_name("player")
 
         // animations
         // idle animation

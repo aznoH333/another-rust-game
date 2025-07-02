@@ -97,5 +97,9 @@ impl GameObjectManager{
     pub fn add_object(&mut self, object: GameObject){
         self.game_objects.push(object);
     }
+
+    pub fn find_object_with_name(&self, name: &String) {
+        
+    }
 }
 

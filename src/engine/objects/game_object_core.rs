@@ -20,6 +20,7 @@ pub struct GameObjectCore {
     pub faction: u32,
     pub damage: f32,
     pub health: f32,
+    pub name: String,
 
     // drawing stuff
     pub sprite_name: String,
@@ -38,7 +39,7 @@ pub struct GameObjectCore {
     delta: f32,
     pub id: u32,
     is_ready_to_draw: bool,
-
+    pub look_for_target_with_name: Option<String>,
 }
 
 
@@ -72,6 +73,8 @@ impl GameObjectCore {
             id: 0,
             rotation: 0.0,
             is_ready_to_draw: false,
+            name: String::new(),
+            look_for_target_with_name: None,
         }
     }
 
@@ -173,6 +176,10 @@ impl GameObjectCore {
      */
     pub fn bottom(&self) -> f32 {
         return self.y + (self.height / 2.0);
+    }
+
+    pub fn set_target(&mut self, target: String) {
+        self.look_for_target_with_name = Some(target);
     }
 
 }

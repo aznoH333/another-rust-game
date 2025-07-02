@@ -14,12 +14,14 @@ impl TakeDamageOnHostileCollisionController {
 
 impl GameObjectController for TakeDamageOnHostileCollisionController {
     fn update(&mut self, core: &mut crate::engine::objects::game_object_core::GameObjectCore, event: &crate::engine::types::object_event::ObjectEvent, input: &crate::engine::input::input::InputHandler, event_manager: &mut crate::engine::events::event_manager::EventManager) {
-        if event.object_collision.faction != core.faction && 
-        event.object_collision.faction != 0 && 
-        event.object_collision.damage > 0.0 &&
+        let other = event.object_collision.as_ref().unwrap();
+        
+        if other.faction != core.faction && 
+        other.faction != 0 && 
+        other.damage > 0.0 &&
         self.timer.can_activate(){
             self.timer.activate();
-            core.health -= event.object_collision.damage;
+            core.health -= other.damage;
             if core.health <= 0.0 {
                 core.wants_to_live = false;
             }
