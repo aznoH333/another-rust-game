@@ -82,14 +82,15 @@ impl GameObjectCore {
         }
         
         let mut sprite_name = &self.sprite_name;
-
+        let x = self.left();
+        let y = self.top();
         if self.use_animations {
             let mut animation = self.animations.get_mut(self.current_animation).expect(format!("Animation not found {}", self.current_animation).as_str());
 
             sprite_name = animation.get_current_frame();
         }
         // drawing
-        drawing_manager.draw_sprite(sprite_name, self.x + self.sprite_x_offset, self.y + self.sprite_y_offset, self.z_index, self.scale, self.flip_sprite, self.rotation);
+        drawing_manager.draw_sprite(sprite_name, x + self.sprite_x_offset, y + self.sprite_y_offset, self.z_index, self.scale, self.flip_sprite, self.rotation);
     }
 
     pub fn update(&mut self, world: &WorldManager, delta: f32) {
@@ -115,8 +116,8 @@ impl GameObjectCore {
 
     pub fn get_center_position(&self) -> Vector{
         return Vector{
-            x: self.x + (self.width / 2.0), 
-            y: self.y + (self.height / 2.0)
+            x: self.x, 
+            y: self.y
         };
     }
 
@@ -145,4 +146,33 @@ impl GameObjectCore {
             self.animations.get_mut(animation).unwrap().reset_animation();
         }
     }
+
+    /**
+     * returns the "left" side of object -> x position
+     */
+    pub fn left(&self) -> f32 {
+        return self.x - (self.width / 2.0);
+    }
+
+    /**
+     * returns the "right" side of object -> x position
+     */
+    pub fn right(&self) -> f32 {
+        return self.x + (self.width / 2.0);
+    }
+
+    /**
+     * returns the "top" side of object -> y position
+     */
+    pub fn top(&self) -> f32 {
+        return self.y - (self.height / 2.0);
+    }
+
+    /**
+     * returns the "bottom" side of object -> y position
+     */
+    pub fn bottom(&self) -> f32 {
+        return self.y + (self.height / 2.0);
+    }
+
 }

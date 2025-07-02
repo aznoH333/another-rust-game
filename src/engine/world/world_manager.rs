@@ -79,8 +79,8 @@ impl WorldManager{
         
         // x move
         let x_colider = self.check_world_square_collisions(
-            game_object.x + game_object.get_x_velocity(), 
-            game_object.y, 
+            game_object.left() + game_object.get_x_velocity(), 
+            game_object.top(), 
             game_object.width, 
             game_object.height);
 
@@ -88,9 +88,9 @@ impl WorldManager{
             game_object.x += game_object.get_x_velocity();
         }else {
             if game_object.get_x_velocity() > 0.0{
-                game_object.x = x_colider.unwrap().get_left() - game_object.width;
+                game_object.x = x_colider.unwrap().get_left() - (game_object.width / 2.0);
             }else {
-                game_object.x = x_colider.unwrap().get_right();
+                game_object.x = x_colider.unwrap().get_right() + (game_object.width / 2.0);
             }
             game_object.x_velocity = -game_object.x_velocity * game_object.bouncyness;
             collided = true;
@@ -98,8 +98,8 @@ impl WorldManager{
 
         // y move
         let y_colider = self.check_world_square_collisions(
-            game_object.x, 
-            game_object.y + game_object.get_y_velocity(), 
+            game_object.left(), 
+            game_object.top() + game_object.get_y_velocity(), 
             game_object.width, 
             game_object.height);
 
@@ -107,9 +107,9 @@ impl WorldManager{
             game_object.y += game_object.get_y_velocity();
         }else {
             if game_object.get_y_velocity() > 0.0{
-                game_object.y = y_colider.unwrap().get_top() - game_object.height;
+                game_object.y = y_colider.unwrap().get_top() - (game_object.height / 2.0);
             }else {
-                game_object.y = y_colider.unwrap().get_bottom();
+                game_object.y = y_colider.unwrap().get_bottom() + (game_object.height / 2.0);
             }
             game_object.y_velocity = -game_object.y_velocity * game_object.bouncyness;
             collided = true;

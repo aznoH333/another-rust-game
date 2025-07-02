@@ -1,6 +1,6 @@
 use std::{collections::HashMap, iter::Map};
 
-use crate::{engine::{drawing::drawing_manager::DrawingManager, events::event_manager::EventManager, input::input::InputHandler, objects::game_object_animation::GameObjectAnimation, types::{object_event::ObjectEvent, vector::Vector}, world::world_manager::WorldManager}, utils::space_utils::SpaceUtils};
+use crate::{engine::{drawing::drawing_manager::DrawingManager, events::event_manager::EventManager, input::input::InputHandler, objects::game_object_animation::GameObjectAnimation, types::{object_event::ObjectEvent, vector::Vector}, world::{world_constants::TILE_SIZE, world_manager::WorldManager}}, utils::space_utils::SpaceUtils};
 
 use super::{game_object_controller::GameObjectController, game_object_core::GameObjectCore};
 
@@ -129,8 +129,8 @@ impl GameObjectBuilder{
     pub fn set_sprite_offset(mut self, x_offset: f32, y_offset: f32) -> GameObjectBuilder {
         self.core.sprite_x_offset = x_offset;
         self.core.sprite_y_offset = y_offset;
-        self.core.x -= x_offset;
-        self.core.y -= y_offset;
+        self.core.x += x_offset / 2.0;
+        self.core.y -= y_offset / 2.0; // TODO : this math is fucked
         return self;
     }
 
@@ -166,7 +166,7 @@ impl GameObjectBuilder{
         return self;
     }
 
-    pub fn build(self) -> GameObject{
+    pub fn build(mut self) -> GameObject{
         return GameObject { core: self.core, controllers: self.controllers }
     }
 
