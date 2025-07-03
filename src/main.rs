@@ -1,3 +1,7 @@
+
+#![allow(dead_code)] // this line make cargo shut the fuck up
+#![allow(unused_variables)]
+
 mod utils;
 mod engine;
 mod game;

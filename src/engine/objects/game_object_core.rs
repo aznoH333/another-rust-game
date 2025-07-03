@@ -1,5 +1,5 @@
-use crate::{engine::{drawing::drawing_manager::DrawingManager, objects::game_object_animation::GameObjectAnimation, types::vector::Vector, world::{world_constants::TILE_SIZE, world_manager::WorldManager}}, utils::number_utils::NumberUtils};
-
+use crate::{engine::{drawing::drawing_manager::DrawingManager, objects::{game_object_animation::GameObjectAnimation, object_simplification::ObjectSimplification}, types::vector::Vector, world::{world_constants::TILE_SIZE, world_manager::WorldManager}}, utils::number_utils::NumberUtils};
+use crate::engine::objects::game_box::GameBox;
 pub struct GameObjectCore {
     
     // positional stuff
@@ -150,36 +150,62 @@ impl GameObjectCore {
         }
     }
 
+    pub fn set_target(&mut self, target: String) {
+        self.look_for_target_with_name = Some(target);
+    }
+
+    pub fn get_simplification(&self) -> ObjectSimplification {
+        return ObjectSimplification::new(self);
+    }
+
+}
+
+impl GameBox for GameObjectCore {
     /**
      * returns the "left" side of object -> x position
      */
-    pub fn left(&self) -> f32 {
+    fn left(&self) -> f32 {
         return self.x - (self.width / 2.0);
     }
 
     /**
      * returns the "right" side of object -> x position
      */
-    pub fn right(&self) -> f32 {
+    fn right(&self) -> f32 {
         return self.x + (self.width / 2.0);
     }
 
     /**
      * returns the "top" side of object -> y position
      */
-    pub fn top(&self) -> f32 {
+    fn top(&self) -> f32 {
         return self.y - (self.height / 2.0);
     }
 
     /**
      * returns the "bottom" side of object -> y position
      */
-    pub fn bottom(&self) -> f32 {
+    fn bottom(&self) -> f32 {
         return self.y + (self.height / 2.0);
     }
 
-    pub fn set_target(&mut self, target: String) {
-        self.look_for_target_with_name = Some(target);
+    fn get_x(&self) -> f32 {
+        return self.x;
+    } 
+
+    fn get_y(&self) -> f32 {
+        return self.y;
     }
 
+    fn get_width(&self) -> f32 {
+        return self.width;
+    }
+
+    fn get_height(&self) -> f32 {
+        return self.height;
+    }
+
+    fn get_id(&self) -> u32 {
+        return self.id;
+    }
 }

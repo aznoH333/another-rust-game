@@ -1,5 +1,5 @@
 
-use crate::engine::{drawing::drawing_manager::DrawingManager, events::event_manager::{self, EventManager}, input::input::InputHandler, performance_monitoring::performance_monitor::PerformanceMonitor, types::{controller_type::{CONTROLLER_TYPE_OBJECT_COLLIDE, CONTROLLER_TYPE_UPDATE, CONTROLLER_TYPE_WORLD_COLLIDE}, object_event::ObjectEvent}, world::world_manager::WorldManager};
+use crate::engine::{drawing::drawing_manager::DrawingManager, events::event_manager::{self, EventManager}, input::input::InputHandler, objects::object_simplification::{self, ObjectSimplification}, performance_monitoring::performance_monitor::PerformanceMonitor, types::{controller_type::{CONTROLLER_TYPE_OBJECT_COLLIDE, CONTROLLER_TYPE_UPDATE, CONTROLLER_TYPE_WORLD_COLLIDE}, object_event::ObjectEvent}, world::world_manager::WorldManager};
 
 use super::{game_object::GameObject, game_object_controller::GameObjectController};
 
@@ -23,18 +23,27 @@ impl GameObjectManager{
     }
 
     pub fn update(&mut self, drawing_manager: &mut DrawingManager, input: &InputHandler, world: &WorldManager, event_manager: &mut EventManager, delta: f32) {
+        let object_simplifications = self.collect_object_simplifications();
 
-        self.update_objects(input, world, event_manager, delta);
+        self.update_objects(input, world, event_manager, delta, object_simplifications);
         self.cull_dead_objects();
         self.update_camera(drawing_manager);
         self.update_object_collisions(input, event_manager);
 
     }
 
-    fn update_objects(&mut self, input: &InputHandler, world: &WorldManager, event_manager: &mut EventManager, delta: f32) {
+    fn update_objects(&mut self, input: &InputHandler, world: &WorldManager, event_manager: &mut EventManager, delta: f32, object_simplifications: Vec<ObjectSimplification>) {
+        // TODO : thanks to object simplifications. update objects and object collisions should now be merger into 1 loop        
         for object in &mut self.game_objects{
             // regular update
-            let object_update_event = ObjectEvent::new(CONTROLLER_TYPE_UPDATE);
+            let target = object.get_target().as_ref();
+            let mut found_target: Option<&ObjectSimplification> = None;
+            if target.is_some() {
+                found_target = object_simplifications.iter().find(|a| a.name == *target.unwrap());
+            }
+            
+            
+            let object_update_event = ObjectEvent::new_with_object(CONTROLLER_TYPE_UPDATE, found_target);
             object.activate_event(&object_update_event, input, event_manager);
             
             if object.collided_with_world() {
@@ -44,6 +53,16 @@ impl GameObjectManager{
             // update core
             object.update(world, delta);
         }
+    }
+
+    pub fn collect_object_simplifications(&self) -> Vec<ObjectSimplification> {
+        let mut output = Vec::<ObjectSimplification>::new();
+
+        for object in &self.game_objects {
+            output.push(ObjectSimplification::new(object.get_core()));
+        }
+
+        return output;
     }
 
     fn update_object_collisions(&mut self, input: &InputHandler, event_manager: &mut EventManager) {
@@ -62,8 +81,11 @@ impl GameObjectManager{
                 let other_object = self.game_objects.get(other_index).unwrap();
 
                 if self.game_objects.get(object_index).unwrap().collides_with_object(self.game_objects.get(other_index).unwrap()) {
+                    
+                    let penis = ObjectSimplification::new(self.game_objects.get(other_index).unwrap().get_core()); 
                     // fire collision event
-                    let object_update_event = ObjectEvent::new_object_collision(self.game_objects.get(other_index).unwrap());
+                    let object_update_event = ObjectEvent::new_with_object(CONTROLLER_TYPE_OBJECT_COLLIDE, 
+                        Some(&penis));
                     let mut object_mut = self.game_objects.get_mut(object_index).unwrap();
                     object_mut.activate_event(&object_update_event, input, event_manager);
                 }

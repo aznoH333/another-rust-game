@@ -1,6 +1,6 @@
 use std::{collections::HashMap, iter::Map};
 
-use crate::{engine::{drawing::drawing_manager::DrawingManager, events::event_manager::EventManager, input::input::InputHandler, objects::game_object_animation::GameObjectAnimation, types::{object_event::ObjectEvent, vector::Vector}, world::{world_constants::TILE_SIZE, world_manager::WorldManager}}, utils::space_utils::SpaceUtils};
+use crate::{engine::{drawing::drawing_manager::DrawingManager, events::event_manager::EventManager, input::input::InputHandler, objects::{game_box::GameBox, game_object_animation::GameObjectAnimation, object_simplification::ObjectSimplification}, types::{object_event::ObjectEvent, vector::Vector}, world::{world_constants::TILE_SIZE, world_manager::WorldManager}}, utils::space_utils::SpaceUtils};
 
 use super::{game_object_controller::GameObjectController, game_object_core::GameObjectCore};
 
@@ -75,15 +75,7 @@ impl GameObject{
     }
 
     pub fn collides_with_object(&self, other: &GameObject) -> bool {
-        return SpaceUtils::squares_collide_f32(
-            self.core.left(), 
-            self.core.top(), 
-            self.core.width, 
-            self.core.height, 
-            other.core.left(), 
-            other.core.top(), 
-            other.core.width, 
-            other.core.height);
+        return self.core.collides_with_box(&other.core);
     }
 
     pub fn equals(&self, other: &GameObject) -> bool {
@@ -96,6 +88,23 @@ impl GameObject{
 
     pub fn get_faction(&self) -> u32 {
         return self.core.faction;
+    }
+
+    pub fn get_simplification(&self) -> ObjectSimplification {
+        return self.core.get_simplification();
+    }
+
+    pub fn get_target(&self) -> &Option<String> {
+        return &self.core.look_for_target_with_name;
+    }
+
+    /**
+     * Note to self.
+     * Can realy fuckup an object if interacted with improperly
+     * Prefer game object methods instead of core.
+     */
+    pub fn get_core(&self) -> &GameObjectCore {
+        return &self.core;
     }
 }
 
@@ -169,8 +178,15 @@ impl GameObjectBuilder{
         return self;
     }
 
-    pub fn build(mut self) -> GameObject{
+    pub fn set_target(mut self, target: &str) -> GameObjectBuilder {
+        self.core.set_target(target.to_owned());
+        return self;
+    }
+    
+    pub fn build(self) -> GameObject{
         return GameObject { core: self.core, controllers: self.controllers }
     }
+
+    
 
 }

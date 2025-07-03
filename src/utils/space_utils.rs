@@ -33,4 +33,8 @@ impl SpaceUtils {
     pub fn world_units_to_game_units(value: i32) -> f32 {
         return (value * TILE_SIZE) as f32;
     }
+
+    pub fn direction_towards(x1: f32, y1: f32, x2: f32, y2: f32) -> f32 {
+        return (y2 - y1).atan2(x2 - x1);
+    }
 }
