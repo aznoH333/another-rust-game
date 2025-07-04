@@ -1,5 +1,6 @@
 use crate::{engine::{drawing::drawing_manager::DrawingManager, objects::{game_object_animation::GameObjectAnimation, object_simplification::ObjectSimplification}, types::vector::Vector, world::{world_constants::TILE_SIZE, world_manager::WorldManager}}, utils::number_utils::NumberUtils};
 use crate::engine::objects::game_box::GameBox;
+use crate::engine::objects::engine_animations::{ANIMATION_IDLE, ANIMATION_WALK};
 use std::collections::HashMap;
 pub struct GameObjectCore {
     
@@ -116,6 +117,8 @@ impl GameObjectCore {
 
         self.collided_with_world = world.move_in_world(self, delta);
 
+        self.update_animation_state();
+
         // friction
         self.x_velocity = NumberUtils::gravitate_number(self.x_velocity, 0.0, self.friction * delta);
         self.y_velocity = NumberUtils::gravitate_number(self.y_velocity, 0.0, self.friction * delta);
@@ -124,6 +127,20 @@ impl GameObjectCore {
         if self.use_animations {
             let mut animation = self.animations.get_mut(&self.current_animation).expect(format!("Animation not found {}", self.current_animation).as_str());
             animation.update_animation(delta);
+        }
+    }
+
+    fn update_animation_state(&mut self) {
+        if !self.use_animations{
+            return;
+        }
+
+        // TODO : hurt animation
+        // TODO : death animation?
+        if self.x_velocity.abs() > 0.0 || self.y_velocity.abs() > 0.0 {
+            self.play_animation(ANIMATION_WALK, false);
+        }else {
+            self.play_animation(ANIMATION_IDLE, false);
         }
     }
 

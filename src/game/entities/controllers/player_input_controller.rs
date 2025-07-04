@@ -45,13 +45,6 @@ impl GameObjectController for PlayerInputController{
             self.shoot_direction = 0.0;
         }
 
-
-        if core.x_velocity.abs() > 0.0 || core.y_velocity.abs() > 0.0 {
-            core.play_animation(ANIMATION_WALK, false);
-        }else {
-            core.play_animation(ANIMATION_IDLE, false);
-        }
-
         if input.key_action1() && self.fire_cooldown.can_activate() {
             let rust_x = core.x;
             let rust_y = core.y;

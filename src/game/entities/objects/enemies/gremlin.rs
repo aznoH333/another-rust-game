@@ -1,4 +1,4 @@
-use crate::{engine::{objects::game_object::{GameObject, GameObjectBuilder}, types::controller_type::{CONTROLLER_TYPE_OBJECT_COLLIDE, CONTROLLER_TYPE_UPDATE}}, game::{entities::controllers::{fighter_controller::FighterController, take_damage_on_hostile_collision::TakeDamageOnHostileCollisionController}, enums::drawing_layers::DrawingLayer}};
+use crate::{engine::{objects::{engine_animations::{ANIMATION_IDLE, ANIMATION_WALK}, game_object::{GameObject, GameObjectBuilder}, game_object_animation::GameObjectAnimation}, types::controller_type::{CONTROLLER_TYPE_OBJECT_COLLIDE, CONTROLLER_TYPE_UPDATE}}, game::{entities::{controllers::{fighter_controller::FighterController, take_damage_on_hostile_collision::TakeDamageOnHostileCollisionController}, objects::enemies::gremlin}, enums::drawing_layers::DrawingLayer}};
 use crate::game::entities::factions::FACTION_ENEMY;
 
 pub struct Gremlin {
@@ -21,6 +21,16 @@ impl Gremlin {
             .set_name("gremlin")
             .set_target("player")
 
+            // animations
+            .add_animation(ANIMATION_IDLE, 
+                GameObjectAnimation::new(16.0)
+                .add_frame("gremlin_0001"))
+            .add_animation(ANIMATION_WALK, 
+                GameObjectAnimation::new(16.0)
+                .add_frame("gremlin_0002")
+                .add_frame("gremlin_0003")
+            )
+                
             // controllers
             .add_controller(CONTROLLER_TYPE_OBJECT_COLLIDE, Box::new(TakeDamageOnHostileCollisionController::new(200)))
             .add_controller(CONTROLLER_TYPE_UPDATE, Box::new(FighterController::new("player")))
