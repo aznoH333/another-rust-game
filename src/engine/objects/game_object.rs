@@ -198,6 +198,11 @@ impl GameObjectBuilder{
         return self;
     }
 
+    pub fn disable_auto_flipping(mut self) -> GameObjectBuilder {
+        self.core.allow_auto_flipping = false;
+        return self;
+    }
+
     pub fn build(self) -> GameObject{
         return GameObject { core: self.core, controllers: self.controllers }
     }

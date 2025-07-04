@@ -10,6 +10,7 @@ impl Bullet {
         .set_faction(faction)
         .set_damage(damage)
         .set_name("projectile")
+        .disable_auto_flipping()
         .add_controller(CONTROLLER_TYPE_UPDATE,Box::new(ProjectileController::new(direction, speed)))
         .add_controller(CONTROLLER_TYPE_WORLD_COLLIDE, Box::new(DestroyOnEvent::new()))
         .add_controller(CONTROLLER_TYPE_OBJECT_COLLIDE, Box::new(DestroyOnHostileCollision::new()))

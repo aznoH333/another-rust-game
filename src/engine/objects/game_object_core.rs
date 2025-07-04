@@ -36,6 +36,7 @@ pub struct GameObjectCore {
     pub is_camera_target: bool,
     pub flip_sprite: bool,
     pub rotation: f32,
+    pub allow_auto_flipping: bool,
 
     pub current_animation: i32,
     pub animations: HashMap<i32, GameObjectAnimation>,
@@ -86,12 +87,13 @@ impl GameObjectCore {
             movement_x: 0.0,
             movement_y: 0.0,
             acceleration: 0.25,
+            allow_auto_flipping: true,
         }
     }
 
 
     pub fn draw(&mut self, drawing_manager: &mut DrawingManager) {
-        if !self.is_ready_to_draw {
+        if !self.is_ready_to_draw || !self.wants_to_live {
             return;
         }
         
@@ -137,10 +139,19 @@ impl GameObjectCore {
 
         // TODO : hurt animation
         // TODO : death animation?
-        if self.x_velocity.abs() > 0.0 || self.y_velocity.abs() > 0.0 {
+        if self.x_velocity.abs() > self.speed * self.acceleration || self.y_velocity.abs() > self.speed * self.acceleration {
             self.play_animation(ANIMATION_WALK, false);
         }else {
             self.play_animation(ANIMATION_IDLE, false);
+        }
+
+        // flip sprite
+        if self.allow_auto_flipping {
+            if self.x_velocity < -self.speed * self.acceleration {
+                self.flip_sprite = true;
+            }else if self.x_velocity > self.speed * self.acceleration {
+                self.flip_sprite = false;
+            }
         }
     }
 
