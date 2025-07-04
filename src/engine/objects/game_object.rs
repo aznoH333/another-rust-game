@@ -183,9 +183,25 @@ impl GameObjectBuilder{
         return self;
     }
     
+    pub fn set_speed(mut self, speed: f32) -> GameObjectBuilder {
+        self.core.speed = speed;
+        return self;
+    }
+
+    pub fn set_acceleration(mut self, acceleration: f32) -> GameObjectBuilder {
+        self.core.acceleration = acceleration;
+        return self;
+    }
+
+    pub fn set_friction(mut self, friction: f32) -> GameObjectBuilder {
+        self.core.acceleration = friction;
+        return self;
+    }
+
     pub fn build(self) -> GameObject{
         return GameObject { core: self.core, controllers: self.controllers }
     }
+
 
     
 

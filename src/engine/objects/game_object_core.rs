@@ -15,7 +15,12 @@ pub struct GameObjectCore {
     pub y_velocity: f32,
     pub friction: f32,
     pub bouncyness: f32,
-    
+    pub speed: f32,
+    pub acceleration: f32,
+    // number between -1 and 1 indicating the direction the object wants to accelerate in
+    pub movement_x: f32,
+    pub movement_y: f32,
+
     // combat logic
     pub faction: u32,
     pub damage: f32,
@@ -75,6 +80,10 @@ impl GameObjectCore {
             is_ready_to_draw: false,
             name: String::new(),
             look_for_target_with_name: None,
+            speed: 0.75,
+            movement_x: 0.0,
+            movement_y: 0.0,
+            acceleration: 0.25,
         }
     }
 
@@ -100,6 +109,10 @@ impl GameObjectCore {
         self.is_ready_to_draw = true;
         self.delta = delta;
         // movement
+        self.accelerate_in_direction(self.movement_x, self.movement_y);
+        self.movement_x = 0.0;
+        self.movement_y = 0.0;
+
         self.collided_with_world = world.move_in_world(self, delta);
 
         // friction
@@ -156,6 +169,11 @@ impl GameObjectCore {
 
     pub fn get_simplification(&self) -> ObjectSimplification {
         return ObjectSimplification::new(self);
+    }
+
+    pub fn accelerate_in_direction(&mut self, x: f32, y: f32) {
+        self.x_velocity = NumberUtils::gravitate_number(self.x_velocity, x.signum() * self.speed, x * self.delta * self.acceleration);
+        self.y_velocity = NumberUtils::gravitate_number(self.y_velocity, y.signum() * self.speed, y * self.delta * self.acceleration);
     }
 
 }

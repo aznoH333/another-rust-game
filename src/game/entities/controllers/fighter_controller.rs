@@ -17,8 +17,8 @@ impl GameObjectController for FighterController {
         if event.found_object.is_some() {
             let other = event.found_object.unwrap();
             let direction = SpaceUtils::direction_towards(core.x, core.y, other.x, other.y);
-            core.x_velocity = direction.cos();
-            core.y_velocity = direction.sin();
+            core.movement_x = direction.cos();
+            core.movement_y = direction.sin();
         }        
     }
 }

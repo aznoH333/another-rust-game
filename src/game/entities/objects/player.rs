@@ -14,6 +14,9 @@ impl Player{
         .set_sprite_offset(-3.0, -6.0)
         .set_camera_target()
 
+        // stats
+        .set_speed(1.2)
+
         // combat
         .set_faction(FACTION_PLAYER)
         .set_health(100.0)
@@ -21,9 +24,9 @@ impl Player{
 
         // animations
         // idle animation
-        .add_animation(GameObjectAnimation::new(16.0).add_frame("player_0001"))
+        .add_animation(GameObjectAnimation::new(9.0).add_frame("player_0001"))
         // walk animation
-        .add_animation(GameObjectAnimation::new(16.0).add_frame("player_0002").add_frame("player_0003"))
+        .add_animation(GameObjectAnimation::new(9.0).add_frame("player_0002").add_frame("player_0003"))
 
         // controllers
         .add_controller(CONTROLLER_TYPE_UPDATE,Box::new(PlayerInputController::new()))

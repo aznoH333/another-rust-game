@@ -8,7 +8,7 @@ pub struct NumberUtils{
 
 impl NumberUtils {
     pub fn gravitate_number(current: f32, target: f32, speed: f32) -> f32 {
-        if (current - target).abs() < speed {
+        if (current - target).signum() > speed.signum() || (current - target).abs() < speed {
             return target;
         }
 

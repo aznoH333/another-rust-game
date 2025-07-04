@@ -24,23 +24,23 @@ impl PlayerInputController{
 impl GameObjectController for PlayerInputController{
     fn update(&mut self, core: &mut GameObjectCore, _event: &ObjectEvent, input: &InputHandler, event_manager: &mut EventManager) {        
         if input.key_up(){
-            core.y_velocity = -1.0;
+            core.movement_y = -1.0;
             self.shoot_direction = -HALF_PI;
         }
 
         if input.key_down(){
-            core.y_velocity = 1.0;
+            core.movement_y = 1.0;
             self.shoot_direction = HALF_PI;
         }
 
         if input.key_left(){
-            core.x_velocity = -1.0;
+            core.movement_x = -1.0;
             core.flip_sprite = true;
             self.shoot_direction = PI;
         }
 
         if input.key_right(){
-            core.x_velocity = 1.0;
+            core.movement_x = 1.0;
             core.flip_sprite = false;
             self.shoot_direction = 0.0;
         }
