@@ -1,5 +1,5 @@
 
-use crate::engine::{drawing::drawing_manager::DrawingManager, events::event_manager::{self, EventManager}, input::input::InputHandler, objects::object_simplification::{self, ObjectSimplification}, performance_monitoring::performance_monitor::PerformanceMonitor, types::{controller_type::{CONTROLLER_TYPE_OBJECT_COLLIDE, CONTROLLER_TYPE_UPDATE, CONTROLLER_TYPE_WORLD_COLLIDE}, object_event::ObjectEvent}, world::world_manager::WorldManager};
+use crate::engine::{drawing::drawing_manager::DrawingManager, events::event_manager::{self, EventManager}, input::input::InputHandler, objects::{object_simplification::{self, ObjectSimplification}, object_update::ObjectUpdate}, performance_monitoring::performance_monitor::PerformanceMonitor, types::{controller_type::{CONTROLLER_TYPE_OBJECT_COLLIDE, CONTROLLER_TYPE_UPDATE, CONTROLLER_TYPE_WORLD_COLLIDE}, object_event::ObjectEvent}, world::world_manager::WorldManager};
 
 use super::{game_object::GameObject, game_object_controller::GameObjectController};
 
@@ -28,7 +28,7 @@ impl GameObjectManager{
         self.update_objects(input, world, event_manager, delta, object_simplifications);
         self.cull_dead_objects();
         self.update_camera(drawing_manager);
-        self.update_object_collisions(input, event_manager);
+        self.update_object_collisions(input, event_manager, world);
 
     }
 
@@ -44,10 +44,19 @@ impl GameObjectManager{
             
             
             let object_update_event = ObjectEvent::new_with_object(CONTROLLER_TYPE_UPDATE, found_target);
-            object.activate_event(&object_update_event, input, event_manager);
+            let mut update_value = ObjectUpdate{
+                event: &object_update_event, // inlining this will make rust shit the bed and cry
+                input,
+                event_manager,
+                world
+            };
+            object.activate_event(&mut update_value);
             
             if object.collided_with_world() {
-                object.activate_event(&ObjectEvent::new(CONTROLLER_TYPE_WORLD_COLLIDE), input, event_manager);
+                let cool_rust_feature = ObjectEvent::new(CONTROLLER_TYPE_WORLD_COLLIDE);
+                let mut object_update = GameObjectManager::get_engine_update(input, event_manager, world, &cool_rust_feature);
+
+                object.activate_event(&mut object_update);
             }
             
             // update core
@@ -65,7 +74,7 @@ impl GameObjectManager{
         return output;
     }
 
-    fn update_object_collisions(&mut self, input: &InputHandler, event_manager: &mut EventManager) {
+    fn update_object_collisions(&mut self, input: &InputHandler, event_manager: &mut EventManager, world_manager: &WorldManager) {
         let count = self.game_objects.iter().count();
         
         for object_index in 0..count {
@@ -81,13 +90,16 @@ impl GameObjectManager{
                 let other_object = self.game_objects.get(other_index).unwrap();
 
                 if self.game_objects.get(object_index).unwrap().collides_with_object(self.game_objects.get(other_index).unwrap()) {
-                    
-                    let penis = ObjectSimplification::new(self.game_objects.get(other_index).unwrap().get_core()); 
+                    let cool_rust_feature = ObjectSimplification::new(self.game_objects.get(other_index).unwrap().get_core()); 
                     // fire collision event
                     let object_update_event = ObjectEvent::new_with_object(CONTROLLER_TYPE_OBJECT_COLLIDE, 
-                        Some(&penis));
+                        Some(&cool_rust_feature));
                     let mut object_mut = self.game_objects.get_mut(object_index).unwrap();
-                    object_mut.activate_event(&object_update_event, input, event_manager);
+
+                    let mut update_value = GameObjectManager::get_engine_update(input, event_manager, world_manager, &object_update_event);
+
+
+                    object_mut.activate_event(&mut update_value);
                 }
             }
         }
@@ -104,6 +116,10 @@ impl GameObjectManager{
                 );
             }
         }
+    }
+
+    fn get_engine_update<'a>(input: &'a InputHandler, event_manager: &'a mut EventManager, world: &'a WorldManager, event: &'a ObjectEvent) -> ObjectUpdate<'a> {
+        return ObjectUpdate { event, input, event_manager, world }
     }
 
     fn cull_dead_objects(&mut self) {

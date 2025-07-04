@@ -1,6 +1,6 @@
 use std::{collections::HashMap, iter::Map};
 
-use crate::{engine::{drawing::drawing_manager::DrawingManager, events::event_manager::EventManager, input::input::InputHandler, objects::{game_box::GameBox, game_object_animation::GameObjectAnimation, object_simplification::ObjectSimplification}, types::{object_event::ObjectEvent, vector::Vector}, world::{world_constants::TILE_SIZE, world_manager::WorldManager}}, utils::space_utils::SpaceUtils};
+use crate::{engine::{drawing::drawing_manager::DrawingManager, events::event_manager::EventManager, input::input::InputHandler, objects::{game_box::GameBox, game_object_animation::GameObjectAnimation, object_simplification::ObjectSimplification, object_update::ObjectUpdate}, types::{object_event::ObjectEvent, vector::Vector}, world::{world_constants::TILE_SIZE, world_manager::WorldManager}}, utils::space_utils::SpaceUtils};
 
 use super::{game_object_controller::GameObjectController, game_object_core::GameObjectCore};
 
@@ -25,16 +25,16 @@ impl GameObject{
         self.core.update(world, delta);
     }
 
-    pub fn activate_event(&mut self, event: &ObjectEvent, input: &InputHandler, event_manager: &mut EventManager) {
+    pub fn activate_event(&mut self, update: &mut ObjectUpdate) {
         
-        let controllers_to_update = self.controllers.get_mut(&event.event_type);
+        let controllers_to_update = self.controllers.get_mut(&update.event.event_type);
 
         if controllers_to_update.is_none() {
             return;
         }
 
         for controller in controllers_to_update.unwrap(){
-            controller.update(&mut self.core, event, input, event_manager);
+            controller.update(&mut self.core, update);
         }
     }
 

@@ -1,6 +1,7 @@
 use crate::utils::space_utils::SpaceUtils;
 
 pub trait GameBox {
+    // TODO : rewerite game object core to use composition instead of interface implementation
     fn get_id(&self) -> u32;
     fn get_x(&self) -> f32;
     fn get_y(&self) -> f32;

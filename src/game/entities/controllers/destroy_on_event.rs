@@ -1,4 +1,4 @@
-use crate::engine::objects::game_object_controller::GameObjectController;
+use crate::engine::{self, objects::{game_object_controller::GameObjectController, object_update::ObjectUpdate}};
 
 pub struct DestroyOnEvent{
 
@@ -11,7 +11,7 @@ impl DestroyOnEvent {
 }
 
 impl GameObjectController for DestroyOnEvent {
-    fn update(&mut self, core: &mut crate::engine::objects::game_object_core::GameObjectCore, event: &crate::engine::types::object_event::ObjectEvent, input: &crate::engine::input::input::InputHandler, event_manager: &mut crate::engine::events::event_manager::EventManager) {
+    fn update(&mut self, core: &mut crate::engine::objects::game_object_core::GameObjectCore, engine: &mut ObjectUpdate) {
         core.die();
     }
 }
