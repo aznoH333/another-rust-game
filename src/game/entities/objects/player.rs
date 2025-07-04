@@ -1,4 +1,4 @@
-use crate::{engine::{objects::{game_object::{GameObject, GameObjectBuilder}, game_object_animation::GameObjectAnimation}, types::controller_type::CONTROLLER_TYPE_UPDATE}, game::{entities::controllers::player_input_controller::PlayerInputController, enums::drawing_layers::DrawingLayer}};
+use crate::{engine::{objects::{engine_animations::{ANIMATION_IDLE, ANIMATION_WALK}, game_object::{GameObject, GameObjectBuilder}, game_object_animation::GameObjectAnimation}, types::controller_type::CONTROLLER_TYPE_UPDATE}, game::{entities::controllers::player_input_controller::PlayerInputController, enums::drawing_layers::DrawingLayer}};
 use crate::game::entities::factions::FACTION_PLAYER;
 pub struct Player{
 
@@ -24,9 +24,9 @@ impl Player{
 
         // animations
         // idle animation
-        .add_animation(GameObjectAnimation::new(9.0).add_frame("player_0001"))
+        .add_animation(ANIMATION_IDLE, GameObjectAnimation::new(9.0).add_frame("player_0001"))
         // walk animation
-        .add_animation(GameObjectAnimation::new(9.0).add_frame("player_0002").add_frame("player_0003"))
+        .add_animation(ANIMATION_WALK, GameObjectAnimation::new(9.0).add_frame("player_0002").add_frame("player_0003"))
 
         // controllers
         .add_controller(CONTROLLER_TYPE_UPDATE,Box::new(PlayerInputController::new()))

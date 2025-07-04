@@ -151,8 +151,8 @@ impl GameObjectBuilder{
         return self;
     }
 
-    pub fn add_animation(mut self, animation: GameObjectAnimation) -> GameObjectBuilder {
-        self.core.animations.push(animation);
+    pub fn add_animation(mut self, animation_index: i32, animation: GameObjectAnimation) -> GameObjectBuilder {
+        self.core.animations.insert(animation_index, animation);
         self.core.use_animations = true;
 
         return self

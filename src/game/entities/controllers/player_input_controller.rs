@@ -1,4 +1,4 @@
-use crate::{engine::{events::{event_manager::{EventManager}, game_event::GameEvent}, input::input::InputHandler, objects::{game_object_controller::GameObjectController, game_object_core::GameObjectCore}, types::object_event::ObjectEvent}, game::entities::objects::projectiles::bullet::Bullet};
+use crate::{engine::{events::{event_manager::EventManager, game_event::GameEvent}, input::input::InputHandler, objects::{engine_animations::{ANIMATION_IDLE, ANIMATION_WALK}, game_object_controller::GameObjectController, game_object_core::GameObjectCore}, types::object_event::ObjectEvent}, game::entities::objects::projectiles::bullet::Bullet};
 use crate::game::entities::factions::FACTION_PLAYER;
 use crate::engine::utils::timer::Timer;
 use std::f32::consts::PI;
@@ -47,9 +47,9 @@ impl GameObjectController for PlayerInputController{
 
 
         if core.x_velocity.abs() > 0.0 || core.y_velocity.abs() > 0.0 {
-            core.play_animation(1, false);
+            core.play_animation(ANIMATION_WALK, false);
         }else {
-            core.play_animation(0, false);
+            core.play_animation(ANIMATION_IDLE, false);
         }
 
         if input.key_action1() && self.fire_cooldown.can_activate() {

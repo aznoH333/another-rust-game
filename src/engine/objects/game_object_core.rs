@@ -1,5 +1,6 @@
 use crate::{engine::{drawing::drawing_manager::DrawingManager, objects::{game_object_animation::GameObjectAnimation, object_simplification::ObjectSimplification}, types::vector::Vector, world::{world_constants::TILE_SIZE, world_manager::WorldManager}}, utils::number_utils::NumberUtils};
 use crate::engine::objects::game_box::GameBox;
+use std::collections::HashMap;
 pub struct GameObjectCore {
     
     // positional stuff
@@ -35,8 +36,8 @@ pub struct GameObjectCore {
     pub flip_sprite: bool,
     pub rotation: f32,
 
-    pub current_animation: usize,
-    pub animations: Vec<GameObjectAnimation>,
+    pub current_animation: i32,
+    pub animations: HashMap<i32, GameObjectAnimation>,
     pub use_animations: bool,
     // state controll
     pub wants_to_live: bool,
@@ -65,7 +66,7 @@ impl GameObjectCore {
             z_index,
             scale: 1.0,
             current_animation: 0,
-            animations: Vec::new(),
+            animations: HashMap::new(),
             use_animations: false,
             is_camera_target: false,
             flip_sprite: false,
@@ -97,7 +98,7 @@ impl GameObjectCore {
         let x = self.left();
         let y = self.top();
         if self.use_animations {
-            let mut animation = self.animations.get_mut(self.current_animation).expect(format!("Animation not found {}", self.current_animation).as_str());
+            let animation = self.animations.get_mut(&self.current_animation).expect(format!("Animation not found {}", self.current_animation).as_str());
 
             sprite_name = animation.get_current_frame();
         }
@@ -121,7 +122,7 @@ impl GameObjectCore {
 
         // animation
         if self.use_animations {
-            let mut animation = self.animations.get_mut(self.current_animation).expect(format!("Animation not found {}", self.current_animation).as_str());
+            let mut animation = self.animations.get_mut(&self.current_animation).expect(format!("Animation not found {}", self.current_animation).as_str());
             animation.update_animation(delta);
         }
     }
@@ -156,10 +157,10 @@ impl GameObjectCore {
         return self.y_velocity * self.delta;
     }
 
-    pub fn play_animation(&mut self, animation: usize, reset: bool) {
+    pub fn play_animation(&mut self, animation: i32, reset: bool) {
         self.current_animation = animation;
         if reset {
-            self.animations.get_mut(animation).unwrap().reset_animation();
+            self.animations.get_mut(&animation).unwrap().reset_animation();
         }
     }
 

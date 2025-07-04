@@ -5,3 +5,4 @@ pub mod game_object;
 pub mod game_object_animation;
 pub mod object_simplification;
 pub mod game_box;
+pub mod engine_animations;
