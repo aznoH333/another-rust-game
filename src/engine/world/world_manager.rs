@@ -1,4 +1,4 @@
-use crate::{engine::{drawing::drawing_manager::DrawingManager, events::event_manager::{self, EventManager}, objects::{game_box::GameBox, game_object_core::GameObjectCore}}, game};
+use crate::{engine::{drawing::drawing_manager::DrawingManager, events::event_manager::{self, EventManager}, objects::{game_box::GameBox, game_object_core::GameObjectCore}}, game, utils::{number_utils::NumberUtils, space_utils::SpaceUtils}};
 
 use super::{world_constants::TILE_SIZE, world_generator::WorldGenerator, world_tile::WorldTile};
 
@@ -152,5 +152,30 @@ impl WorldManager{
 
     pub fn is_tile_empty(&self, x: i32, y: i32) -> bool {
         return !self.is_tile_solid(x, y);
+    }
+
+    pub fn has_line_of_sight(&self, x1: f32, y1: f32, x2: f32, y2: f32) -> bool {
+        let distance = SpaceUtils::pythagoras(x1, y1, x2, y2);
+        
+        let x_speed = (x2 - x1) / distance;
+        let y_speed = (y2 - y1) / distance;
+
+        let mut current_x = x1;
+        let mut current_y = y1;
+
+        for _ in 0..(distance.ceil() as i32) {
+            current_x += x_speed;
+            current_y += y_speed;
+
+            // check if solid
+            let world_x = SpaceUtils::game_units_to_world_units(current_x);
+            let world_y = SpaceUtils::game_units_to_world_units(current_y);
+
+            if self.is_tile_solid(world_x, world_y) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

@@ -23,10 +23,10 @@ impl Gremlin {
 
             // animations
             .add_animation(ANIMATION_IDLE, 
-                GameObjectAnimation::new(16.0)
+                GameObjectAnimation::new(10.0)
                 .add_frame("gremlin_0001"))
             .add_animation(ANIMATION_WALK, 
-                GameObjectAnimation::new(16.0)
+                GameObjectAnimation::new(10.0)
                 .add_frame("gremlin_0002")
                 .add_frame("gremlin_0003")
             )

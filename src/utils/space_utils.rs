@@ -27,7 +27,7 @@ impl SpaceUtils {
     }
 
     pub fn game_units_to_world_units(value: f32) -> i32{
-        return (value as i32) / TILE_SIZE;
+        return (value / (TILE_SIZE as f32)) as i32;
     }
 
     pub fn world_units_to_game_units(value: i32) -> f32 {
