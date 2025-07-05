@@ -2,6 +2,9 @@ use crate::{engine::{drawing::drawing_manager::DrawingManager, objects::{game_ob
 use crate::engine::objects::game_box::GameBox;
 use crate::engine::objects::engine_animations::{ANIMATION_IDLE, ANIMATION_WALK};
 use std::collections::HashMap;
+use crate::engine::utils::timer::Timer;
+// TODO restructure engine directory to make sense
+// TODO fix these garbage auto imports
 pub struct GameObjectCore {
     
     // positional stuff
@@ -28,6 +31,7 @@ pub struct GameObjectCore {
     pub damage: f32,
     pub health: f32,
     pub name: String,
+    pub stun_timer: Timer,
 
     // drawing stuff
     pub sprite_name: String,
@@ -88,6 +92,7 @@ impl GameObjectCore {
             movement_y: 0.0,
             acceleration: 0.25,
             allow_auto_flipping: true,
+            stun_timer: Timer::new(0),
         }
     }
 
@@ -113,7 +118,9 @@ impl GameObjectCore {
         self.is_ready_to_draw = true;
         self.delta = delta;
         // movement
-        self.accelerate_in_direction(self.movement_x, self.movement_y);
+        if self.stun_timer.can_activate() {
+            self.accelerate_in_direction(self.movement_x, self.movement_y);
+        }
         self.movement_x = 0.0;
         self.movement_y = 0.0;
 
@@ -121,6 +128,7 @@ impl GameObjectCore {
 
         self.update_animation_state();
 
+        // TODO : normalize velocity loss for both axis
         // friction
         self.x_velocity = NumberUtils::gravitate_number(self.x_velocity, 0.0, self.friction * delta);
         self.y_velocity = NumberUtils::gravitate_number(self.y_velocity, 0.0, self.friction * delta);
@@ -146,7 +154,7 @@ impl GameObjectCore {
         }
 
         // flip sprite
-        if self.allow_auto_flipping {
+        if self.allow_auto_flipping && self.stun_timer.can_activate(){
             if self.x_velocity < -self.speed * self.acceleration {
                 self.flip_sprite = true;
             }else if self.x_velocity > self.speed * self.acceleration {

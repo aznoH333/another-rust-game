@@ -20,6 +20,7 @@ impl Gremlin {
             .set_health(25.0)
             .set_name("gremlin")
             .set_target("player")
+            .set_stun_length(500)
 
             // animations
             .add_animation(ANIMATION_IDLE, 
@@ -32,7 +33,7 @@ impl Gremlin {
             )
                 
             // controllers
-            .add_controller(CONTROLLER_TYPE_OBJECT_COLLIDE, Box::new(TakeDamageOnHostileCollisionController::new(200)))
+            .add_controller(CONTROLLER_TYPE_OBJECT_COLLIDE, Box::new(TakeDamageOnHostileCollisionController::new(200, 2.2)))
             .add_controller(CONTROLLER_TYPE_UPDATE, Box::new(FighterController::new("player")))
 
             .build()

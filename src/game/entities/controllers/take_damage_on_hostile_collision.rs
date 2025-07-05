@@ -1,14 +1,17 @@
 use crate::engine::objects::game_object_controller::GameObjectController;
 use crate::engine::objects::object_update::ObjectUpdate;
 use crate::engine::utils::timer::Timer;
+use crate::utils::space_utils::SpaceUtils;
 pub struct TakeDamageOnHostileCollisionController{
-    timer: Timer
+    timer: Timer,
+    knockback_multiplier: f32,
 }
 
 impl TakeDamageOnHostileCollisionController {
-    pub fn new(invulnerability_time: u128) -> TakeDamageOnHostileCollisionController {
+    pub fn new(invulnerability_time: u128, knockback_multiplier: f32) -> TakeDamageOnHostileCollisionController {
         return TakeDamageOnHostileCollisionController {  
             timer: Timer::new(invulnerability_time),
+            knockback_multiplier
         };
     }
 }
@@ -23,9 +26,15 @@ impl GameObjectController for TakeDamageOnHostileCollisionController {
         self.timer.can_activate(){
             self.timer.activate();
             core.health -= other.damage;
+            core.stun_timer.activate();
             if core.health <= 0.0 {
-                core.wants_to_live = false;
+                core.die();
             }
+
+            // knockback
+            let direction = SpaceUtils::direction_towards(other.x, other.y, core.x, core.y);
+            core.x_velocity += direction.cos() * self.knockback_multiplier;
+            core.y_velocity += direction.sin() * self.knockback_multiplier;
         }
     }
 }

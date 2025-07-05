@@ -203,6 +203,11 @@ impl GameObjectBuilder{
         return self;
     }
 
+    pub fn set_stun_length(mut self, length: u128) -> GameObjectBuilder {
+        self.core.stun_timer.set_cooldown(length);
+        return self;
+    }
+
     pub fn build(self) -> GameObject{
         return GameObject { core: self.core, controllers: self.controllers }
     }
