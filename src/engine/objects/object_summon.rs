@@ -1,4 +1,4 @@
-use crate::engine::objects::game_object::GameObject;
+use crate::{engine::objects::game_object::GameObject, game::entities::factions::FACTION_NEUTRAL};
 
 
 pub type ObjectSummonFunc = fn(&ObjectSummonParameters) -> GameObject;
@@ -22,7 +22,12 @@ inventory::collect!(ObjectSummonRegistration);
 pub struct  ObjectSummonParameters{
     pub object_id: &'static str,
     pub x: f32,
-    pub y: f32, // TODO : add more parameters (direction velocity faction etc)
+    pub y: f32,
+    pub damage: f32,
+    pub faction: u32,
+    pub direction: f32,
+    pub sprite: &'static str,
+    pub speed: f32,
 }
 
 
@@ -36,9 +41,39 @@ impl ObjectSummon {
             parameters: ObjectSummonParameters{
                 object_id: object_id,
                 x: x,
-                y: y
+                y: y,
+                damage: 0.0,
+                faction: FACTION_NEUTRAL,
+                direction: 0.0,
+                sprite: "undefined",
+                speed: 0.0,
             }
         };
+    }
+
+    pub fn set_damage(mut self, damage: f32) -> ObjectSummon {
+        self.parameters.damage = damage;
+        return self;
+    }
+
+    pub fn set_faction(mut self, faction: u32) -> ObjectSummon {
+        self.parameters.faction = faction;
+        return self;
+    }
+
+    pub fn set_sprite(mut self, sprite: &'static str) -> ObjectSummon {
+        self.parameters.sprite = sprite;
+        return self;
+    }
+
+    pub fn set_direction(mut self, direction: f32) -> ObjectSummon {
+        self.parameters.direction = direction;
+        return self;
+    }
+
+    pub fn set_speed(mut self, speed: f32) -> ObjectSummon {
+        self.parameters.speed = speed;
+        return self;
     }
 
     pub fn build(&self) -> &ObjectSummonParameters {
