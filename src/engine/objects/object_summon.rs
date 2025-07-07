@@ -1,3 +1,5 @@
+use ggez::graphics::Color;
+
 use crate::{engine::objects::game_object::GameObject, game::entities::factions::FACTION_NEUTRAL};
 
 
@@ -29,6 +31,7 @@ pub struct  ObjectSummonParameters{
     pub sprite: &'static str,
     pub speed: f32,
     pub object_type: u32,
+    pub color: Color,
 }
 
 
@@ -49,6 +52,7 @@ impl ObjectSummon {
                 sprite: "undefined",
                 speed: 0.0,
                 object_type: 0,
+                color: Color::WHITE,
             }
         };
     }
@@ -80,6 +84,11 @@ impl ObjectSummon {
 
     pub fn set_type(mut self, object_type: u32) -> ObjectSummon {
         self.parameters.object_type = object_type;
+        return self;
+    }
+
+    pub fn set_color(mut self, color: Color) -> ObjectSummon {
+        self.parameters.color = color;
         return self;
     }
 

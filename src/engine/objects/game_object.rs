@@ -3,7 +3,7 @@ use std::{collections::HashMap, iter::Map};
 use crate::{engine::{drawing::drawing_manager::DrawingManager, events::event_manager::EventManager, input::input::InputHandler, objects::{game_box::GameBox, game_object_animation::GameObjectAnimation, object_simplification::ObjectSimplification, object_update::ObjectUpdate}, types::{object_event::ObjectEvent, vector::Vector}, world::{world_constants::TILE_SIZE, world_manager::WorldManager}}, utils::space_utils::SpaceUtils};
 
 use super::{game_object_controller::GameObjectController, game_object_core::GameObjectCore};
-
+use ggez::graphics::Color;
 pub struct GameObject{
     core: GameObjectCore,
     controllers: HashMap<u8, Vec::<Box<dyn GameObjectController>>>,
@@ -216,6 +216,11 @@ impl GameObjectBuilder{
     pub fn set_starting_velocity(mut self, x: f32, y: f32) -> GameObjectBuilder {
         self.core.x_velocity = x;
         self.core.y_velocity = y;
+        return self;
+    }
+
+    pub fn set_color(mut self, color: Color) -> GameObjectBuilder {
+        self.core.color = color;
         return self;
     }
 

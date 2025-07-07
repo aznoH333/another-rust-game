@@ -27,4 +27,8 @@ impl Timer {
     pub fn set_cooldown(&mut self, cooldown: u128) {
         self.timeout = cooldown;
     }
+
+    pub fn get_as_percentage(&self) -> f32 {
+        return (self.get_current_time() as f32 - self.last_fired as f32) / self.timeout as f32;
+    }
 }

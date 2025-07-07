@@ -1,5 +1,5 @@
 
-use crate::{engine::{drawing::drawing_manager::DrawingManager, events::event_manager::{self, EventManager}, input::input::InputHandler, objects::{object_simplification::{self, ObjectSimplification}, object_summon::{ObjectSummonParameters, ObjectSummonRegistration}, object_update::ObjectUpdate}, performance_monitoring::performance_monitor::PerformanceMonitor, types::{controller_type::{CONTROLLER_TYPE_OBJECT_COLLIDE, CONTROLLER_TYPE_UPDATE, CONTROLLER_TYPE_WORLD_COLLIDE}, object_event::ObjectEvent}, world::world_manager::WorldManager}};
+use crate::engine::{drawing::drawing_manager::DrawingManager, events::event_manager::{self, EventManager}, input::input::InputHandler, objects::{object_simplification::{self, ObjectSimplification}, object_summon::{ObjectSummonParameters, ObjectSummonRegistration}, object_update::ObjectUpdate}, performance_monitoring::performance_monitor::PerformanceMonitor, types::{controller_type::{CONTROLLER_TYPE_DESTROYED, CONTROLLER_TYPE_OBJECT_COLLIDE, CONTROLLER_TYPE_UPDATE, CONTROLLER_TYPE_WORLD_COLLIDE}, object_event::ObjectEvent}, world::world_manager::WorldManager};
 
 use super::{game_object::GameObject, game_object_controller::GameObjectController};
 use std::collections::HashMap;
@@ -28,7 +28,7 @@ impl GameObjectManager{
         let object_simplifications = self.collect_object_simplifications();
 
         self.update_objects(input, world, event_manager, delta, object_simplifications);
-        self.cull_dead_objects();
+        self.cull_dead_objects(input, event_manager, world); // these values should be somehow grouped instead of passing them around
         self.update_camera(drawing_manager);
         self.update_object_collisions(input, event_manager, world);
 
@@ -44,7 +44,7 @@ impl GameObjectManager{
                 found_target = object_simplifications.iter().find(|a| a.name == *target.unwrap());
             }
             
-            
+            // TODO simlplify calling events
             let object_update_event = ObjectEvent::new_with_object(CONTROLLER_TYPE_UPDATE, found_target);
             let mut update_value = ObjectUpdate{
                 event: &object_update_event, // inlining this will make rust shit the bed and cry
@@ -124,11 +124,20 @@ impl GameObjectManager{
         return ObjectUpdate { event, input, event_manager, world }
     }
 
-    fn cull_dead_objects(&mut self) {
+    fn cull_dead_objects(&mut self, input: &InputHandler, event_manager: &mut EventManager, world: &WorldManager) {
         for object_index in (0..self.game_objects.iter().count()).rev() {
-            let object = self.game_objects.get(object_index).unwrap();
+            let object = self.game_objects.get_mut(object_index).unwrap();
 
             if !object.is_alive() {
+                let object_update_event = ObjectEvent::new(CONTROLLER_TYPE_DESTROYED);
+                let mut update_value = ObjectUpdate{
+                    event: &object_update_event, // inlining this will make rust shit the bed and cry
+                    input,
+                    event_manager,
+                    world
+                };
+                object.activate_event(&mut update_value);
+                
                 self.game_objects.remove(object_index);
             }
         }
