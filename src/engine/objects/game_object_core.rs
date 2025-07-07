@@ -139,7 +139,7 @@ impl GameObjectCore {
 
         // animation
         if self.use_animations {
-            let mut animation = self.animations.get_mut(&self.current_animation).expect(format!("Animation not found {}", self.current_animation).as_str());
+            let animation = self.animations.get_mut(&self.current_animation).expect(format!("Animation not found {}", self.current_animation).as_str());
             animation.update_animation(delta);
         }
     }

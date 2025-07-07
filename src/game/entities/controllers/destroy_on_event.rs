@@ -1,4 +1,4 @@
-use crate::engine::{self, objects::{game_object_controller::GameObjectController, object_update::ObjectUpdate}};
+use crate::engine::{objects::{game_object_controller::GameObjectController, object_update::ObjectUpdate}};
 
 pub struct DestroyOnEvent{
 

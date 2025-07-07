@@ -1,4 +1,4 @@
-use crate::engine::{objects::{game_object_controller::GameObjectController, object_update::ObjectUpdate}, types::object_event::ObjectEvent};
+use crate::engine::objects::{game_object_controller::GameObjectController, object_update::ObjectUpdate};
 
 pub struct ProjectileController {
     direction: f32,

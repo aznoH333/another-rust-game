@@ -1,4 +1,4 @@
-use crate::engine::{events::event_manager::EventManager, input::input::InputHandler, objects::object_update::ObjectUpdate, types::object_event::ObjectEvent};
+use crate::engine::objects::object_update::ObjectUpdate;
 
 use super::game_object_core::GameObjectCore;
 

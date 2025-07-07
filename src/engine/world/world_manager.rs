@@ -1,4 +1,4 @@
-use crate::{engine::{drawing::drawing_manager::DrawingManager, events::event_manager::{self, EventManager}, objects::{game_box::GameBox, game_object_core::GameObjectCore}}, game, utils::{number_utils::NumberUtils, space_utils::SpaceUtils}};
+use crate::{engine::{drawing::drawing_manager::DrawingManager, events::event_manager::{EventManager}, objects::{game_box::GameBox, game_object_core::GameObjectCore}}, utils::space_utils::SpaceUtils};
 
 use super::{world_constants::TILE_SIZE, world_generator::WorldGenerator, world_tile::WorldTile};
 

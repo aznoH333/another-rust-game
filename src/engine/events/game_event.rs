@@ -1,4 +1,4 @@
-use crate::engine::objects::{game_object_manager::GameObjectManager, object_summon::ObjectSummon};
+use crate::engine::objects::object_summon::ObjectSummon;
 
 pub enum GameEvent{
     SpawnObject {

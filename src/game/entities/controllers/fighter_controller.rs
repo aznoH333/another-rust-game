@@ -1,4 +1,4 @@
-use crate::{engine::{objects::{game_object_controller::GameObjectController, object_update::ObjectUpdate}, world}, utils::space_utils::SpaceUtils};
+use crate::{engine::objects::{game_object_controller::GameObjectController, object_update::ObjectUpdate}, utils::space_utils::SpaceUtils};
 
 pub struct FighterController {
     target_name: String

@@ -1,5 +1,5 @@
 
-use crate::engine::{drawing::drawing_manager::DrawingManager, events::event_manager::{self, EventManager}, input::input::InputHandler, objects::{object_simplification::{self, ObjectSimplification}, object_summon::{ObjectSummonParameters, ObjectSummonRegistration}, object_update::ObjectUpdate}, performance_monitoring::performance_monitor::PerformanceMonitor, types::{controller_type::{CONTROLLER_TYPE_DESTROYED, CONTROLLER_TYPE_OBJECT_COLLIDE, CONTROLLER_TYPE_UPDATE, CONTROLLER_TYPE_WORLD_COLLIDE}, object_event::ObjectEvent}, world::world_manager::WorldManager};
+use crate::engine::{drawing::drawing_manager::DrawingManager, events::event_manager::{EventManager}, input::input::InputHandler, objects::{object_simplification::{ObjectSimplification}, object_summon::{ObjectSummonParameters, ObjectSummonRegistration}, object_update::ObjectUpdate}, types::{controller_type::{CONTROLLER_TYPE_DESTROYED, CONTROLLER_TYPE_OBJECT_COLLIDE, CONTROLLER_TYPE_UPDATE, CONTROLLER_TYPE_WORLD_COLLIDE}, object_event::ObjectEvent}, world::world_manager::WorldManager};
 
 use super::{game_object::GameObject, game_object_controller::GameObjectController};
 use std::collections::HashMap;
@@ -96,7 +96,7 @@ impl GameObjectManager{
                     // fire collision event
                     let object_update_event = ObjectEvent::new_with_object(CONTROLLER_TYPE_OBJECT_COLLIDE, 
                         Some(&cool_rust_feature));
-                    let mut object_mut = self.game_objects.get_mut(object_index).unwrap();
+                    let object_mut = self.game_objects.get_mut(object_index).unwrap();
 
                     let mut update_value = GameObjectManager::get_engine_update(input, event_manager, world_manager, &object_update_event);
 

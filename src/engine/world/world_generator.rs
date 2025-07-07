@@ -1,4 +1,4 @@
-use crate::engine::events::event_manager::{self, EventManager};
+use crate::engine::events::event_manager::{EventManager};
 
 use super::world_manager::WorldManager;
 

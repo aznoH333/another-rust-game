@@ -1,4 +1,4 @@
-use crate::engine::{objects::{game_object::GameObject, object_simplification::ObjectSimplification}, types::controller_type::{CONTROLLER_TYPE_OBJECT_COLLIDE, CONTROLLER_TYPE_UPDATE}};
+use crate::engine::objects::object_simplification::ObjectSimplification;
 
 pub struct ObjectEvent<'a> {
     pub event_type: u8,
