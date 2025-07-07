@@ -1,4 +1,4 @@
-use crate::{engine::{objects::{engine_animations::{ANIMATION_IDLE, ANIMATION_WALK}, game_object::{GameObject, GameObjectBuilder}, game_object_animation::GameObjectAnimation, object_summon::ObjectSummonFunc}, types::controller_type::CONTROLLER_TYPE_UPDATE}, game::{entities::{controllers::player_input_controller::PlayerInputController, objects::object_ids::PLAYER_ID}, enums::drawing_layers::DrawingLayer}};
+use crate::{engine::{objects::{engine_animations::{ANIMATION_IDLE, ANIMATION_WALK}, game_object::{GameObject, GameObjectBuilder}, game_object_animation::GameObjectAnimation, object_summon::ObjectSummonFunc}, types::controller_type::CONTROLLER_TYPE_UPDATE}, game::{entities::{controllers::player_input_controller::PlayerInputController}, enums::drawing_layers::DrawingLayer}};
 use crate::game::entities::factions::FACTION_PLAYER;
 use crate::engine::objects::object_summon::ObjectSummonRegistration;
 use crate::engine::objects::object_summon::ObjectSummonParameters;
@@ -27,5 +27,5 @@ fn player_new(parameters: &ObjectSummonParameters) -> GameObject{
     .build();
 }
 inventory::submit! {
-    ObjectSummonRegistration::new(0, player_new)
+    ObjectSummonRegistration::new("player", player_new)
 }

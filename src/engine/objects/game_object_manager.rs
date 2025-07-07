@@ -6,7 +6,7 @@ use std::collections::HashMap;
 use crate::engine::objects::object_summon::ObjectSummonFunc;
 pub struct GameObjectManager{
     game_objects: Vec<GameObject>,
-    object_summons: HashMap<u32, ObjectSummonFunc>
+    object_summons: HashMap<String, ObjectSummonFunc>
 }
 
 impl GameObjectManager{
@@ -139,11 +139,11 @@ impl GameObjectManager{
     }
 
     pub fn register_summon(&mut self, register_command: &ObjectSummonRegistration) {
-        self.object_summons.insert(register_command.summon_id, register_command.summon_function);
+        self.object_summons.insert(register_command.summon_id.to_owned(), register_command.summon_function);
     }
 
     pub fn summon_object(&mut self, summon: &ObjectSummonParameters) {
-        let summon_ref = self.object_summons.get(&summon.object_id)
+        let summon_ref = self.object_summons.get(&summon.object_id.to_owned())
             .expect(format!("tried to summon object with unknown id : {}", summon.object_id).as_str());
 
         self.add_object(summon_ref(summon));
