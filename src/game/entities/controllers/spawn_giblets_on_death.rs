@@ -3,15 +3,15 @@ use ggez::graphics::Color;
 use crate::{engine::objects::{game_object_controller::GameObjectController, object_summon::ObjectSummon}, game::entities::objects::effects::giblet_type, utils::{number_utils::NumberUtils, vec_utils::VecUtils}};
 use crate::engine::events::game_event::GameEvent;
 pub struct SpawnGibletsOnDeathController {
-    giblet_type: u8,
+    giblet_type: u32,
     giblet_min: u32,
     giblet_max: u32,
     giblet_colors: Vec<Color>,
 }
 
 impl SpawnGibletsOnDeathController {
-    pub fn new(giblet_type: u8, giblet_min: u32, giblet_max: u32, giblet_colors: Vec<Color>) -> SpawnGibletsOnDeathController {
-        return SpawnGibletsOnDeathController { giblet_type, giblet_min, giblet_max, giblet_colors };
+    pub fn new(giblet_type: u32, giblet_min: u32, giblet_max: u32, giblet_colors: Vec<Color>) -> SpawnGibletsOnDeathController {
+        return SpawnGibletsOnDeathController { giblet_type: giblet_type, giblet_min, giblet_max, giblet_colors };
     }
 }
 
@@ -25,7 +25,7 @@ impl GameObjectController for SpawnGibletsOnDeathController {
             engine.event_manager.push_event(GameEvent::SpawnObject { summon: 
                 ObjectSummon::new("giblet", core.x, core.y) 
                 .set_color(color)
-                .set_type(self.giblet_type as u32)
+                .set_type(self.giblet_type)
                 .set_speed(2.1)
             });
         }

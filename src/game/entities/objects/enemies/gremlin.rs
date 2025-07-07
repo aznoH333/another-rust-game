@@ -1,5 +1,7 @@
-use crate::{engine::{objects::{engine_animations::{ANIMATION_IDLE, ANIMATION_WALK}, game_object::{GameObject, GameObjectBuilder}, game_object_animation::GameObjectAnimation, object_summon::{ObjectSummonParameters, ObjectSummonRegistration}}, types::controller_type::{CONTROLLER_TYPE_OBJECT_COLLIDE, CONTROLLER_TYPE_UPDATE}}, game::{entities::{controllers::{fighter_controller::FighterController, take_damage_on_hostile_collision::TakeDamageOnHostileCollisionController}, objects::enemies::gremlin}, enums::drawing_layers::DrawingLayer}};
+use crate::{engine::{objects::{engine_animations::{ANIMATION_IDLE, ANIMATION_WALK}, game_object::{GameObject, GameObjectBuilder}, game_object_animation::GameObjectAnimation, object_summon::{ObjectSummonParameters, ObjectSummonRegistration}}, types::controller_type::{CONTROLLER_TYPE_DESTROYED, CONTROLLER_TYPE_OBJECT_COLLIDE, CONTROLLER_TYPE_UPDATE}}, game::{entities::{controllers::{fighter_controller::FighterController, take_damage_on_hostile_collision::TakeDamageOnHostileCollisionController}, objects::{effects::giblet_type::GIBLET_BLOB, enemies::gremlin}}, enums::drawing_layers::DrawingLayer}};
 use crate::game::entities::factions::FACTION_ENEMY;
+use ggez::graphics::Color;
+use crate::game::entities::controllers::spawn_giblets_on_death::SpawnGibletsOnDeathController;
 
 fn gremlin_new(parameters: &ObjectSummonParameters) -> GameObject {
     return 
@@ -27,6 +29,8 @@ fn gremlin_new(parameters: &ObjectSummonParameters) -> GameObject {
         // controllers
         .add_controller(CONTROLLER_TYPE_OBJECT_COLLIDE, Box::new(TakeDamageOnHostileCollisionController::new(200, 2.2)))
         .add_controller(CONTROLLER_TYPE_UPDATE, Box::new(FighterController::new("player")))
+        .add_controller(CONTROLLER_TYPE_DESTROYED, Box::new(SpawnGibletsOnDeathController::new(GIBLET_BLOB, 5, 8, vec!(Color::new(0.893, 0.083, 0.083, 1.0)))))
+
         .build()
         ;
 }
