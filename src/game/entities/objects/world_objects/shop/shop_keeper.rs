@@ -1,11 +1,9 @@
-use crate::{engine::objects::game_object::{GameObject, GameObjectBuilder}, game::enums::drawing_layers::DrawingLayer};
+use crate::{engine::objects::{game_object::{GameObject, GameObjectBuilder}, object_summon::{ObjectSummonParameters, ObjectSummonRegistration}}, game::enums::drawing_layers::DrawingLayer};
 
-pub struct ShopKeeper{
-
+fn shopkeeper_new(parameters: &ObjectSummonParameters) -> GameObject {
+    return GameObjectBuilder::new(parameters.x, parameters.y, "shop_keeper_0001", DrawingLayer::WorldObjects.get_value()).build();
 }
 
-impl ShopKeeper {
-    pub fn new(x: f32, y: f32) -> GameObject {
-        return GameObjectBuilder::new(x, y, "shop_keeper_0001", DrawingLayer::WorldObjects.get_value()).build();
-    }
+inventory::submit! {
+    ObjectSummonRegistration::new("shopkeeper", shopkeeper_new)
 }

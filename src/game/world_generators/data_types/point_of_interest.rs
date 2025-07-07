@@ -32,17 +32,12 @@ impl PointOfInterest{
         let (x, y) = room.pick_random_empty_spot_with_distance( 0.80);
         
         // spawn entities
-        event_manager.push_event( GameEvent::SpawnObject { summon: ObjectSummon::new("player", x, y) });
-        //event_manager.push_event( GameEvent::SpawnObject { spawn_function: Box::new(move |game_object_manager| {
-        //    game_object_manager.add_object(Player::new(x + SPAWN_OFFSET, y + SPAWN_OFFSET));
-        //}) });
+        event_manager.push_event( GameEvent::SpawnObject { summon: ObjectSummon::new("player", x + SPAWN_OFFSET, y + SPAWN_OFFSET) });
     }
 
     fn populate_exit_room(&self, room: &Room, event_manager: &mut EventManager){
         let (x, y) = room.pick_random_empty_spot_with_distance( 0.80);
-        //event_manager.push_event( GameEvent::SpawnObject { spawn_function: Box::new(move |game_object_manager|{
-        //    game_object_manager.add_object(ExitStairs::new(x + SPAWN_OFFSET, y + SPAWN_OFFSET));
-        //})});
+        event_manager.push_event(GameEvent::SpawnObject { summon: ObjectSummon::new("exit", x + SPAWN_OFFSET, y + SPAWN_OFFSET) });
     }
 
     fn populate_with_enemies(&self, room: &Room, event_manager: &mut EventManager){
@@ -51,9 +46,7 @@ impl PointOfInterest{
         for _ in 0..ammount_of_enemies_to_spawn {
             let (x, y) = room.pick_random_empty_spot_in_room();
 
-            //event_manager.push_event( GameEvent::SpawnObject { spawn_function: Box::new(move |game_object_manager|{
-            //    game_object_manager.add_object(Gremlin::new(x + SPAWN_OFFSET, y + SPAWN_OFFSET));
-            //})});
+            event_manager.push_event(GameEvent::SpawnObject { summon: ObjectSummon::new("gremlin", x + SPAWN_OFFSET, y + SPAWN_OFFSET) });
         }
     }
 
@@ -62,8 +55,7 @@ impl PointOfInterest{
 
         for _ in 0..ammount_of_treasure_to_spawn {
             let (x, y) = room.pick_random_empty_spot_with_distance( 0.05);
-            //event_manager.push_event( GameEvent::SpawnObject { spawn_function: Box::new(move |game_object_manager|{
-            //    game_object_manager.add_object(Treasure::new(x + SPAWN_OFFSET, y + SPAWN_OFFSET));
+            event_manager.push_event(GameEvent::SpawnObject { summon: ObjectSummon::new("treasure", x + SPAWN_OFFSET, y + SPAWN_OFFSET) });
             //})});
         }
     }
@@ -73,6 +65,11 @@ impl PointOfInterest{
             let (x, y) = room.pick_random_empty_spot_with_distance( 0.05);
 
             if world_manager.is_space_empty(SpaceUtils::game_units_to_world_units(x) - 1, SpaceUtils::game_units_to_world_units(y), 3 , 3) {
+                
+                event_manager.push_event(GameEvent::SpawnObject { summon: ObjectSummon::new("shopkeeper", x + SPAWN_OFFSET, y + SPAWN_OFFSET) });
+                event_manager.push_event(GameEvent::SpawnObject { summon: ObjectSummon::new("shop_item", x + SPAWN_OFFSET - TILE_SIZE as f32, y + SPAWN_OFFSET + TILE_SIZE as f32) });
+                event_manager.push_event(GameEvent::SpawnObject { summon: ObjectSummon::new("shop_item", x + SPAWN_OFFSET + TILE_SIZE as f32, y + SPAWN_OFFSET + TILE_SIZE as f32) });
+
                 //event_manager.push_event( GameEvent::SpawnObject { spawn_function: Box::new(move |game_object_manager|{
                 //    game_object_manager.add_object(ShopKeeper::new(x + SPAWN_OFFSET, y + SPAWN_OFFSET));
                 //    game_object_manager.add_object(ShopItem::new(x - TILE_SIZE as f32 + SPAWN_OFFSET, y + TILE_SIZE as f32 + SPAWN_OFFSET));

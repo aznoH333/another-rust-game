@@ -1,11 +1,12 @@
-use crate::{engine::objects::game_object::{GameObject, GameObjectBuilder}, game::enums::drawing_layers::DrawingLayer};
+use crate::{engine::objects::{game_object::{GameObject, GameObjectBuilder}, object_summon::{ObjectSummonParameters, ObjectSummonRegistration}}, game::enums::drawing_layers::DrawingLayer};
 
-pub struct ExitStairs{
 
+fn exit_new(parameters: &ObjectSummonParameters) -> GameObject {
+    return GameObjectBuilder::new(parameters.x, parameters.y, "tiles_0028", DrawingLayer::WorldObjects.get_value()).build();
 }
 
-impl ExitStairs{
-    pub fn new(x: f32, y: f32) -> GameObject {
-        return GameObjectBuilder::new(x, y, "tiles_0028", DrawingLayer::WorldObjects.get_value()).build();
-    }
+
+inventory::submit! {
+    ObjectSummonRegistration::new("exit", exit_new)
 }
+
