@@ -21,8 +21,8 @@ impl EventManager {
 
     pub fn update_events(&mut self, game_object_manager: &mut GameObjectManager){
         for event in &self.events{
-            if let GameEvent::SpawnObject { spawn_function } = event {
-                spawn_function(game_object_manager);
+            if let GameEvent::SpawnObject { summon } = event {
+                game_object_manager.summon_object(&summon.build());
             }
         }
 

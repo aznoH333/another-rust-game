@@ -1,17 +1,19 @@
 
-use crate::engine::{drawing::drawing_manager::DrawingManager, events::event_manager::{self, EventManager}, input::input::InputHandler, objects::{object_simplification::{self, ObjectSimplification}, object_update::ObjectUpdate}, performance_monitoring::performance_monitor::PerformanceMonitor, types::{controller_type::{CONTROLLER_TYPE_OBJECT_COLLIDE, CONTROLLER_TYPE_UPDATE, CONTROLLER_TYPE_WORLD_COLLIDE}, object_event::ObjectEvent}, world::world_manager::WorldManager};
+use crate::{engine::{drawing::drawing_manager::DrawingManager, events::event_manager::{self, EventManager}, input::input::InputHandler, objects::{object_simplification::{self, ObjectSimplification}, object_summon::{ObjectSummonParameters, ObjectSummonRegistration}, object_update::ObjectUpdate}, performance_monitoring::performance_monitor::PerformanceMonitor, types::{controller_type::{CONTROLLER_TYPE_OBJECT_COLLIDE, CONTROLLER_TYPE_UPDATE, CONTROLLER_TYPE_WORLD_COLLIDE}, object_event::ObjectEvent}, world::world_manager::WorldManager}};
 
 use super::{game_object::GameObject, game_object_controller::GameObjectController};
-
+use std::collections::HashMap;
+use crate::engine::objects::object_summon::ObjectSummonFunc;
 pub struct GameObjectManager{
     game_objects: Vec<GameObject>,
+    object_summons: HashMap<u32, ObjectSummonFunc>
 }
-
 
 impl GameObjectManager{
     pub fn new() -> GameObjectManager{
         return GameObjectManager{
-            game_objects: Vec::new()
+            game_objects: Vec::new(),
+            object_summons: HashMap::new()
         }
     }
 
@@ -136,8 +138,16 @@ impl GameObjectManager{
         self.game_objects.push(object);
     }
 
-    pub fn find_object_with_name(&self, name: &String) {
-        
+    pub fn register_summon(&mut self, register_command: &ObjectSummonRegistration) {
+        self.object_summons.insert(register_command.summon_id, register_command.summon_function);
+    }
+
+    pub fn summon_object(&mut self, summon: &ObjectSummonParameters) {
+        let summon_ref = self.object_summons.get(&summon.object_id)
+            .expect(format!("tried to summon object with unknown id : {}", summon.object_id).as_str());
+
+        self.add_object(summon_ref(summon));
+
     }
 }
 

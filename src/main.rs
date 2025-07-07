@@ -22,6 +22,8 @@ use ggez::{Context, ContextBuilder, GameResult};
 use ggez::graphics::{self, Color, Sampler};
 use ggez::event::{self, EventHandler};
 
+use crate::engine::objects::object_summon::ObjectSummonRegistration;
+
 
 fn main() {
     
@@ -66,7 +68,11 @@ impl MyGame {
         let mut sprite_manager = DrawingManager::new(context, Vec::from_iter(DrawingLayer::VALUES.iter().map(|it|{return it.get_value()})));
         sprite_manager.set_camera_zoom(5.0);
         // game object manager
-        let game_object_manager = GameObjectManager::new();
+        let mut game_object_manager = GameObjectManager::new();
+
+        for summon_registration in inventory::iter::<ObjectSummonRegistration> {
+            game_object_manager.register_summon(summon_registration);
+        }
 
         // event manager
         let mut event_manager = EventManager::new();

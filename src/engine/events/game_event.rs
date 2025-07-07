@@ -1,5 +1,7 @@
-use crate::engine::objects::game_object_manager::GameObjectManager;
+use crate::engine::objects::{game_object_manager::GameObjectManager, object_summon::ObjectSummon};
 
 pub enum GameEvent{
-    SpawnObject {spawn_function: Box<dyn Fn(&mut GameObjectManager)>}
+    SpawnObject {
+        summon: ObjectSummon,
+    }
 }

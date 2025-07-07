@@ -50,9 +50,10 @@ impl GameObjectController for PlayerInputController{
             let rust_y = core.y;
             let rust_direction = self.shoot_direction;
             self.fire_cooldown.activate();
+            /*
             update_value.event_manager.push_event(GameEvent::SpawnObject { spawn_function: Box::new(move |game_object_manager|{
                 game_object_manager.add_object(Bullet::new(rust_x, rust_y, rust_direction,"bow_0001", 4.0, FACTION_PLAYER, 10.0));
-            })});
+            })}); */
         }
     }
 }
