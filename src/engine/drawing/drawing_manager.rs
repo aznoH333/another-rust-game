@@ -1,7 +1,7 @@
 
 use std::{collections::HashMap, env, path::Path};
 
-use ggez::{graphics::{Canvas, DrawParam, Image, InstanceArray}, Context};
+use ggez::{graphics::{Canvas, DrawParam, Image, InstanceArray, Color}, Context};
 
 
 use crate::utils::file_utils::FileUtils;
@@ -68,8 +68,8 @@ impl DrawingManager{
         }
     }
 
-    pub fn draw_sprite(&mut self, sprite_name: &String, x: f32, y: f32, z_index: i32, scale: f32, fliped: bool, rotation: f32){
-        self.draw_buffer.push(DrawBufferData::new(sprite_name.clone(), x, y, z_index, scale, fliped, rotation));
+    pub fn draw_sprite(&mut self, sprite_name: &String, x: f32, y: f32, z_index: i32, scale: f32, fliped: bool, rotation: f32, color: Color){
+        self.draw_buffer.push(DrawBufferData::new(sprite_name.clone(), x, y, z_index, scale, fliped, rotation, color));
     }
 
     pub fn draw_buffer_to_canvas(&mut self, canvas: &mut Canvas){

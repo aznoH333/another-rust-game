@@ -70,11 +70,6 @@ impl PointOfInterest{
                 event_manager.push_event(GameEvent::SpawnObject { summon: ObjectSummon::new("shop_item", x + SPAWN_OFFSET - TILE_SIZE as f32, y + SPAWN_OFFSET + TILE_SIZE as f32) });
                 event_manager.push_event(GameEvent::SpawnObject { summon: ObjectSummon::new("shop_item", x + SPAWN_OFFSET + TILE_SIZE as f32, y + SPAWN_OFFSET + TILE_SIZE as f32) });
 
-                //event_manager.push_event( GameEvent::SpawnObject { spawn_function: Box::new(move |game_object_manager|{
-                //    game_object_manager.add_object(ShopKeeper::new(x + SPAWN_OFFSET, y + SPAWN_OFFSET));
-                //    game_object_manager.add_object(ShopItem::new(x - TILE_SIZE as f32 + SPAWN_OFFSET, y + TILE_SIZE as f32 + SPAWN_OFFSET));
-                //    game_object_manager.add_object(ShopItem::new(x + TILE_SIZE as f32 + SPAWN_OFFSET, y + TILE_SIZE as f32 + SPAWN_OFFSET));
-                //})});
                 break;
             }
         }

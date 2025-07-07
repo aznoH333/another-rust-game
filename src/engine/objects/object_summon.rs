@@ -28,6 +28,7 @@ pub struct  ObjectSummonParameters{
     pub direction: f32,
     pub sprite: &'static str,
     pub speed: f32,
+    pub object_type: u32,
 }
 
 
@@ -47,6 +48,7 @@ impl ObjectSummon {
                 direction: 0.0,
                 sprite: "undefined",
                 speed: 0.0,
+                object_type: 0,
             }
         };
     }
@@ -73,6 +75,11 @@ impl ObjectSummon {
 
     pub fn set_speed(mut self, speed: f32) -> ObjectSummon {
         self.parameters.speed = speed;
+        return self;
+    }
+
+    pub fn set_type(mut self, object_type: u32) -> ObjectSummon {
+        self.parameters.object_type = object_type;
         return self;
     }
 

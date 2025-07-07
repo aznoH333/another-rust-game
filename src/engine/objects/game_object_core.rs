@@ -1,3 +1,5 @@
+use ggez::graphics::Color;
+
 use crate::{engine::{drawing::drawing_manager::DrawingManager, objects::{game_object_animation::GameObjectAnimation, object_simplification::ObjectSimplification}, types::vector::Vector, world::{world_constants::TILE_SIZE, world_manager::WorldManager}}, utils::number_utils::NumberUtils};
 use crate::engine::objects::game_box::GameBox;
 use crate::engine::objects::engine_animations::{ANIMATION_IDLE, ANIMATION_WALK};
@@ -19,7 +21,7 @@ pub struct GameObjectCore {
     pub x_velocity: f32,
     pub y_velocity: f32,
     pub friction: f32,
-    pub bouncyness: f32,
+    pub bounciness: f32,
     pub speed: f32,
     pub acceleration: f32,
     // number between -1 and 1 indicating the direction the object wants to accelerate in
@@ -41,6 +43,7 @@ pub struct GameObjectCore {
     pub flip_sprite: bool,
     pub rotation: f32,
     pub allow_auto_flipping: bool,
+    pub color: Color,
 
     pub current_animation: i32,
     pub animations: HashMap<i32, GameObjectAnimation>,
@@ -67,7 +70,7 @@ impl GameObjectCore {
             x_velocity: 0.0,
             y_velocity: 0.0,
             friction: 0.1,
-            bouncyness: 0.0,
+            bounciness: 0.0,
             sprite_name: sprite_name.to_owned(),
             z_index,
             scale: 1.0,
@@ -93,6 +96,7 @@ impl GameObjectCore {
             acceleration: 0.25,
             allow_auto_flipping: true,
             stun_timer: Timer::new(0),
+            color: Color::new(1.0, 1.0, 1.0, 1.0)
         }
     }
 
@@ -111,7 +115,7 @@ impl GameObjectCore {
             sprite_name = animation.get_current_frame();
         }
         // drawing
-        drawing_manager.draw_sprite(sprite_name, x + self.sprite_x_offset, y + self.sprite_y_offset, self.z_index, self.scale, self.flip_sprite, self.rotation);
+        drawing_manager.draw_sprite(sprite_name, x + self.sprite_x_offset, y + self.sprite_y_offset, self.z_index, self.scale, self.flip_sprite, self.rotation, self.color);
     }
 
     pub fn update(&mut self, world: &WorldManager, delta: f32) {

@@ -4,3 +4,4 @@ pub mod destroy_on_event;
 pub mod take_damage_on_hostile_collision;
 pub mod destroy_on_hostile_collision;
 pub mod fighter_controller;
+pub mod fade_away;

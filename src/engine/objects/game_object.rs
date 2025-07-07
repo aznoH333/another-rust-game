@@ -208,6 +208,17 @@ impl GameObjectBuilder{
         return self;
     }
 
+    pub fn set_bounciness(mut self, bounciness: f32) -> GameObjectBuilder{
+        self.core.bounciness = bounciness;
+        return self;
+    }
+
+    pub fn set_starting_velocity(mut self, x: f32, y: f32) -> GameObjectBuilder {
+        self.core.x_velocity = x;
+        self.core.y_velocity = y;
+        return self;
+    }
+
     pub fn build(self) -> GameObject{
         return GameObject { core: self.core, controllers: self.controllers }
     }

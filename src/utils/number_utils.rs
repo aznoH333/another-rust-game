@@ -30,6 +30,15 @@ impl NumberUtils {
         return rng.random_range(min..max+1);
     }
 
+    pub fn random_float() -> f32 {
+        let mut rng = rand::rng();
+        return rng.random_range(0.0..1.0);
+    }
+
+    pub fn random_float_range(min: f32, max: f32) -> f32 {
+        let mut rng = rand::rng();
+        return rng.random_range(min..max);
+    }
 
     pub fn random_integer_from_array(array: &[i32]) -> i32 {
         return array[Self::random_integer(0, array.iter().count() as i32 - 1) as usize];

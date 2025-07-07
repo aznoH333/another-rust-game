@@ -92,7 +92,7 @@ impl WorldManager{
             }else {
                 game_object.x = x_colider.unwrap().get_right() + (game_object.width / 2.0);
             }
-            game_object.x_velocity = -game_object.x_velocity * game_object.bouncyness;
+            game_object.x_velocity = -game_object.x_velocity * game_object.bounciness;
             collided = true;
         }
 
@@ -111,7 +111,7 @@ impl WorldManager{
             }else {
                 game_object.y = y_colider.unwrap().get_bottom() + (game_object.height / 2.0);
             }
-            game_object.y_velocity = -game_object.y_velocity * game_object.bouncyness;
+            game_object.y_velocity = -game_object.y_velocity * game_object.bounciness;
             collided = true;
         }
 

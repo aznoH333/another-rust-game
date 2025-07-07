@@ -1,3 +1,5 @@
+use ggez::graphics::Color;
+
 use crate::{engine::drawing::drawing_manager::DrawingManager, game::enums::drawing_layers::DrawingLayer};
 
 use super::world_constants::TILE_SIZE;
@@ -36,9 +38,10 @@ impl WorldTile{
         self.solid = solid;
     }
 
+    // TODO : different tile colors
     pub fn draw(&self, drawing: &mut DrawingManager){
-        drawing.draw_sprite(&self.texture, self.x as f32, self.y as f32, DrawingLayer::World as i32, 1.0, false, 0.0);
-    } // TODO : world generator
+        drawing.draw_sprite(&self.texture, self.x as f32, self.y as f32, DrawingLayer::World as i32, 1.0, false, 0.0, Color::WHITE);
+    }
 
     pub fn get_left(&self) -> f32 {
         return self.x as f32;

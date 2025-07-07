@@ -1,4 +1,5 @@
 use ggez::{glam::Vec2, graphics::{self, Canvas, Image}};
+use ggez::graphics::Color;
 
 use crate::utils::number_utils::NumberUtils;
 
@@ -12,11 +13,12 @@ pub struct DrawBufferData{
     scale: f32,
     fliped: bool,
     rotation: f32,
+    color: Color,
 }
 
 
 impl DrawBufferData{
-    pub fn new(sprite_name: String, x: f32, y: f32, z_index: i32, scale: f32, fliped: bool, rotation: f32) -> DrawBufferData{
+    pub fn new(sprite_name: String, x: f32, y: f32, z_index: i32, scale: f32, fliped: bool, rotation: f32, color: Color) -> DrawBufferData{
         return DrawBufferData{
             sprite_name: sprite_name,
             x: x,
@@ -25,6 +27,7 @@ impl DrawBufferData{
             scale: scale,
             fliped: fliped,
             rotation,
+            color,
         }
     }
 
@@ -37,6 +40,7 @@ impl DrawBufferData{
                 self.x * drawing_context.get_scale() - drawing_context.get_sprite_x_offset(),// - width as f32 * drawing_context.get_scale() * self.scale * NumberUtils::bool_to_f32(!self.fliped), 
                 self.y * drawing_context.get_scale() - drawing_context.get_sprite_y_offset()))
             .z(self.z_index)
+            .color(self.color)
             .scale(Vec2::new(self.scale * drawing_context.get_scale() * NumberUtils::bool_to_minus_plus_f32(!self.fliped), self.scale * drawing_context.get_scale()));
     }
 
