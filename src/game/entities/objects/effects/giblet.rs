@@ -12,7 +12,7 @@ fn giblet_new(parameters: &ObjectSummonParameters) -> GameObject {
         sprite_name = VecUtils::pick_random_element_vec(&rust).to_owned();
     }
 
-    let direction = NumberUtils::random_float_range(0.0, PI);
+    let direction = NumberUtils::random_float_range(0.0, PI*2.0);
     let x_m = direction.cos() * parameters.speed;
     let y_m = direction.sin() * parameters.speed;
     

@@ -134,8 +134,9 @@ impl GameObjectCore {
 
         // TODO : normalize velocity loss for both axis
         // friction
-        self.x_velocity = NumberUtils::gravitate_number(self.x_velocity, 0.0, self.friction * delta);
-        self.y_velocity = NumberUtils::gravitate_number(self.y_velocity, 0.0, self.friction * delta);
+        let direction = SpaceUtils::direction_towards(0.0, 0.0, self.x_velocity, self.y_velocity);
+        self.x_velocity = NumberUtils::gravitate_number(self.x_velocity, 0.0, self.friction * delta * direction.cos());
+        self.y_velocity = NumberUtils::gravitate_number(self.y_velocity, 0.0, self.friction * delta * direction.sin());
 
         // animation
         if self.use_animations {
@@ -216,8 +217,6 @@ impl GameObjectCore {
         let direction = SpaceUtils::direction_towards(0.0, 0.0, x, y);
         let speed = SpaceUtils::get_vec_length(x, y);
 
-        // self.x_velocity = self.speed * direction.cos();
-        // self.y_velocity = self.speed * direction.sin();
         self.x_velocity = NumberUtils::gravitate_number(self.x_velocity, self.speed * direction.cos(), x * self.speed * self.delta * self.acceleration);
         self.y_velocity = NumberUtils::gravitate_number(self.y_velocity, self.speed * direction.sin(), y * self.speed * self.delta * self.acceleration);
     }
