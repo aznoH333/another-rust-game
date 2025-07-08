@@ -58,4 +58,12 @@ impl WorldTile{
     pub fn get_bottom(&self) -> f32 {
         return (self.y + TILE_SIZE) as f32;
     }
+
+    pub fn get_center_x(&self) -> f32 {
+        return self.x as f32 + (TILE_SIZE as f32 / 2.0);
+    }
+
+    pub fn get_center_y(&self) -> f32 {
+        return self.y as f32 + (TILE_SIZE as f32 / 2.0);
+    }
 }

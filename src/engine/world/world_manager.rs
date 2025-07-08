@@ -87,7 +87,7 @@ impl WorldManager{
         if x_colider.is_none(){
             game_object.x += game_object.get_x_velocity();
         }else {
-            if game_object.get_x_velocity() > 0.0{
+            if game_object.get_x() < x_colider.unwrap().get_center_x(){
                 game_object.x = x_colider.unwrap().get_left() - (game_object.width / 2.0);
             }else {
                 game_object.x = x_colider.unwrap().get_right() + (game_object.width / 2.0);
@@ -106,7 +106,7 @@ impl WorldManager{
         if y_colider.is_none(){
             game_object.y += game_object.get_y_velocity();
         }else {
-            if game_object.get_y_velocity() > 0.0{
+            if game_object.get_y() < y_colider.unwrap().get_center_y() {
                 game_object.y = y_colider.unwrap().get_top() - (game_object.height / 2.0);
             }else {
                 game_object.y = y_colider.unwrap().get_bottom() + (game_object.height / 2.0);
