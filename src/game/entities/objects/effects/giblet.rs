@@ -19,8 +19,8 @@ fn giblet_new(parameters: &ObjectSummonParameters) -> GameObject {
     return 
     GameObjectBuilder::new(parameters.x, parameters.y, sprite_name, DrawingLayer::GameObjects.get_value())
     .disable_auto_flipping()
-    .set_dimensions(4.0, 4.0)
-    .set_sprite_offset(-14.0, -14.0)
+    .set_dimensions(8.0, 8.0)
+    .set_sprite_offset(-8.0, -8.0)
     .set_bounciness(0.95)
     .set_starting_velocity(x_m, y_m)
     .set_color(parameters.color)

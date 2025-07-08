@@ -12,7 +12,7 @@ impl NumberUtils {
             return target;
         }
 
-        return current - ((current - target).signum() * speed);
+        return current - ((current - target).signum() * speed.abs());
     }
 
     pub fn error_signum(value: f32, error_margin: f32) -> f32{

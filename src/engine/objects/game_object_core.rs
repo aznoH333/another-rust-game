@@ -1,6 +1,6 @@
 use ggez::graphics::Color;
 
-use crate::{engine::{drawing::drawing_manager::DrawingManager, objects::{game_object_animation::GameObjectAnimation, object_simplification::ObjectSimplification}, types::vector::Vector, world::{world_constants::TILE_SIZE, world_manager::WorldManager}}, utils::number_utils::NumberUtils};
+use crate::{engine::{drawing::drawing_manager::DrawingManager, objects::{game_object_animation::GameObjectAnimation, object_simplification::ObjectSimplification}, types::vector::Vector, world::{world_constants::TILE_SIZE, world_manager::WorldManager}}, utils::{number_utils::NumberUtils, space_utils::SpaceUtils}};
 use crate::engine::objects::game_box::GameBox;
 use crate::engine::objects::engine_animations::{ANIMATION_IDLE, ANIMATION_WALK};
 use std::collections::HashMap;
@@ -213,8 +213,13 @@ impl GameObjectCore {
     }
 
     pub fn accelerate_in_direction(&mut self, x: f32, y: f32) {
-        self.x_velocity = NumberUtils::gravitate_number(self.x_velocity, x.signum() * self.speed, x * self.delta * self.acceleration);
-        self.y_velocity = NumberUtils::gravitate_number(self.y_velocity, y.signum() * self.speed, y * self.delta * self.acceleration);
+        let direction = SpaceUtils::direction_towards(0.0, 0.0, x, y);
+        let speed = SpaceUtils::get_vec_length(x, y);
+
+        // self.x_velocity = self.speed * direction.cos();
+        // self.y_velocity = self.speed * direction.sin();
+        self.x_velocity = NumberUtils::gravitate_number(self.x_velocity, self.speed * direction.cos(), x * self.speed * self.delta * self.acceleration);
+        self.y_velocity = NumberUtils::gravitate_number(self.y_velocity, self.speed * direction.sin(), y * self.speed * self.delta * self.acceleration);
     }
 
 }

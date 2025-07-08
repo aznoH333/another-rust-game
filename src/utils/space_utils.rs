@@ -37,4 +37,8 @@ impl SpaceUtils {
     pub fn direction_towards(x1: f32, y1: f32, x2: f32, y2: f32) -> f32 {
         return (y2 - y1).atan2(x2 - x1);
     }
+
+    pub fn get_vec_length(x: f32, y: f32) -> f32 {
+        return Self::pythagoras(0.0, 0.0, x, y);
+    }
 }
