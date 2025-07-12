@@ -13,6 +13,7 @@ fn player_new(parameters: &ObjectSummonParameters) -> GameObject{
     .set_camera_target()
     // stats
     .set_speed(1.2)
+    .disable_friction_normalization()
     // combat
     .set_faction(FACTION_PLAYER)
     .set_health(100.0)

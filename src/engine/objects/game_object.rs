@@ -224,6 +224,11 @@ impl GameObjectBuilder{
         return self;
     }
 
+    pub fn disable_friction_normalization(mut self) -> GameObjectBuilder {
+        self.core.normalize_friction = false;
+        return self;
+    }
+
     pub fn build(self) -> GameObject{
         return GameObject { core: self.core, controllers: self.controllers }
     }

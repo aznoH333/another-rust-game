@@ -24,6 +24,7 @@ pub struct GameObjectCore {
     pub bounciness: f32,
     pub speed: f32,
     pub acceleration: f32,
+    pub normalize_friction: bool,
     // number between -1 and 1 indicating the direction the object wants to accelerate in
     pub movement_x: f32,
     pub movement_y: f32,
@@ -96,7 +97,8 @@ impl GameObjectCore {
             acceleration: 0.25,
             allow_auto_flipping: true,
             stun_timer: Timer::new(0),
-            color: Color::new(1.0, 1.0, 1.0, 1.0)
+            color: Color::new(1.0, 1.0, 1.0, 1.0),
+            normalize_friction: true,
         }
     }
 
@@ -132,11 +134,20 @@ impl GameObjectCore {
 
         self.update_animation_state();
 
-        // TODO : normalize velocity loss for both axis
-        // friction
-        let direction = SpaceUtils::direction_towards(0.0, 0.0, self.x_velocity, self.y_velocity);
-        self.x_velocity = NumberUtils::gravitate_number(self.x_velocity, 0.0, self.friction * delta * direction.cos());
-        self.y_velocity = NumberUtils::gravitate_number(self.y_velocity, 0.0, self.friction * delta * direction.sin());
+        if self.normalize_friction {
+            // friction
+            let direction = SpaceUtils::direction_towards(0.0, 0.0, self.x_velocity, self.y_velocity);
+            self.x_velocity = NumberUtils::gravitate_number(self.x_velocity, 0.0, self.friction * delta * direction.cos());
+            self.y_velocity = NumberUtils::gravitate_number(self.y_velocity, 0.0, self.friction * delta * direction.sin());
+        }else {
+            // legacy friction
+            self.x_velocity = NumberUtils::gravitate_number(self.x_velocity, 0.0, self.friction * delta);
+            self.y_velocity = NumberUtils::gravitate_number(self.y_velocity, 0.0, self.friction * delta);
+        }
+        
+        
+        
+
 
         // animation
         if self.use_animations {
