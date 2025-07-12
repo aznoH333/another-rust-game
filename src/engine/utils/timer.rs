@@ -31,4 +31,12 @@ impl Timer {
     pub fn get_as_percentage(&self) -> f32 {
         return (self.get_current_time() - self.last_fired) as f32 / (self.timeout as f32);
     }
+
+    pub fn get_as_number(&self) -> u128 {
+        return self.get_current_time() - self.last_fired;
+    }
+
+    pub fn get_cooldown(&self) -> u128 {
+        return self.timeout;
+    }
 }

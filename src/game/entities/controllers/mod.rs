@@ -6,3 +6,4 @@ pub mod destroy_on_hostile_collision;
 pub mod fighter_controller;
 pub mod fade_away;
 pub mod spawn_giblets_on_death;
+pub mod fade_in_and_out;

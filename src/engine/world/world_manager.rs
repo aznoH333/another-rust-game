@@ -77,12 +77,16 @@ impl WorldManager{
     pub fn move_in_world(&self, game_object: &mut GameObjectCore, delta: f32) -> bool {
         let mut collided = false;
         
+        // NOTE : this is 🤡 code. 
+        // afaik bool ? expresion : expresion doesn't exist in rust
+        // this for some reason executes collide_with_terrain anyway
+        // so the app will crash if an object goes out of bounds even if its a ghost
         // x move
-        let x_colider = self.check_world_square_collisions(
+        let x_colider = game_object.collide_with_terrain.then_some(self.check_world_square_collisions(
             game_object.left() + game_object.get_x_velocity(), 
             game_object.top(), 
             game_object.width, 
-            game_object.height);
+            game_object.height)).unwrap_or(None);
 
         if x_colider.is_none(){
             game_object.x += game_object.get_x_velocity();
@@ -97,11 +101,11 @@ impl WorldManager{
         }
 
         // y move
-        let y_colider = self.check_world_square_collisions(
+        let y_colider = game_object.collide_with_terrain.then_some(self.check_world_square_collisions(
             game_object.left(), 
             game_object.top() + game_object.get_y_velocity(), 
             game_object.width, 
-            game_object.height);
+            game_object.height)).unwrap_or(None);
 
         if y_colider.is_none(){
             game_object.y += game_object.get_y_velocity();

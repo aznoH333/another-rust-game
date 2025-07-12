@@ -229,6 +229,11 @@ impl GameObjectBuilder{
         return self;
     }
 
+    pub fn disable_terrain_collisions(mut self) -> GameObjectBuilder {
+        self.core.collide_with_terrain = false;
+        return self;
+    }
+
     pub fn build(self) -> GameObject{
         return GameObject { core: self.core, controllers: self.controllers }
     }

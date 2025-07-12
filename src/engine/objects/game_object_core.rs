@@ -25,6 +25,7 @@ pub struct GameObjectCore {
     pub speed: f32,
     pub acceleration: f32,
     pub normalize_friction: bool,
+    pub collide_with_terrain: bool,
     // number between -1 and 1 indicating the direction the object wants to accelerate in
     pub movement_x: f32,
     pub movement_y: f32,
@@ -99,6 +100,7 @@ impl GameObjectCore {
             stun_timer: Timer::new(0),
             color: Color::new(1.0, 1.0, 1.0, 1.0),
             normalize_friction: true,
+            collide_with_terrain: true,
         }
     }
 

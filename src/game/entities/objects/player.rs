@@ -4,7 +4,6 @@ use crate::engine::objects::object_summon::ObjectSummonRegistration;
 use crate::engine::objects::object_summon::ObjectSummonParameters;
 
 fn player_new(parameters: &ObjectSummonParameters) -> GameObject{
-        println!("here");
 
     return GameObjectBuilder::new(parameters.x, parameters.y, "player_0001", DrawingLayer::Player.get_value())
     // set core values
