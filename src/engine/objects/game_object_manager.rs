@@ -35,7 +35,7 @@ impl GameObjectManager{
     }
 
     fn update_objects(&mut self, input: &InputHandler, world: &WorldManager, event_manager: &mut EventManager, delta: f32, object_simplifications: Vec<ObjectSimplification>) {
-        // TODO : thanks to object simplifications. update objects and object collisions should now be merger into 1 loop        
+        // TODO : thanks to object simplifications. update objects and object collisions should now be merged into 1 loop        
         for object in &mut self.game_objects{
             // regular update
             let target = object.get_target().as_ref();

@@ -1,6 +1,6 @@
 use ggez::graphics::Color;
 
-use crate::{engine::{drawing::drawing_manager::DrawingManager, objects::{game_object_animation::GameObjectAnimation, object_simplification::ObjectSimplification}, types::vector::Vector, world::{world_constants::TILE_SIZE, world_manager::WorldManager}}, utils::{number_utils::NumberUtils, space_utils::SpaceUtils}};
+use crate::{engine::{drawing::drawing_manager::DrawingManager, objects::{engine_animations::ANIMATION_HURT, game_object_animation::GameObjectAnimation, object_simplification::ObjectSimplification}, types::vector::Vector, world::{world_constants::TILE_SIZE, world_manager::WorldManager}}, utils::{number_utils::NumberUtils, space_utils::SpaceUtils}};
 use crate::engine::objects::game_box::GameBox;
 use crate::engine::objects::engine_animations::{ANIMATION_IDLE, ANIMATION_WALK};
 use std::collections::HashMap;
@@ -152,7 +152,9 @@ impl GameObjectCore {
 
         // TODO : hurt animation
         // TODO : death animation?
-        if self.x_velocity.abs() > self.speed * self.acceleration || self.y_velocity.abs() > self.speed * self.acceleration {
+        if !self.stun_timer.can_activate() {
+            self.play_animation(ANIMATION_HURT, false);
+        }else if self.x_velocity.abs() > self.speed * self.acceleration || self.y_velocity.abs() > self.speed * self.acceleration {
             self.play_animation(ANIMATION_WALK, false);
         }else {
             self.play_animation(ANIMATION_IDLE, false);

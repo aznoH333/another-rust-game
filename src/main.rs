@@ -40,7 +40,7 @@ fn main() {
     // Make a Context.
     let (mut context, event_loop) = ContextBuilder::new("my_game", "me")
         .add_resource_path(resource_dir)
-        .window_mode( WindowMode::default().fullscreen_type(ggez::conf::FullscreenType::Desktop).dimensions(1920.0, 1080.0) )
+        .window_mode( WindowMode::default().fullscreen_type(ggez::conf::FullscreenType::True).dimensions(1920.0, 1080.0) )
         .build()
         .unwrap();
 
@@ -63,6 +63,7 @@ struct MyGame {
 
 impl MyGame {
     pub fn new(context: &mut Context) -> MyGame {
+        context.gfx.set_fullscreen(ggez::conf::FullscreenType::True).unwrap();
         
         // sprite manager
         let mut sprite_manager = DrawingManager::new(context, Vec::from_iter(DrawingLayer::VALUES.iter().map(|it|{return it.get_value()})));
