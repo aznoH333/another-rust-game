@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use crate::engine::{drawing::drawing_manager::DrawingManager, objects::{game_box::GameBox, game_object_animation::GameObjectAnimation, object_simplification::ObjectSimplification, object_update::ObjectUpdate}, types::vector::Vector, world::world_manager::WorldManager};
+use crate::engine::{drawing::drawing_manager::DrawingManager, objects::{game_box::GameBox, game_object_animation::GameObjectAnimation, object_simplification::ObjectSimplification, object_update::ObjectUpdate, object_weapon::ObjectWeapon}, types::vector::Vector, world::world_manager::WorldManager};
 
 use super::{game_object_controller::GameObjectController, game_object_core::GameObjectCore};
 use ggez::graphics::Color;
@@ -231,6 +231,11 @@ impl GameObjectBuilder{
 
     pub fn disable_terrain_collisions(mut self) -> GameObjectBuilder {
         self.core.collide_with_terrain = false;
+        return self;
+    }
+
+    pub fn set_weapon(mut self, weapon: Option<ObjectWeapon>) -> GameObjectBuilder {
+        self.core.set_weapon(weapon);
         return self;
     }
 

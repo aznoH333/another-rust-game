@@ -1,10 +1,9 @@
-use crate::engine::{events::game_event::GameEvent, objects::{game_object_controller::GameObjectController, game_object_core::GameObjectCore, object_summon::ObjectSummon, object_update::ObjectUpdate}};
+use crate::engine::{events::{event_manager, game_event::GameEvent}, objects::{game_object_controller::GameObjectController, game_object_core::GameObjectCore, object_summon::ObjectSummon, object_update::ObjectUpdate}};
 use crate::game::entities::factions::FACTION_PLAYER;
 use crate::engine::utils::timer::Timer;
 use std::f32::consts::PI;
 
 pub struct PlayerInputController{
-    fire_cooldown: Timer,
     shoot_direction: f32,
 }
 
@@ -14,7 +13,6 @@ const HALF_PI: f32 = PI / 2.0;
 impl PlayerInputController{
     pub fn new() -> PlayerInputController {
         return PlayerInputController { 
-            fire_cooldown: Timer::new(500),
             shoot_direction: 0.0,
         };
     }
@@ -45,26 +43,11 @@ impl GameObjectController for PlayerInputController{
             self.shoot_direction = 0.0;
         }
 
-        if update_value.input.key_action1() && self.fire_cooldown.can_activate() {
-            let rust_x = core.x;
-            let rust_y = core.y;
-            let rust_direction = self.shoot_direction;
-            self.fire_cooldown.activate();
-            /*
-            update_value.event_manager.push_event(GameEvent::SpawnObject { spawn_function: Box::new(move |game_object_manager|{
-                game_object_manager.add_object(Bullet::new(rust_x, rust_y, rust_direction,"bow_0001", 4.0, FACTION_PLAYER, 10.0));
-            })}); */
+        core.set_weapon_direction(self.shoot_direction);
+        
 
-            update_value.event_manager.push_event(GameEvent::SpawnObject 
-                { 
-                    summon: ObjectSummon::new("projectile", core.x, core.y)
-                    .set_direction(self.shoot_direction)
-                    .set_speed(4.0)
-                    .set_faction(FACTION_PLAYER)
-                    .set_damage(10.0)
-                    .set_sprite("bow_0001")
-                }
-            );
+        if update_value.input.key_action1() {
+            core.attack(update_value.event_manager);
         }
     }
 }

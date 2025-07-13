@@ -1,6 +1,6 @@
 use ggez::graphics::Color;
 
-use crate::{engine::{drawing::drawing_manager::DrawingManager, objects::{engine_animations::ANIMATION_HURT, game_object_animation::GameObjectAnimation, object_simplification::ObjectSimplification}, types::vector::Vector, world::{world_constants::TILE_SIZE, world_manager::WorldManager}}, utils::{number_utils::NumberUtils, space_utils::SpaceUtils}};
+use crate::{engine::{drawing::drawing_manager::DrawingManager, events::event_manager::{self, EventManager}, objects::{engine_animations::ANIMATION_HURT, game_object_animation::GameObjectAnimation, object_simplification::ObjectSimplification, object_weapon::ObjectWeapon}, types::vector::Vector, world::{world_constants::TILE_SIZE, world_manager::WorldManager}}, utils::{number_utils::NumberUtils, space_utils::SpaceUtils}};
 use crate::engine::objects::game_box::GameBox;
 use crate::engine::objects::engine_animations::{ANIMATION_IDLE, ANIMATION_WALK};
 use std::collections::HashMap;
@@ -36,6 +36,7 @@ pub struct GameObjectCore {
     pub health: f32,
     pub name: String,
     pub stun_timer: Timer,
+    pub weapon: Option<ObjectWeapon>,
 
     // drawing stuff
     pub sprite_name: String,
@@ -101,6 +102,7 @@ impl GameObjectCore {
             color: Color::new(1.0, 1.0, 1.0, 1.0),
             normalize_friction: true,
             collide_with_terrain: true,
+            weapon: None,
         }
     }
 
@@ -120,6 +122,12 @@ impl GameObjectCore {
         }
         // drawing
         drawing_manager.draw_sprite(sprite_name, x + self.sprite_x_offset, y + self.sprite_y_offset, self.z_index, self.scale, self.flip_sprite, self.rotation, self.color);
+    
+        // weapon
+        if self.weapon.is_some() {
+            let weapon = self.weapon.as_mut().unwrap();
+            weapon.draw(drawing_manager);
+        }
     }
 
     pub fn update(&mut self, world: &WorldManager, delta: f32) {
@@ -148,7 +156,12 @@ impl GameObjectCore {
         }
         
         
-        
+        // weapon
+        if self.weapon.is_some() {
+            let weapon = self.weapon.as_mut().unwrap();
+
+            weapon.update(self.x, self.y);
+        }
 
 
         // animation
@@ -163,7 +176,6 @@ impl GameObjectCore {
             return;
         }
 
-        // TODO : hurt animation
         // TODO : death animation?
         if !self.stun_timer.can_activate() {
             self.play_animation(ANIMATION_HURT, false);
@@ -234,6 +246,22 @@ impl GameObjectCore {
 
         self.x_velocity = NumberUtils::gravitate_number(self.x_velocity, self.speed * direction.cos(), x * self.speed * self.delta * self.acceleration);
         self.y_velocity = NumberUtils::gravitate_number(self.y_velocity, self.speed * direction.sin(), y * self.speed * self.delta * self.acceleration);
+    }
+
+    pub fn set_weapon(&mut self, weapon: Option<ObjectWeapon>) {
+        self.weapon = weapon;
+    }
+
+    pub fn attack(&mut self, event_manager: &mut EventManager) {
+        if self.weapon.is_some() {
+            self.weapon.as_mut().unwrap().fire(event_manager);
+        }
+    }
+
+    pub fn set_weapon_direction(&mut self, direction: f32) {
+        if self.weapon.is_some() {
+            self.weapon.as_mut().unwrap().set_direction(direction);
+        }
     }
 
 }
