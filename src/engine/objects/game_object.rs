@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use crate::engine::{drawing::drawing_manager::DrawingManager, objects::{game_box::GameBox, drawable::game_object_animation::GameObjectAnimation, object_simplification::ObjectSimplification, object_update::ObjectUpdate, object_weapon::ObjectWeapon}, types::vector::Vector, world::world_manager::WorldManager};
+use crate::engine::{drawing::drawing_manager::DrawingManager, objects::{drawable::game_object_animation::GameObjectAnimation, object_simplification::ObjectSimplification, object_update::ObjectUpdate, object_weapon::ObjectWeapon}, types::vector::Vector, world::world_manager::WorldManager};
 
 use super::{game_object_controller::GameObjectController, game_object_core::GameObjectCore};
 use ggez::graphics::Color;
@@ -43,19 +43,19 @@ impl GameObject{
     }
 
     pub fn get_x(&self) -> f32 {
-        return self.core.x;
+        return self.core.get_x();
     }
 
     pub fn get_y(&self) -> f32 {
-        return self.core.y;
+        return self.core.get_y();
     }
 
     pub fn get_width(&self) -> f32 {
-        return self.core.width;
+        return self.core.get_width();
     }
 
     pub fn get_height(&self) -> f32 {
-        return self.core.height;
+        return self.core.get_height();
     }
 
     pub fn is_alive(&self) -> bool {

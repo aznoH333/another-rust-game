@@ -7,10 +7,7 @@ use crate::engine::{objects::drawable::game_object_animation::GameObjectAnimatio
 
 
 pub struct GameSprite{
-    x: f32,
-    y: f32,
-    width: f32,
-    height: f32,
+    pub position: GameBox,
     sprite_x_offset: f32,
     sprite_y_offset: f32,
 
@@ -32,10 +29,7 @@ pub struct GameSprite{
 impl GameSprite {
     pub fn new(x: f32, y: f32, sprite: &str, z_index: i32) -> GameSprite {
         return GameSprite { 
-            x: x, 
-            y: y, 
-            width: TILE_SIZE as f32, 
-            height: TILE_SIZE as f32, 
+            position: GameBox::new(x, y, TILE_SIZE as f32, TILE_SIZE as f32),
             sprite_x_offset: 0.0, 
             sprite_y_offset: 0.0, 
             sprite_name: sprite.to_owned(), 
@@ -52,8 +46,8 @@ impl GameSprite {
 
     pub fn draw(&mut self, drawing_manager: &mut DrawingManager) {
         let mut sprite_name = &self.sprite_name;
-        let x = self.left();
-        let y = self.top();
+        let x = self.position.left();
+        let y = self.position.top();
         if self.use_animations {
             let animation = self.animations.get_mut(&self.current_animation).expect(format!("Animation not found {}", self.current_animation).as_str());
 
@@ -89,54 +83,32 @@ impl GameSprite {
     pub fn set_flip(&mut self, flip: bool) {
         self.flip_sprite = flip;
     }
-}
 
-impl GameBox for GameSprite {
-    /**
-     * returns the "left" side of object -> x position
-     */
-    fn left(&self) -> f32 {
-        return self.x - (self.width / 2.0);
+    pub fn get_y(&self) -> f32 {
+        return self.position.y;
     }
 
-    /**
-     * returns the "right" side of object -> x position
-     */
-    fn right(&self) -> f32 {
-        return self.x + (self.width / 2.0);
+    pub fn get_width(&self) -> f32 {
+        return self.position.width;
     }
 
-    /**
-     * returns the "top" side of object -> y position
-     */
-    fn top(&self) -> f32 {
-        return self.y - (self.height / 2.0);
+    pub fn get_height(&self) -> f32 {
+        return self.position.height;
     }
 
-    /**
-     * returns the "bottom" side of object -> y position
-     */
-    fn bottom(&self) -> f32 {
-        return self.y + (self.height / 2.0);
+    pub fn set_x(&self, value: f32) {
+        self.position.x = value;
     }
 
-    fn get_x(&self) -> f32 {
-        return self.x;
-    } 
-
-    fn get_y(&self) -> f32 {
-        return self.y;
+    pub fn set_y(&self, value: f32) {
+        self.position.y = value;
     }
 
-    fn get_width(&self) -> f32 {
-        return self.width;
+    pub fn set_width(&self, value: f32) {
+        self.position.width = value;
     }
 
-    fn get_height(&self) -> f32 {
-        return self.height;
-    }
-
-    fn get_id(&self) -> u32 {
-        return 0; // TODO : this shouldnt be here
+    pub fn set_height(&self, value: f32) {
+        self.position.height = value;
     }
 }

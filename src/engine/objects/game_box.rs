@@ -1,19 +1,52 @@
 use crate::utils::space_utils::SpaceUtils;
 
-pub trait GameBox {
-    // TODO : rewerite game object core to use composition instead of interface implementation
-    fn get_id(&self) -> u32;
-    fn get_x(&self) -> f32;
-    fn get_y(&self) -> f32;
-    fn get_width(&self) -> f32;
-    fn get_height(&self) -> f32;
-    fn left(&self) -> f32;
-    fn right(&self) -> f32;
-    fn top(&self) -> f32;
-    fn bottom(&self) -> f32;
+
+pub struct GameBox{
+    pub x: f32,
+    pub y: f32,
+    pub width: f32,
+    pub height: f32,
+}
+
+impl GameBox {
+    pub fn new(x: f32, y: f32, width: f32, height: f32) -> GameBox{
+        return GameBox {
+            x: x,
+            y: y,
+            width: width,
+            height: height,
+        };
+    }
     
-    
-    fn collides_with_box(&self, other: &dyn GameBox) -> bool {
+    /**
+     * returns the "left" side of object -> x position
+     */
+    pub fn left(&self) -> f32 {
+        return self.x - (self.width / 2.0);
+    }
+
+    /**
+     * returns the "right" side of object -> x position
+     */
+    pub fn right(&self) -> f32 {
+        return self.x + (self.width / 2.0);
+    }
+
+    /**
+     * returns the "top" side of object -> y position
+     */
+    pub fn top(&self) -> f32 {
+        return self.y - (self.height / 2.0);
+    }
+
+    /**
+     * returns the "bottom" side of object -> y position
+     */
+    pub fn bottom(&self) -> f32 {
+        return self.y + (self.height / 2.0);
+    }
+
+    pub fn collides_with_box(&self, other: &GameBox) -> bool {
         return SpaceUtils::squares_collide_f32(
             self.left(), 
             self.top(), 
@@ -23,9 +56,5 @@ pub trait GameBox {
             other.top(), 
             other.get_width(), 
             other.get_height());
-    }
-
-    fn equals(&self, other: &dyn GameBox) -> bool {
-        return self.get_id() == other.get_id();
     }
 }

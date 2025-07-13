@@ -119,8 +119,8 @@ impl GameObjectCore {
         
         // weapon
         if self.weapon.is_some() {
-            let rust_x = self.get_x(); // love rust
-            let rust_y = self.get_y();
+            let rust_x = self.sprite.position.x; // love rust
+            let rust_y = self.sprite.position.y;
             
             let weapon = self.weapon.as_mut().unwrap().update(rust_x, rust_y);
         }
@@ -160,15 +160,15 @@ impl GameObjectCore {
 
     pub fn get_center_position(&self) -> Vector{
         return Vector{
-            x: self.get_x(), 
-            y: self.get_y()
+            x: self.sprite.position.x(), 
+            y: self.sprite.position.y()
         };
     }
 
     pub fn get_position(&self) -> Vector {
         return Vector{
-            x: self.get_x(), 
-            y: self.get_y()
+            x: self.sprite.position.x(), 
+            y: self.sprite.position.y()
         };
     }
 
@@ -220,54 +220,35 @@ impl GameObjectCore {
         }
     }
 
-}
-
-impl GameBox for GameObjectCore {
-    /**
-     * returns the "left" side of object -> x position
-     */
-    fn left(&self) -> f32 {
-        return self.get_x() - (self.get_width() / 2.0);
+    pub fn get_x(&self) -> f32 {
+        return self.sprite.position.x;
     }
 
-    /**
-     * returns the "right" side of object -> x position
-     */
-    fn right(&self) -> f32 {
-        return self.get_x() + (self.get_width() / 2.0);
+    pub fn get_y(&self) -> f32 {
+        return self.sprite.position.y;
     }
 
-    /**
-     * returns the "top" side of object -> y position
-     */
-    fn top(&self) -> f32 {
-        return self.get_y() - (self.get_height() / 2.0);
+    pub fn get_width(&self) -> f32 {
+        return self.sprite.position.width;
     }
 
-    /**
-     * returns the "bottom" side of object -> y position
-     */
-    fn bottom(&self) -> f32 {
-        return self.get_y() + (self.get_height() / 2.0);
+    pub fn get_height(&self) -> f32 {
+        return self.sprite.position.height;
     }
 
-    fn get_x(&self) -> f32 {
-        return self.sprite.get_x();
-    } 
-
-    fn get_y(&self) -> f32 {
-        return self.sprite.get_y();
+    pub fn set_x(&self, value: f32) {
+        self.sprite.position.x = value;
     }
 
-    fn get_width(&self) -> f32 {
-        return self.sprite.get_width();
+    pub fn set_y(&self, value: f32) {
+        self.sprite.position.y = value;
     }
 
-    fn get_height(&self) -> f32 {
-        return self.sprite.get_height();
+    pub fn set_width(&self, value: f32) {
+        self.sprite.position.width = value;
     }
 
-    fn get_id(&self) -> u32 {
-        return self.id;
+    pub fn set_height(&self, value: f32) {
+        self.sprite.position.height = value;
     }
 }
