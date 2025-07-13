@@ -69,7 +69,7 @@ fn main() {
     // 6 [ ] Game loop
     //   6.1 [ ] Enemies
     //       6.1.1 [x] Enemy awearness
-    //       6.1.2 [a] Enemy "pathfinding"
+    //       6.1.2 [x] Enemy "pathfinding"
     //   6.2 [a] Weapons
 
     // set resource path

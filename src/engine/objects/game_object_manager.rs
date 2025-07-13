@@ -44,7 +44,7 @@ impl GameObjectManager{
                 found_target = object_simplifications.iter().find(|a| a.name == *target.unwrap());
             }
             
-            // TODO simlplify calling events
+            // TODO : simlplify calling events
             let object_update_event = ObjectEvent::new_with_object(CONTROLLER_TYPE_UPDATE, found_target);
             let mut update_value = ObjectUpdate{
                 event: &object_update_event, // inlining this will make rust shit the bed and cry

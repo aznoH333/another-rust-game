@@ -1,6 +1,6 @@
 use ggez::glam::Vec2;
 
-use crate::{engine::{events::game_event::GameEvent, objects::{game_box::GameBox, game_object_controller::GameObjectController, game_object_core::GameObjectCore, object_summon::ObjectSummon, object_update::ObjectUpdate}, world::world_constants::TILE_SIZE}, game::entities::controllers::ai::ai_state::{self, AI_STATE_ALERTED, AI_STATE_FIGHTING, AI_STATE_IDLE}, utils::space_utils::SpaceUtils};
+use crate::{engine::{events::game_event::GameEvent, objects::{game_box::GameBox, game_object_controller::GameObjectController, game_object_core::GameObjectCore, object_summon::ObjectSummon, object_update::ObjectUpdate}, utils::timer::Timer, world::world_constants::TILE_SIZE}, game::entities::controllers::ai::ai_state::{self, AI_STATE_ALERTED, AI_STATE_FIGHTING, AI_STATE_IDLE}, utils::space_utils::SpaceUtils};
 
 pub struct FighterController {
     target_name: String,
@@ -9,6 +9,7 @@ pub struct FighterController {
     has_line_of_sight_to_target: bool,
     has_line_of_sight_to_last_pos: bool,
     last_pos_exists: bool,
+    attentions_span: Timer,
 }
 
 impl FighterController {
@@ -20,6 +21,7 @@ impl FighterController {
             has_line_of_sight_to_last_pos: false,
             has_line_of_sight_to_target: false,
             last_pos_exists: false,
+            attentions_span: Timer::new(5000),
         };
     }
 
@@ -34,6 +36,9 @@ impl FighterController {
         }else if new_state == AI_STATE_IDLE {
             // spawn ? callout
             engine.event_manager.push_event(GameEvent::SpawnObject { summon: ObjectSummon::new("callout", core.x, core.top()).set_sprite("emotions_0002") });
+        }else if new_state == AI_STATE_ALERTED {
+            // start timer
+            self.attentions_span.activate();
         }
 
         self.ai_state = new_state;
@@ -78,10 +83,20 @@ impl GameObjectController for FighterController {
             self.last_pos_exists = false;
         }
 
+        // delete last target if attention ran out
+        if self.ai_state == AI_STATE_ALERTED && self.attentions_span.can_activate() {
+            self.last_pos_exists = false;
+        }
+
         if self.has_line_of_sight_to_last_pos && self.last_pos_exists {
             let direction = SpaceUtils::direction_towards(core.x, core.y, self.last_target_pos.x, self.last_target_pos.y);
             core.movement_x = direction.cos();
             core.movement_y = direction.sin();
+
+            if core.collided_with_world() {
+                core.movement_x = core.movement_x.signum();
+                core.movement_y = core.movement_y.signum();
+            }
         }
         
     }
