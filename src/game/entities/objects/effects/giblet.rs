@@ -1,4 +1,4 @@
-use crate::{engine::{objects::{game_object::{GameObject, GameObjectBuilder}, object_summon::{ObjectSummonParameters, ObjectSummonRegistration}}, types::controller_type::CONTROLLER_TYPE_UPDATE}, game::{entities::{controllers::fade_away::FadeAwayController, objects::effects::giblet_type::{GIBLET_BLOB, GIBLET_SPLINTER}}, enums::drawing_layers::DrawingLayer}, utils::{number_utils::NumberUtils, vec_utils::VecUtils}};
+use crate::{engine::{objects::{game_object::{GameObject, GameObjectBuilder}, spawning::object_summon::{ObjectSummonParameters, ObjectSummonRegistration}}, types::controller_type::CONTROLLER_TYPE_UPDATE}, game::{entities::{controllers::fade_away::FadeAwayController, objects::effects::giblet_type::{GIBLET_BLOB, GIBLET_SPLINTER}}, enums::drawing_layers::DrawingLayer}, utils::{number_utils::NumberUtils, vec_utils::VecUtils}};
 use std::f32::consts::PI;
 
 fn giblet_new(parameters: &ObjectSummonParameters) -> GameObject {

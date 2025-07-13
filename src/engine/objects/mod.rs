@@ -7,5 +7,5 @@ pub mod object_simplification;
 pub mod game_box;
 pub mod engine_animations;
 pub mod object_update;
-pub mod object_summon;
 pub mod object_weapon;
+pub mod spawning;

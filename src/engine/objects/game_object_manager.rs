@@ -1,9 +1,9 @@
 
-use crate::engine::{drawing::drawing_manager::DrawingManager, events::event_manager::{EventManager}, input::input::InputHandler, objects::{object_simplification::{ObjectSimplification}, object_summon::{ObjectSummonParameters, ObjectSummonRegistration}, object_update::ObjectUpdate}, types::{controller_type::{CONTROLLER_TYPE_DESTROYED, CONTROLLER_TYPE_OBJECT_COLLIDE, CONTROLLER_TYPE_UPDATE, CONTROLLER_TYPE_WORLD_COLLIDE}, object_event::ObjectEvent}, world::world_manager::WorldManager};
+use crate::engine::{drawing::drawing_manager::DrawingManager, events::event_manager::{EventManager}, input::input::InputHandler, objects::{object_simplification::{ObjectSimplification}, object_update::ObjectUpdate}, types::{controller_type::{CONTROLLER_TYPE_DESTROYED, CONTROLLER_TYPE_OBJECT_COLLIDE, CONTROLLER_TYPE_UPDATE, CONTROLLER_TYPE_WORLD_COLLIDE}, object_event::ObjectEvent}, world::world_manager::WorldManager};
 
-use super::{game_object::GameObject, game_object_controller::GameObjectController};
+use super::{game_object::GameObject};
 use std::collections::HashMap;
-use crate::engine::objects::object_summon::ObjectSummonFunc;
+use crate::engine::objects::spawning::object_summon::{ObjectSummonParameters, ObjectSummonRegistration,ObjectSummonFunc};
 pub struct GameObjectManager{
     game_objects: Vec<GameObject>,
     object_summons: HashMap<String, ObjectSummonFunc>

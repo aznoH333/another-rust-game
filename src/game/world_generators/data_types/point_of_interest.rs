@@ -1,4 +1,4 @@
-use crate::{engine::{events::{event_manager::EventManager, game_event::GameEvent}, objects::object_summon::ObjectSummon, world::{world_constants::TILE_SIZE, world_manager::WorldManager}}, utils::{number_utils::NumberUtils, space_utils::SpaceUtils}};
+use crate::{engine::{events::{event_manager::EventManager, game_event::GameEvent}, objects::spawning::object_summon::ObjectSummon, world::{world_constants::TILE_SIZE, world_manager::WorldManager}}, utils::{number_utils::NumberUtils, space_utils::SpaceUtils}};
 
 use super::room::Room;
 

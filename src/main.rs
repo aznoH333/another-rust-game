@@ -22,7 +22,7 @@ use ggez::{Context, ContextBuilder, GameResult};
 use ggez::graphics::{self, Color, Sampler};
 use ggez::event::{self, EventHandler};
 
-use crate::engine::objects::object_summon::ObjectSummonRegistration;
+use crate::engine::objects::spawning::object_summon::ObjectSummonRegistration;
 
 
 fn main() {

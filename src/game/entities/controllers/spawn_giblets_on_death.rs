@@ -1,6 +1,6 @@
 use ggez::graphics::Color;
 
-use crate::{engine::objects::{game_object_controller::GameObjectController, object_summon::ObjectSummon}, utils::{number_utils::NumberUtils, vec_utils::VecUtils}};
+use crate::{engine::objects::{game_object_controller::GameObjectController, spawning::object_summon::ObjectSummon}, utils::{number_utils::NumberUtils, vec_utils::VecUtils}};
 use crate::engine::events::game_event::GameEvent;
 pub struct SpawnGibletsOnDeathController {
     giblet_type: u32,

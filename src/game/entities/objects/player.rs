@@ -1,7 +1,7 @@
 use crate::{engine::{objects::{engine_animations::{ANIMATION_IDLE, ANIMATION_WALK}, game_object::{GameObject, GameObjectBuilder}, game_object_animation::GameObjectAnimation, object_weapon::ObjectWeapon}, types::controller_type::CONTROLLER_TYPE_UPDATE}, game::{entities::controllers::player_input_controller::PlayerInputController, enums::drawing_layers::DrawingLayer}};
 use crate::game::entities::factions::FACTION_PLAYER;
-use crate::engine::objects::object_summon::ObjectSummonRegistration;
-use crate::engine::objects::object_summon::ObjectSummonParameters;
+use crate::engine::objects::spawning::object_summon::ObjectSummonRegistration;
+use crate::engine::objects::spawning::object_summon::ObjectSummonParameters;
 
 fn player_new(parameters: &ObjectSummonParameters) -> GameObject{
 
