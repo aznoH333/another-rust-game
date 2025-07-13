@@ -6,32 +6,32 @@ use crate::engine::objects::game_box::GameBox;
 use crate::engine::{objects::drawable::game_object_animation::GameObjectAnimation, world::world_constants::TILE_SIZE};
 
 
-pub struct Drawable{
-    pub x: f32,
-    pub y: f32,
-    pub width: f32,
-    pub height: f32,
-    pub sprite_x_offset: f32,
-    pub sprite_y_offset: f32,
+pub struct GameSprite{
+    x: f32,
+    y: f32,
+    width: f32,
+    height: f32,
+    sprite_x_offset: f32,
+    sprite_y_offset: f32,
 
-    pub sprite_name: String,
-    pub z_index: i32,
-    pub scale: f32,
+    sprite_name: String,
+    z_index: i32,
+    scale: f32,
 
-    pub flip_sprite: bool,
-    pub rotation: f32,
-    pub color: Color,
+    flip_sprite: bool,
+    rotation: f32,
+    color: Color,
 
-    pub current_animation: i32,
-    pub animations: HashMap<i32, GameObjectAnimation>,
-    pub use_animations: bool,
+    current_animation: i32,
+    animations: HashMap<i32, GameObjectAnimation>,
+    use_animations: bool,
 
 }
 
 
-impl Drawable {
-    pub fn new(x: f32, y: f32, sprite: &str, z_index: i32) -> Drawable {
-        return Drawable { 
+impl GameSprite {
+    pub fn new(x: f32, y: f32, sprite: &str, z_index: i32) -> GameSprite {
+        return GameSprite { 
             x: x, 
             y: y, 
             width: TILE_SIZE as f32, 
@@ -81,9 +81,17 @@ impl Drawable {
         self.animations.insert(index, animation);
         self.use_animations = true;
     }
+
+    pub fn uses_animations(&self) -> bool {
+        return self.use_animations;
+    }
+
+    pub fn set_flip(&mut self, flip: bool) {
+        self.flip_sprite = flip;
+    }
 }
 
-impl GameBox for Drawable {
+impl GameBox for GameSprite {
     /**
      * returns the "left" side of object -> x position
      */

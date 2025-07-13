@@ -1,21 +1,16 @@
-use ggez::graphics::Color;
 
+use crate::engine::objects::drawable::game_sprite::GameSprite;
 use crate::{engine::{drawing::drawing_manager::DrawingManager, events::event_manager::{self, EventManager}, objects::{drawable::engine_animations::ANIMATION_HURT, drawable::game_object_animation::GameObjectAnimation, object_simplification::ObjectSimplification, object_weapon::ObjectWeapon}, types::vector::Vector, world::{world_constants::TILE_SIZE, world_manager::WorldManager}}, utils::{number_utils::NumberUtils, space_utils::SpaceUtils}};
 use crate::engine::objects::game_box::GameBox;
 use crate::engine::objects::drawable::engine_animations::{ANIMATION_IDLE, ANIMATION_WALK};
-use std::collections::HashMap;
 use crate::engine::utils::timer::Timer;
 // TODO restructure engine directory to make sense
 // TODO fix these garbage auto imports
 pub struct GameObjectCore {
     
-    // positional stuff
-    pub x: f32,
-    pub y: f32,
-    pub width: f32,
-    pub height: f32,
-    pub sprite_x_offset: f32,
-    pub sprite_y_offset: f32,
+
+    pub sprite: GameSprite,
+    
 
     // movement and physics
     pub x_velocity: f32,
@@ -39,18 +34,9 @@ pub struct GameObjectCore {
     pub weapon: Option<ObjectWeapon>,
 
     // drawing stuff
-    pub sprite_name: String,
-    pub z_index: i32,
-    pub scale: f32,
     pub is_camera_target: bool,
-    pub flip_sprite: bool,
-    pub rotation: f32,
     pub allow_auto_flipping: bool,
-    pub color: Color,
 
-    pub current_animation: i32,
-    pub animations: HashMap<i32, GameObjectAnimation>,
-    pub use_animations: bool,
     // state controll
     pub wants_to_live: bool,
     collided_with_world: bool,
@@ -64,24 +50,12 @@ pub struct GameObjectCore {
 impl GameObjectCore {
     pub fn new(x: f32, y: f32, sprite_name: &str, z_index: i32) -> GameObjectCore {
         return GameObjectCore{
-            x,
-            y,
-            width: TILE_SIZE as f32,
-            height: TILE_SIZE as f32,
-            sprite_x_offset: 0.0, 
-            sprite_y_offset: 0.0,
+            sprite: GameSprite::new(x, y, sprite_name, z_index),
             x_velocity: 0.0,
             y_velocity: 0.0,
             friction: 0.1,
             bounciness: 0.0,
-            sprite_name: sprite_name.to_owned(),
-            z_index,
-            scale: 1.0,
-            current_animation: 0,
-            animations: HashMap::new(),
-            use_animations: false,
             is_camera_target: false,
-            flip_sprite: false,
             wants_to_live: true,
             collided_with_world: false,
             delta: 0.0,
@@ -89,7 +63,6 @@ impl GameObjectCore {
             damage: 0.0,
             health: 1.0,
             id: 0,
-            rotation: 0.0,
             is_ready_to_draw: false,
             name: String::new(),
             look_for_target_with_name: None,
@@ -99,7 +72,6 @@ impl GameObjectCore {
             acceleration: 0.25,
             allow_auto_flipping: true,
             stun_timer: Timer::new(0),
-            color: Color::new(1.0, 1.0, 1.0, 1.0),
             normalize_friction: true,
             collide_with_terrain: true,
             weapon: None,
@@ -111,18 +83,7 @@ impl GameObjectCore {
         if !self.is_ready_to_draw || !self.wants_to_live {
             return;
         }
-        
-        let mut sprite_name = &self.sprite_name;
-        let x = self.left();
-        let y = self.top();
-        if self.use_animations {
-            let animation = self.animations.get_mut(&self.current_animation).expect(format!("Animation not found {}", self.current_animation).as_str());
-
-            sprite_name = animation.get_current_frame();
-        }
-        // drawing
-        drawing_manager.draw_sprite(sprite_name, x + self.sprite_x_offset, y + self.sprite_y_offset, self.z_index, self.scale, self.flip_sprite, self.rotation, self.color);
-    
+        self.sprite.draw(drawing_manager);
         // weapon
         if self.weapon.is_some() {
             let weapon = self.weapon.as_mut().unwrap();
@@ -158,21 +119,19 @@ impl GameObjectCore {
         
         // weapon
         if self.weapon.is_some() {
-            let weapon = self.weapon.as_mut().unwrap();
-
-            weapon.update(self.x, self.y);
+            let rust_x = self.get_x(); // love rust
+            let rust_y = self.get_y();
+            
+            let weapon = self.weapon.as_mut().unwrap().update(rust_x, rust_y);
         }
 
 
         // animation
-        if self.use_animations {
-            let animation = self.animations.get_mut(&self.current_animation).expect(format!("Animation not found {}", self.current_animation).as_str());
-            animation.update_animation(delta);
-        }
+        self.sprite.update_animations(delta);
     }
 
     fn update_animation_state(&mut self) {
-        if !self.use_animations{
+        if !self.sprite.uses_animations(){
             return;
         }
 
@@ -188,9 +147,9 @@ impl GameObjectCore {
         // flip sprite
         if self.allow_auto_flipping && self.stun_timer.can_activate(){
             if self.x_velocity < -self.speed * self.acceleration {
-                self.flip_sprite = true;
+                self.sprite.set_flip(true);
             }else if self.x_velocity > self.speed * self.acceleration {
-                self.flip_sprite = false;
+                self.sprite.set_flip(false);
             }
         }
     }
@@ -201,15 +160,15 @@ impl GameObjectCore {
 
     pub fn get_center_position(&self) -> Vector{
         return Vector{
-            x: self.x, 
-            y: self.y
+            x: self.get_x(), 
+            y: self.get_y()
         };
     }
 
     pub fn get_position(&self) -> Vector {
         return Vector{
-            x: self.x, 
-            y: self.y
+            x: self.get_x(), 
+            y: self.get_y()
         };
     }
 
@@ -226,10 +185,7 @@ impl GameObjectCore {
     }
 
     pub fn play_animation(&mut self, animation: i32, reset: bool) {
-        self.current_animation = animation;
-        if reset {
-            self.animations.get_mut(&animation).unwrap().reset_animation();
-        }
+        self.sprite.play_animation(animation, reset);
     }
 
     pub fn set_target(&mut self, target: String) {
@@ -271,44 +227,44 @@ impl GameBox for GameObjectCore {
      * returns the "left" side of object -> x position
      */
     fn left(&self) -> f32 {
-        return self.x - (self.width / 2.0);
+        return self.get_x() - (self.get_width() / 2.0);
     }
 
     /**
      * returns the "right" side of object -> x position
      */
     fn right(&self) -> f32 {
-        return self.x + (self.width / 2.0);
+        return self.get_x() + (self.get_width() / 2.0);
     }
 
     /**
      * returns the "top" side of object -> y position
      */
     fn top(&self) -> f32 {
-        return self.y - (self.height / 2.0);
+        return self.get_y() - (self.get_height() / 2.0);
     }
 
     /**
      * returns the "bottom" side of object -> y position
      */
     fn bottom(&self) -> f32 {
-        return self.y + (self.height / 2.0);
+        return self.get_y() + (self.get_height() / 2.0);
     }
 
     fn get_x(&self) -> f32 {
-        return self.x;
+        return self.sprite.get_x();
     } 
 
     fn get_y(&self) -> f32 {
-        return self.y;
+        return self.sprite.get_y();
     }
 
     fn get_width(&self) -> f32 {
-        return self.width;
+        return self.sprite.get_width();
     }
 
     fn get_height(&self) -> f32 {
-        return self.height;
+        return self.sprite.get_height();
     }
 
     fn get_id(&self) -> u32 {
