@@ -26,8 +26,52 @@ use crate::engine::objects::object_summon::ObjectSummonRegistration;
 
 
 fn main() {
+    // ================================
+    // THE LIST
+    // ================================
     
-    
+    // [ ] - to be done
+    // [a] - assigned
+    // [d] - doing right now
+    // [x] - done
+    // [p] - postponed
+    // [-] - cancelled
+
+    // ================================
+
+    // 1 [ ] Gamblig
+    //   1.1 [ ] Level Randomness system
+    //       1.1.1 [ ] Random big enemies
+    //       1.1.2 [ ] Random items
+    //       1.1.3 [ ] Random pickups
+    // 2 [ ] Items
+    //   2.1 [ ] Weapons
+    //   2.2 [ ] Pickups
+    //   2.3 [ ] Money?
+    //   2.4 [ ] Crafting materials?
+    //   2.5 [ ] Armor
+    // 3 [ ] Levels
+    //   3.1 [x] Generation
+    //   3.2 [ ] Locked rooms
+    //       3.2.1 [ ] Button rooms
+    //       3.2.2 [ ] Key rooms
+    //   3.3 [ ] Level progression
+    //       3.3.1 [ ] Level exit
+    //       3.3.2 [ ] Generating next level
+    //       3.3.3 [ ] Special levels
+    //   3.4 [ ] Randomize graphics
+    // 4 [ ] Engine
+    //   4.1 [ ] Global values
+    //   4.2 [ ] Ui
+    //   4.3 [ ] Sounds
+    // 5 [ ] Game content
+    // TODO : fill this in
+    // 6 [ ] Game loop
+    //   6.1 [ ] Enemies
+    //       6.1.1 [x] Enemy awearness
+    //       6.1.2 [a] Enemy "pathfinding"
+    //   6.2 [a] Weapons
+
     // set resource path
     let resource_dir = if let Ok(manifest_dir) = env::var("CARGO_MANIFEST_DIR") {
         let mut path = path::PathBuf::from(manifest_dir);

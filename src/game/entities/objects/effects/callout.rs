@@ -1,4 +1,4 @@
-use crate::{engine::{objects::{game_object::{GameObject, GameObjectBuilder}, object_summon::{ObjectSummonParameters, ObjectSummonRegistration}}, types::controller_type::CONTROLLER_TYPE_UPDATE}, game::{entities::controllers::{fade_away::FadeAwayController, fade_in_and_out::FadeInAndOut}, enums::drawing_layers::DrawingLayer}};
+use crate::{engine::{objects::{game_object::{GameObject, GameObjectBuilder}, object_summon::{ObjectSummonParameters, ObjectSummonRegistration}}, types::controller_type::CONTROLLER_TYPE_UPDATE}, game::{entities::controllers::{fade_in_and_out::FadeInAndOut}, enums::drawing_layers::DrawingLayer}};
 
 fn callout_new(parameters: &ObjectSummonParameters) -> GameObject {
     return 
@@ -7,7 +7,6 @@ fn callout_new(parameters: &ObjectSummonParameters) -> GameObject {
     .set_starting_velocity(0.0, -2.5)
     .set_friction(0.001)
     .disable_terrain_collisions()
-
     .build();
 }
 
