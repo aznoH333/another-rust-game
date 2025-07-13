@@ -96,19 +96,31 @@ impl GameSprite {
         return self.position.height;
     }
 
-    pub fn set_x(&self, value: f32) {
+    pub fn set_x(&mut self, value: f32) {
         self.position.x = value;
     }
 
-    pub fn set_y(&self, value: f32) {
+    pub fn set_y(&mut self, value: f32) {
         self.position.y = value;
     }
 
-    pub fn set_width(&self, value: f32) {
+    pub fn set_width(&mut self, value: f32) {
         self.position.width = value;
     }
 
-    pub fn set_height(&self, value: f32) {
+    pub fn set_height(&mut self, value: f32) {
         self.position.height = value;
+    }
+
+    pub fn set_sprite_x_offset(&mut self, offset: f32) {
+        self.sprite_x_offset = offset;
+    }
+
+    pub fn set_sprite_y_offset(&mut self, offset: f32) {
+        self.sprite_y_offset = offset;
+    }
+
+    pub fn set_color(&mut self, color: Color) {
+        self.color = color;
     }
 }

@@ -75,7 +75,7 @@ impl GameObject{
     }
 
     pub fn collides_with_object(&self, other: &GameObject) -> bool {
-        return self.core.collides_with_box(&other.core);
+        return self.core.collides_with_box(&other.core.sprite.position);
     }
 
     pub fn equals(&self, other: &GameObject) -> bool {
@@ -97,6 +97,7 @@ impl GameObject{
     pub fn get_target(&self) -> &Option<String> {
         return &self.core.look_for_target_with_name;
     }
+
 
     /**
      * Note to self.
@@ -124,8 +125,8 @@ impl GameObjectBuilder{
     }
 
     pub fn set_dimensions(mut self, width: f32, height: f32) -> GameObjectBuilder {
-        self.core.width = width;
-        self.core.height = height;
+        self.core.set_width(width);
+        self.core.set_height(height);
         return self;
     }
 
@@ -136,8 +137,8 @@ impl GameObjectBuilder{
 
 
     pub fn set_sprite_offset(mut self, x_offset: f32, y_offset: f32) -> GameObjectBuilder {
-        self.core.sprite_x_offset = x_offset;
-        self.core.sprite_y_offset = y_offset;
+        self.core.set_sprite_x_offset(x_offset);
+        self.core.set_sprite_y_offset(y_offset);
         return self;
     }
 
@@ -152,8 +153,7 @@ impl GameObjectBuilder{
     }
 
     pub fn add_animation(mut self, animation_index: i32, animation: GameObjectAnimation) -> GameObjectBuilder {
-        self.core.animations.insert(animation_index, animation);
-        self.core.use_animations = true;
+        self.core.add_animation(animation_index, animation);
 
         return self
     }
@@ -220,7 +220,7 @@ impl GameObjectBuilder{
     }
 
     pub fn set_color(mut self, color: Color) -> GameObjectBuilder {
-        self.core.color = color;
+        self.core.set_color(color);
         return self;
     }
 

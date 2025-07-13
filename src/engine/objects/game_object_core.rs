@@ -1,4 +1,6 @@
 
+use ggez::graphics::Color;
+
 use crate::engine::objects::drawable::game_sprite::GameSprite;
 use crate::{engine::{drawing::drawing_manager::DrawingManager, events::event_manager::{self, EventManager}, objects::{drawable::engine_animations::ANIMATION_HURT, drawable::game_object_animation::GameObjectAnimation, object_simplification::ObjectSimplification, object_weapon::ObjectWeapon}, types::vector::Vector, world::{world_constants::TILE_SIZE, world_manager::WorldManager}}, utils::{number_utils::NumberUtils, space_utils::SpaceUtils}};
 use crate::engine::objects::game_box::GameBox;
@@ -160,15 +162,15 @@ impl GameObjectCore {
 
     pub fn get_center_position(&self) -> Vector{
         return Vector{
-            x: self.sprite.position.x(), 
-            y: self.sprite.position.y()
+            x: self.sprite.position.x, 
+            y: self.sprite.position.y
         };
     }
 
     pub fn get_position(&self) -> Vector {
         return Vector{
-            x: self.sprite.position.x(), 
-            y: self.sprite.position.y()
+            x: self.sprite.position.x, 
+            y: self.sprite.position.y
         };
     }
 
@@ -236,19 +238,55 @@ impl GameObjectCore {
         return self.sprite.position.height;
     }
 
-    pub fn set_x(&self, value: f32) {
+    pub fn set_x(&mut self, value: f32) {
         self.sprite.position.x = value;
     }
 
-    pub fn set_y(&self, value: f32) {
+    pub fn set_y(&mut self, value: f32) {
         self.sprite.position.y = value;
     }
 
-    pub fn set_width(&self, value: f32) {
+    pub fn set_width(&mut self, value: f32) {
         self.sprite.position.width = value;
     }
 
-    pub fn set_height(&self, value: f32) {
+    pub fn set_height(&mut self, value: f32) {
         self.sprite.position.height = value;
+    }
+
+    pub fn collides_with_box(&self, other: &GameBox) -> bool {
+        return self.sprite.position.collides_with_box(other);
+    }
+
+    pub fn set_sprite_x_offset(&mut self, offset: f32) {
+        self.sprite.set_sprite_x_offset(offset);
+    }
+
+    pub fn set_sprite_y_offset(&mut self, offset: f32) {
+        self.sprite.set_sprite_y_offset(offset);
+    }
+    
+    pub fn add_animation(&mut self, animation_index: i32, animation: GameObjectAnimation) {
+        self.sprite.add_animation(animation_index, animation);
+    }
+
+    pub fn set_color(&mut self, color: Color) {
+        self.sprite.set_color(color);
+    }
+
+    pub fn left(&self) -> f32 {
+        return self.sprite.position.left();
+    }
+
+    pub fn top(&self) -> f32 {
+        return self.sprite.position.top();
+    }
+
+    pub fn right(&self) -> f32 {
+        return self.sprite.position.right();
+    }
+
+    pub fn bottom(&self) -> f32 {
+        return self.sprite.position.bottom();
     }
 }

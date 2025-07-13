@@ -1,3 +1,4 @@
+use crate::game;
 use crate::{engine::{drawing::drawing_manager::DrawingManager, events::event_manager::{EventManager}, objects::{game_box::GameBox, game_object_core::GameObjectCore}}, utils::space_utils::SpaceUtils};
 
 use super::{world_constants::TILE_SIZE, world_generator::WorldGenerator, world_tile::WorldTile};
@@ -85,16 +86,16 @@ impl WorldManager{
         let x_colider = game_object.collide_with_terrain.then_some(self.check_world_square_collisions(
             game_object.left() + game_object.get_x_velocity(), 
             game_object.top(), 
-            game_object.width, 
-            game_object.height)).unwrap_or(None);
+            game_object.get_width(), 
+            game_object.get_height())).unwrap_or(None);
 
         if x_colider.is_none(){
-            game_object.x += game_object.get_x_velocity();
+            game_object.set_x(game_object.get_x() + game_object.get_x_velocity())
         }else {
             if game_object.get_x() < x_colider.unwrap().get_center_x(){
-                game_object.x = x_colider.unwrap().get_left() - (game_object.width / 2.0);
+                game_object.set_x(x_colider.unwrap().get_left() - (game_object.get_width() / 2.0));
             }else {
-                game_object.x = x_colider.unwrap().get_right() + (game_object.width / 2.0);
+                game_object.set_x(x_colider.unwrap().get_left() + (game_object.get_width() / 2.0));
             }
             game_object.x_velocity = -game_object.x_velocity * game_object.bounciness;
             collided = true;
@@ -104,16 +105,17 @@ impl WorldManager{
         let y_colider = game_object.collide_with_terrain.then_some(self.check_world_square_collisions(
             game_object.left(), 
             game_object.top() + game_object.get_y_velocity(), 
-            game_object.width, 
-            game_object.height)).unwrap_or(None);
+            game_object.get_width(), 
+            game_object.get_height())).unwrap_or(None);
 
         if y_colider.is_none(){
-            game_object.y += game_object.get_y_velocity();
+            game_object.set_y(game_object.get_y() + game_object.get_y_velocity());
         }else {
             if game_object.get_y() < y_colider.unwrap().get_center_y() {
-                game_object.y = y_colider.unwrap().get_top() - (game_object.height / 2.0);
+                game_object.set_y(y_colider.unwrap().get_top() - (game_object.get_height() / 2.0));
             }else {
-                game_object.y = y_colider.unwrap().get_bottom() + (game_object.height / 2.0);
+                game_object.set_y(y_colider.unwrap().get_top() + (game_object.get_height() / 2.0));
+
             }
             game_object.y_velocity = -game_object.y_velocity * game_object.bounciness;
             collided = true;

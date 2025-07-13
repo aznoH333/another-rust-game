@@ -50,11 +50,11 @@ impl GameBox {
         return SpaceUtils::squares_collide_f32(
             self.left(), 
             self.top(), 
-            self.get_width(), 
-            self.get_height(), 
+            self.width, 
+            self.height, 
             other.left(), 
             other.top(), 
-            other.get_width(), 
-            other.get_height());
+            other.width, 
+            other.height);
     }
 }
