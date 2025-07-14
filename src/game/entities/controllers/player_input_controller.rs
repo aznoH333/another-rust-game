@@ -31,13 +31,13 @@ impl GameObjectController for PlayerInputController{
 
         if update_value.input.key_left(){
             core.movement_x = -1.0;
-            core.flip_sprite = true;
+            core.sprite.set_flip(true);
             self.shoot_direction = PI;
         }
 
         if update_value.input.key_right(){
             core.movement_x = 1.0;
-            core.flip_sprite = false;
+            core.sprite.set_flip(false);
             self.shoot_direction = 0.0;
         }
 

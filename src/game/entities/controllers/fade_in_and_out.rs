@@ -30,11 +30,11 @@ impl GameObjectController for FadeInAndOut {
         }
 
         if progress < self.fade_in_time {
-            core.color.a = (progress as f32) / (self.fade_in_time as f32);
+            core.sprite.get_color_mut().a = (progress as f32) / (self.fade_in_time as f32);
         } else if progress > self.timer.get_cooldown() - self.fade_out_time {
-            core.color.a = ((self.timer.get_cooldown() - progress) as f32) / (self.fade_out_time as f32);
+            core.sprite.get_color_mut().a = ((self.timer.get_cooldown() - progress) as f32) / (self.fade_out_time as f32);
         } else {
-            core.color.a = 1.0;
+            core.sprite.get_color_mut().a = 1.0;
         }
         
         

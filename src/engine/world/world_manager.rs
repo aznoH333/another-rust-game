@@ -95,7 +95,7 @@ impl WorldManager{
             if game_object.get_x() < x_colider.unwrap().get_center_x(){
                 game_object.set_x(x_colider.unwrap().get_left() - (game_object.get_width() / 2.0));
             }else {
-                game_object.set_x(x_colider.unwrap().get_left() + (game_object.get_width() / 2.0));
+                game_object.set_x(x_colider.unwrap().get_right() + (game_object.get_width() / 2.0));
             }
             game_object.x_velocity = -game_object.x_velocity * game_object.bounciness;
             collided = true;
@@ -114,7 +114,7 @@ impl WorldManager{
             if game_object.get_y() < y_colider.unwrap().get_center_y() {
                 game_object.set_y(y_colider.unwrap().get_top() - (game_object.get_height() / 2.0));
             }else {
-                game_object.set_y(y_colider.unwrap().get_top() + (game_object.get_height() / 2.0));
+                game_object.set_y(y_colider.unwrap().get_bottom() + (game_object.get_height() / 2.0));
 
             }
             game_object.y_velocity = -game_object.y_velocity * game_object.bounciness;

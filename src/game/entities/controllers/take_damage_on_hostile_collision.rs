@@ -32,7 +32,7 @@ impl GameObjectController for TakeDamageOnHostileCollisionController {
             }
 
             // knockback
-            let direction = SpaceUtils::direction_towards(other.x, other.y, core.x, core.y);
+            let direction = SpaceUtils::direction_towards(other.position.x, other.position.y, core.get_x(), core.get_y());
             core.x_velocity += direction.cos() * self.knockback_multiplier;
             core.y_velocity += direction.sin() * self.knockback_multiplier;
         }

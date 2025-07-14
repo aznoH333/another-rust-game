@@ -20,6 +20,6 @@ impl GameObjectController for ProjectileController {
     fn update(&mut self, core: &mut crate::engine::objects::game_object_core::GameObjectCore, update: &mut ObjectUpdate) {
         core.x_velocity = self.direction.cos() * self.speed;
         core.y_velocity = self.direction.sin() * self.speed;
-        core.rotation = self.direction;
+        core.sprite.set_rotation(self.direction);
     }
 }

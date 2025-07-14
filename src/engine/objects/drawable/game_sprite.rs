@@ -123,4 +123,12 @@ impl GameSprite {
     pub fn set_color(&mut self, color: Color) {
         self.color = color;
     }
+
+    pub fn set_rotation(&mut self, rotation: f32) {
+        self.rotation = rotation;
+    }
+
+    pub fn get_color_mut(&mut self) -> &mut Color {
+        return &mut self.color;
+    }
 }

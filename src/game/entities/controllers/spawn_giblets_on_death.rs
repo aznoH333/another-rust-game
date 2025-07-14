@@ -23,7 +23,7 @@ impl GameObjectController for SpawnGibletsOnDeathController {
             let color = VecUtils::pick_random_element_vec::<Color>(&self.giblet_colors).to_owned();
             
             engine.event_manager.push_event(GameEvent::SpawnObject { summon: 
-                ObjectSummon::new("giblet", core.x, core.y) 
+                ObjectSummon::new("giblet", core.get_x(), core.get_y()) 
                 .set_color(color)
                 .set_type(self.giblet_type)
                 .set_speed(2.1)

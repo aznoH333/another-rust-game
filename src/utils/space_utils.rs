@@ -35,7 +35,7 @@ impl SpaceUtils {
     }
 
     pub fn align_to_world_grid(value: f32) -> f32 {
-        return ((value / TILE_SIZE as f32).round() * TILE_SIZE as f32); //- (TILE_SIZE as f32 / 2.0);
+        return (value / TILE_SIZE as f32).round() * TILE_SIZE as f32; //- (TILE_SIZE as f32 / 2.0);
     }
 
     pub fn direction_towards(x1: f32, y1: f32, x2: f32, y2: f32) -> f32 {

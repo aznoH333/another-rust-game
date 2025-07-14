@@ -32,10 +32,10 @@ impl FighterController {
         
         if self.ai_state == AI_STATE_IDLE {
             // spawn ! callout
-            engine.event_manager.push_event(GameEvent::SpawnObject { summon: ObjectSummon::new("callout", core.x, core.top()).set_sprite("emotions_0001") });
+            engine.event_manager.push_event(GameEvent::SpawnObject { summon: ObjectSummon::new("callout", core.get_x(), core.top()).set_sprite("emotions_0001") });
         }else if new_state == AI_STATE_IDLE {
             // spawn ? callout
-            engine.event_manager.push_event(GameEvent::SpawnObject { summon: ObjectSummon::new("callout", core.x, core.top()).set_sprite("emotions_0002") });
+            engine.event_manager.push_event(GameEvent::SpawnObject { summon: ObjectSummon::new("callout", core.get_x(), core.top()).set_sprite("emotions_0002") });
         }else if new_state == AI_STATE_ALERTED {
             // start timer
             self.attentions_span.activate();
@@ -54,16 +54,16 @@ impl GameObjectController for FighterController {
         if engine.event.found_object.is_some() {
             let other = engine.event.found_object.unwrap();
 
-            self.has_line_of_sight_to_target = engine.world.has_line_of_sight(core.x, core.y, other.x, other.y);
+            self.has_line_of_sight_to_target = engine.world.has_line_of_sight(core.get_x(), core.get_y(), other.position.x, other.position.y);
             
             if self.has_line_of_sight_to_target {
                 self.last_pos_exists = true;
-                self.last_target_pos.x = other.x;
-                self.last_target_pos.y = other.y;
+                self.last_target_pos.x = other.position.x;
+                self.last_target_pos.y = other.position.y;
             }
             
         }
-        self.has_line_of_sight_to_last_pos = engine.world.has_line_of_sight(core.x, core.y, self.last_target_pos.x, self.last_target_pos.y);
+        self.has_line_of_sight_to_last_pos = engine.world.has_line_of_sight(core.get_x(), core.get_y(), self.last_target_pos.x, self.last_target_pos.y);
 
 
         // update state
@@ -79,7 +79,7 @@ impl GameObjectController for FighterController {
         // delete last target if reached
         if self.last_pos_exists && 
         !self.has_line_of_sight_to_target && 
-        SpaceUtils::pythagoras(core.x, core.y, self.last_target_pos.x, self.last_target_pos.y) < TILE_SIZE as f32 {
+        SpaceUtils::pythagoras(core.get_x(), core.get_y(), self.last_target_pos.x, self.last_target_pos.y) < TILE_SIZE as f32 {
             self.last_pos_exists = false;
         }
 
@@ -89,7 +89,7 @@ impl GameObjectController for FighterController {
         }
 
         if self.has_line_of_sight_to_last_pos && self.last_pos_exists {
-            let direction = SpaceUtils::direction_towards(core.x, core.y, self.last_target_pos.x, self.last_target_pos.y);
+            let direction = SpaceUtils::direction_towards(core.get_x(), core.get_y(), self.last_target_pos.x, self.last_target_pos.y);
             core.movement_x = direction.cos();
             core.movement_y = direction.sin();
 
