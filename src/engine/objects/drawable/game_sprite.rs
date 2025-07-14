@@ -125,4 +125,8 @@ impl GameSprite {
     pub fn get_color_mut(&mut self) -> &mut Color {
         return &mut self.color;
     }
+
+    pub fn get_rotation(&self) -> f32 {
+        return self.rotation;
+    }
 }

@@ -7,8 +7,9 @@ pub struct ObjectWeapon {
     attack_timer: Timer,
     
     // logic
-    direction: f32,
     sprite: GameSprite,
+    weapon_x_offset: f32,
+    weapon_y_offset: f32,
 
 
 }
@@ -17,8 +18,9 @@ impl ObjectWeapon {
     pub fn new(fire_rate: u128, sprite: &str) -> ObjectWeapon {
         return ObjectWeapon { 
             attack_timer: Timer::new(fire_rate), 
-            direction: 0.0,
-            sprite: GameSprite::new(0.0, 0.0, sprite, DrawingLayer::World.get_value())
+            sprite: GameSprite::new(0.0, 0.0, sprite, DrawingLayer::GameObjects.get_value()),
+            weapon_x_offset: 0.0,
+            weapon_y_offset: 0.0,
         }
     }
 
@@ -28,8 +30,9 @@ impl ObjectWeapon {
     }
 
     pub fn update(&mut self, holder_x: f32, holder_y: f32) {
-        self.sprite.position.x = holder_x;
-        self.sprite.position.y = holder_y;
+        // TODO : figure this out
+        self.sprite.position.x = holder_x + (self.sprite.get_rotation().cos() * self.weapon_x_offset) + (self.sprite.get_rotation().sin() * self.weapon_y_offset);
+        self.sprite.position.y = holder_y + (self.sprite.get_rotation().sin() * self.weapon_y_offset) + (self.sprite.get_rotation().cos() * self.weapon_x_offset);
 
     }
 
@@ -39,7 +42,7 @@ impl ObjectWeapon {
             event_manager.push_event(GameEvent::SpawnObject 
                 { 
                     summon: ObjectSummon::new("projectile", self.sprite.position.x, self.sprite.position.y)
-                    .set_direction(self.direction)
+                    .set_direction(self.sprite.get_rotation())
                     .set_speed(4.0)
                     .set_faction(FACTION_PLAYER)
                     .set_damage(10.0)
@@ -50,10 +53,16 @@ impl ObjectWeapon {
     }
 
     pub fn set_direction(&mut self, direction: f32) {
-        self.direction = direction;
+        self.sprite.set_rotation(direction);
     }
     pub fn add_animation(mut self, index: i32, animation: GameObjectAnimation) -> ObjectWeapon {
         self.sprite.add_animation(index, animation);
+        return self;
+    }
+
+    pub fn set_weapon_offset(mut self, x: f32, y: f32) -> ObjectWeapon {
+        self.weapon_x_offset = x;
+        self.weapon_y_offset = y;
         return self;
     }
 }
