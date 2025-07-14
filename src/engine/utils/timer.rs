@@ -1,39 +1,36 @@
-use std::time::UNIX_EPOCH;
-use std::time::SystemTime;
+use crate::engine::utils::time::Time;
 pub struct Timer{
-    last_fired: u128,
+    time: Time,
     timeout: u128,
 }
 
 impl Timer {
     pub fn new(timeout: u128) -> Timer {
-        return Timer { last_fired: 0, timeout };
+        return Timer { 
+            time: Time::new(),
+            timeout 
+        };
     }
 
     pub fn can_activate(&self) -> bool {
-        return self.get_current_time() - self.last_fired >= self.timeout;
+        return self.time.get_time_since_last_activation() >= self.timeout;
     }
 
     pub fn activate(&mut self) {
-        self.last_fired = self.get_current_time();
+        self.time.activate();
     }
 
-    fn get_current_time(&self) -> u128 {
-        return SystemTime::now()
-            .duration_since(UNIX_EPOCH)
-            .expect("time should go forward").as_millis();
-    }
 
     pub fn set_cooldown(&mut self, cooldown: u128) {
         self.timeout = cooldown;
     }
 
     pub fn get_as_percentage(&self) -> f32 {
-        return (self.get_current_time() - self.last_fired) as f32 / (self.timeout as f32);
+        return (self.time.get_time_since_last_activation()) as f32 / (self.timeout as f32);
     }
 
     pub fn get_as_number(&self) -> u128 {
-        return self.get_current_time() - self.last_fired;
+        return self.time.get_time_since_last_activation();
     }
 
     pub fn get_cooldown(&self) -> u128 {

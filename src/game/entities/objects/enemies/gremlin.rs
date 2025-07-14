@@ -18,15 +18,15 @@ fn gremlin_new(parameters: &ObjectSummonParameters) -> GameObject {
         .set_stun_length(500)
         // animations
         .add_animation(ANIMATION_IDLE, 
-            GameObjectAnimation::new(10.0)
+            GameObjectAnimation::new(100)
             .add_frame("gremlin_0001"))
         .add_animation(ANIMATION_WALK, 
-            GameObjectAnimation::new(10.0)
+            GameObjectAnimation::new(100)
             .add_frame("gremlin_0002")
             .add_frame("gremlin_0003")
         )
         .add_animation(ANIMATION_HURT, 
-            GameObjectAnimation::new(1.0)
+            GameObjectAnimation::new(100)
         .add_frame("gremlin_0004"))
             
         // controllers

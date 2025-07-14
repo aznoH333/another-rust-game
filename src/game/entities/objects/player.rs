@@ -22,9 +22,9 @@ fn player_new(parameters: &ObjectSummonParameters) -> GameObject{
     )
     // animations
     // idle animation
-    .add_animation(ANIMATION_IDLE, GameObjectAnimation::new(9.0).add_frame("player_0001"))
+    .add_animation(ANIMATION_IDLE, GameObjectAnimation::new(100).add_frame("player_0001"))
     // walk animation
-    .add_animation(ANIMATION_WALK, GameObjectAnimation::new(9.0).add_frame("player_0002").add_frame("player_0003"))
+    .add_animation(ANIMATION_WALK, GameObjectAnimation::new(200).add_frame("player_0002").add_frame("player_0003"))
     // controllers
     .add_controller(CONTROLLER_TYPE_UPDATE,Box::new(PlayerInputController::new()))
     .build();

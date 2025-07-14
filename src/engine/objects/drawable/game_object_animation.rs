@@ -1,20 +1,20 @@
+use crate::engine::utils::time::Time;
+
 pub struct GameObjectAnimation {
     frames: Vec::<String>,
-    animation_speed: f32,
-    current_time: f32,
-    current_frame: u32,
+    frame_duration: u128,
     frame_count: u32,
+    frame_timer: Time,
 }
 
 
 impl GameObjectAnimation {
-    pub fn new(animation_speed: f32) -> GameObjectAnimation {
+    pub fn new(frame_duration: u128) -> GameObjectAnimation {
         return GameObjectAnimation{
             frames: Vec::new(),
-            animation_speed,
-            current_time: 0.0,
-            current_frame: 0,
+            frame_duration,
             frame_count: 0,
+            frame_timer: Time::new()
         };
     }
 
@@ -25,23 +25,12 @@ impl GameObjectAnimation {
     }
 
     pub fn reset_animation(&mut self) {
-        self.current_time = 0.0;
-    }
-
-    pub fn update_animation(&mut self, delta: f32) {
-        self.current_time += delta;
-        if self.current_time >= self.animation_speed {
-            self.current_frame += 1;
-            
-            if self.current_frame >= self.frame_count {
-                self.current_frame = 0;
-            }
-            
-            self.current_time -= self.animation_speed;
-        }
+        self.frame_timer.activate();
     }
 
     pub fn get_current_frame(&self) -> &String {
-        return self.frames.get(self.current_frame as usize).unwrap();
+        let index = ((self.frame_timer.get_time_since_last_activation() / self.frame_duration) as u32 % self.frame_count) as usize;
+        
+        return self.frames.get(index).unwrap();
     }
 }

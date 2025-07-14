@@ -126,10 +126,6 @@ impl GameObjectCore {
             
             let weapon = self.weapon.as_mut().unwrap().update(rust_x, rust_y);
         }
-
-
-        // animation
-        self.sprite.update_animations(delta);
     }
 
     fn update_animation_state(&mut self) {

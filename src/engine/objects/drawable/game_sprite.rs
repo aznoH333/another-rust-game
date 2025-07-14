@@ -44,12 +44,12 @@ impl GameSprite {
         }
     }
 
-    pub fn draw(&mut self, drawing_manager: &mut DrawingManager) {
+    pub fn draw(&self, drawing_manager: &mut DrawingManager) {
         let mut sprite_name = &self.sprite_name;
         let x = self.position.left();
         let y = self.position.top();
         if self.use_animations {
-            let animation = self.animations.get_mut(&self.current_animation).expect(format!("Animation not found {}", self.current_animation).as_str());
+            let animation = self.animations.get(&self.current_animation).expect(format!("Animation not found {}", self.current_animation).as_str());
 
             sprite_name = animation.get_current_frame();
         }
@@ -57,12 +57,6 @@ impl GameSprite {
         drawing_manager.draw_sprite(sprite_name, x + self.sprite_x_offset, y + self.sprite_y_offset, self.z_index, self.scale, self.flip_sprite, self.rotation, self.color);
     }
 
-    pub fn update_animations(&mut self, delta: f32) {
-        if self.use_animations {
-            let animation = self.animations.get_mut(&self.current_animation).expect(format!("Animation not found {}", self.current_animation).as_str());
-            animation.update_animation(delta);
-        }
-    }
 
     pub fn play_animation(&mut self, animation: i32, reset: bool) {
         self.current_animation = animation;

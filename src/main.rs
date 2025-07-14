@@ -75,8 +75,14 @@ fn main() {
     //       6.2.2 [a] firing
     //       6.2.3 [ ] equiping
     //       6.2.4 [a] builder methods
+    //       6.2.5 [ ] projectile attributes
     // 7 [ ] Code
     //   7.1 [ ] Split game object core into smaller parts
+    //       7.1.1 [x] Split position
+    //       7.1.2 [x] Split sprite
+    //   7.2 [ ] Reorganize drawing layers
+    //       7.2.1 [ ] Add more drawing layers
+    //       7.2.2 [ ] Change layers for existing objects
 
     // set resource path
     let resource_dir = if let Ok(manifest_dir) = env::var("CARGO_MANIFEST_DIR") {
