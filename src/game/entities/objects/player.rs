@@ -19,7 +19,7 @@ fn player_new(parameters: &ObjectSummonParameters) -> GameObject{
     .set_name("player")
     .set_weapon(
         Some(ObjectWeapon::new(250, "bow_0002")
-        .set_weapon_offset(10.0, 10.0))
+        .set_weapon_offset(10.0))
     )
     // animations
     // idle animation

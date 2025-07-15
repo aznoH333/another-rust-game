@@ -43,8 +43,6 @@ impl GameObjectController for PlayerInputController{
 
         // core.set_weapon_direction(self.shoot_direction);
         core.set_weapon_direction(self.shoot_direction);
-        self.shoot_direction += 0.01;
-        
 
         if update_value.input.key_action1() {
             core.attack(update_value.event_manager);

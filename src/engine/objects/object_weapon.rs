@@ -8,9 +8,7 @@ pub struct ObjectWeapon {
     
     // logic
     sprite: GameSprite,
-    weapon_x_offset: f32,
-    weapon_y_offset: f32,
-
+    weapon_offset: f32,
 
 }
 
@@ -19,8 +17,7 @@ impl ObjectWeapon {
         return ObjectWeapon { 
             attack_timer: Timer::new(fire_rate), 
             sprite: GameSprite::new(0.0, 0.0, sprite, DrawingLayer::GameObjects.get_value()),
-            weapon_x_offset: 0.0,
-            weapon_y_offset: 0.0,
+            weapon_offset: 16.0,
         }
     }
 
@@ -30,10 +27,8 @@ impl ObjectWeapon {
     }
 
     pub fn update(&mut self, holder_x: f32, holder_y: f32) {
-        // TODO : figure this out
-        self.sprite.position.x = holder_x + (self.sprite.get_rotation().cos() * self.weapon_x_offset) + (self.sprite.get_rotation().sin() * self.weapon_y_offset);
-        self.sprite.position.y = holder_y + (self.sprite.get_rotation().sin() * self.weapon_y_offset) + (self.sprite.get_rotation().cos() * self.weapon_x_offset);
-
+        self.sprite.position.x = holder_x + (self.sprite.get_rotation().cos() * self.weapon_offset);
+        self.sprite.position.y = holder_y + (self.sprite.get_rotation().sin() * self.weapon_offset);
     }
 
     pub fn fire(&mut self, event_manager: &mut EventManager) {
@@ -60,9 +55,8 @@ impl ObjectWeapon {
         return self;
     }
 
-    pub fn set_weapon_offset(mut self, x: f32, y: f32) -> ObjectWeapon {
-        self.weapon_x_offset = x;
-        self.weapon_y_offset = y;
+    pub fn set_weapon_offset(mut self, offset: f32) -> ObjectWeapon {
+        self.weapon_offset = offset;
         return self;
     }
 }
