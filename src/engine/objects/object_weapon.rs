@@ -1,3 +1,5 @@
+use crate::engine::objects::drawable::engine_animations::ANIMATION_ATTACK;
+use crate::engine::objects::drawable::engine_animations::ANIMATION_IDLE;
 use crate::engine::objects::drawable::game_sprite::GameSprite;
 use crate::game::enums::drawing_layers::DrawingLayer;
 use crate::{engine::{drawing::drawing_manager::{DrawingManager}, events::{event_manager::{EventManager}, game_event::GameEvent}, objects::{drawable::game_object_animation::GameObjectAnimation, spawning::object_summon::ObjectSummon}, utils::timer::Timer}, game::{entities::factions::FACTION_PLAYER}};
@@ -27,8 +29,17 @@ impl ObjectWeapon {
     }
 
     pub fn update(&mut self, holder_x: f32, holder_y: f32) {
+        // position
         self.sprite.position.x = holder_x + (self.sprite.get_rotation().cos() * self.weapon_offset);
         self.sprite.position.y = holder_y + (self.sprite.get_rotation().sin() * self.weapon_offset);
+
+
+        // animation
+        if self.attack_timer.can_activate() {
+            self.sprite.play_animation(ANIMATION_IDLE, false);
+        }else {
+            self.sprite.play_animation(ANIMATION_ATTACK, false);
+        }
     }
 
     pub fn fire(&mut self, event_manager: &mut EventManager) {
@@ -44,6 +55,8 @@ impl ObjectWeapon {
                     .set_sprite("bow_0001")
                 }
             );
+            self.sprite.play_animation(ANIMATION_ATTACK, true);
+            
         }
     }
 

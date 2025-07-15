@@ -1,3 +1,4 @@
+use crate::engine::objects::drawable::engine_animations::ANIMATION_ATTACK;
 use crate::{engine::{objects::{drawable::engine_animations::{ANIMATION_IDLE, ANIMATION_WALK}, game_object::{GameObject, GameObjectBuilder}, drawable::game_object_animation::GameObjectAnimation, object_weapon::ObjectWeapon}, types::controller_type::CONTROLLER_TYPE_UPDATE}, game::{entities::controllers::player_input_controller::PlayerInputController, enums::drawing_layers::DrawingLayer}};
 use crate::game::entities::factions::FACTION_PLAYER;
 use crate::engine::objects::spawning::object_summon::ObjectSummonRegistration;
@@ -18,8 +19,11 @@ fn player_new(parameters: &ObjectSummonParameters) -> GameObject{
     .set_health(100.0)
     .set_name("player")
     .set_weapon(
-        Some(ObjectWeapon::new(250, "bow_0002")
-        .set_weapon_offset(10.0))
+        Some(ObjectWeapon::new(500, "bow_0002")
+        .add_animation(ANIMATION_IDLE, GameObjectAnimation::new(1).add_frame("bow_0003"))
+        .add_animation(ANIMATION_ATTACK, GameObjectAnimation::new(250).add_frame("bow_0002").add_frame("bow_0003").make_last_frame_loop())
+        .set_weapon_offset(10.0)
+    )
     )
     // animations
     // idle animation
