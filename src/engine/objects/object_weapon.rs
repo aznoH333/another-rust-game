@@ -18,7 +18,7 @@ impl ObjectWeapon {
     pub fn new(fire_rate: u128, sprite: &str) -> ObjectWeapon {
         return ObjectWeapon { 
             attack_timer: Timer::new(fire_rate), 
-            sprite: GameSprite::new(0.0, 0.0, sprite, DrawingLayer::GameObjects.get_value()),
+            sprite: GameSprite::new(0.0, 0.0, sprite, DrawingLayer::GameObjects.get_value()).enable_flipping_with_rotation(),
             weapon_offset: 16.0,
         }
     }

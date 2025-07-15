@@ -23,6 +23,7 @@ fn player_new(parameters: &ObjectSummonParameters) -> GameObject{
         .add_animation(ANIMATION_IDLE, GameObjectAnimation::new(1).add_frame("bow_0003"))
         .add_animation(ANIMATION_ATTACK, GameObjectAnimation::new(250).add_frame("bow_0002").add_frame("bow_0003").make_last_frame_loop())
         .set_weapon_offset(10.0)
+
     )
     )
     // animations

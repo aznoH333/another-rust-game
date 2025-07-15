@@ -4,7 +4,7 @@ use ggez::{graphics::Color};
 use crate::engine::drawing::drawing_manager::DrawingManager;
 use crate::engine::objects::game_box::GameBox;
 use crate::engine::{objects::drawable::game_object_animation::GameObjectAnimation, world::world_constants::TILE_SIZE};
-
+use std::f32::consts::PI;
 
 pub struct GameSprite{
     pub position: GameBox,
@@ -23,6 +23,7 @@ pub struct GameSprite{
     animations: HashMap<i32, GameObjectAnimation>,
     use_animations: bool,
 
+    flip_with_rotation: bool,
 }
 
 
@@ -41,6 +42,7 @@ impl GameSprite {
             current_animation: 0, 
             animations: HashMap::new(),
             use_animations: false,
+            flip_with_rotation: false,
         }
     }
 
@@ -53,8 +55,18 @@ impl GameSprite {
 
             sprite_name = animation.get_current_frame();
         }
+        
+        // flipping with rotation
+        let mut draw_rotation = self.rotation;
+        let mut draw_flip = self.flip_sprite;
+
+        if self.flip_with_rotation && self.rotation.cos() < 0.0 {
+            draw_rotation -= PI;
+            draw_flip = !draw_flip;
+        }
+        
         // drawing
-        drawing_manager.draw_sprite(sprite_name, x + self.sprite_x_offset, y + self.sprite_y_offset, self.z_index, self.scale, self.flip_sprite, self.rotation, self.color);
+        drawing_manager.draw_sprite(sprite_name, x + self.sprite_x_offset, y + self.sprite_y_offset, self.z_index, self.scale, draw_flip, draw_rotation, self.color);
     }
 
 
@@ -128,5 +140,10 @@ impl GameSprite {
 
     pub fn get_rotation(&self) -> f32 {
         return self.rotation;
+    }
+
+    pub fn enable_flipping_with_rotation(mut self) -> GameSprite {
+        self.flip_with_rotation = true;
+        return self;
     }
 }

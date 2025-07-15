@@ -70,11 +70,11 @@ fn main() {
     //   6.1 [ ] Enemies
     //       6.1.1 [x] Enemy awearness
     //       6.1.2 [x] Enemy "pathfinding"
-    //   6.2 [a] Weapons
-    //       6.2.1 [a] drawing
-    //       6.2.2 [a] firing
+    //   6.2 [ ] Weapons
+    //       6.2.1 [x] drawing
+    //       6.2.2 [x] firing
     //       6.2.3 [ ] equiping
-    //       6.2.4 [a] builder methods
+    //       6.2.4 [ ] builder methods
     //       6.2.5 [ ] projectile attributes
     // 7 [ ] Code
     //   7.1 [ ] Split game object core into smaller parts
