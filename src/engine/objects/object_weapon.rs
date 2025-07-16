@@ -2,7 +2,7 @@ use crate::engine::objects::drawable::engine_animations::ANIMATION_ATTACK;
 use crate::engine::objects::drawable::engine_animations::ANIMATION_IDLE;
 use crate::engine::objects::drawable::game_sprite::GameSprite;
 use crate::game::enums::drawing_layers::DrawingLayer;
-use crate::{engine::{drawing::sprite_manager::{SpriteManager}, events::{event_manager::{EventManager}, game_event::GameEvent}, objects::{drawable::game_object_animation::GameObjectAnimation, spawning::object_summon::ObjectSummon}, utils::timer::Timer}, game::{entities::factions::FACTION_PLAYER}};
+use crate::{engine::{drawing::drawing_manager::{DrawingManager}, events::{event_manager::{EventManager}, game_event::GameEvent}, objects::{drawable::game_object_animation::GameObjectAnimation, spawning::object_summon::ObjectSummon}, utils::timer::Timer}, game::{entities::factions::FACTION_PLAYER}};
 
 pub struct ObjectWeapon {
     // stats
@@ -23,7 +23,7 @@ impl ObjectWeapon {
         }
     }
 
-    pub fn draw(&self, drawing_manager: &mut SpriteManager) {
+    pub fn draw(&self, drawing_manager: &mut DrawingManager) {
         // TODO: flip upside down when facing left
         self.sprite.draw(drawing_manager);
     }

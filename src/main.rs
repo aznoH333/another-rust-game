@@ -8,7 +8,7 @@ mod game;
 
 
 use std::{env, path};
-use engine::drawing::sprite_manager::SpriteManager;
+use engine::drawing::drawing_manager::DrawingManager;
 use engine::events::event_manager::EventManager;
 use engine::input::input::InputHandler;
 use engine::objects::game_object_manager::GameObjectManager;
@@ -110,7 +110,7 @@ fn main() {
 }
 
 struct MyGame {
-    sprite_manager: SpriteManager,
+    sprite_manager: DrawingManager,
     game_object_manager: GameObjectManager,
     world_manager: WorldManager,
     input: InputHandler,
@@ -122,7 +122,7 @@ impl MyGame {
         context.gfx.set_fullscreen(ggez::conf::FullscreenType::True).unwrap();
         
         // sprite manager
-        let mut sprite_manager = SpriteManager::new(context, Vec::from_iter(DrawingLayer::VALUES.iter().map(|it|{return it.get_value()})));
+        let mut sprite_manager = DrawingManager::new(context, Vec::from_iter(DrawingLayer::VALUES.iter().map(|it|{return it.get_value()})));
         sprite_manager.set_camera_zoom(5.0);
         // game object manager
         let mut game_object_manager = GameObjectManager::new();

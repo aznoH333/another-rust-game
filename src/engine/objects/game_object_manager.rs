@@ -1,5 +1,5 @@
 
-use crate::engine::{drawing::sprite_manager::SpriteManager, events::event_manager::{EventManager}, input::input::InputHandler, objects::{object_simplification::{ObjectSimplification}, object_update::ObjectUpdate}, types::{controller_type::{CONTROLLER_TYPE_DESTROYED, CONTROLLER_TYPE_OBJECT_COLLIDE, CONTROLLER_TYPE_UPDATE, CONTROLLER_TYPE_WORLD_COLLIDE}, object_event::ObjectEvent}, world::world_manager::WorldManager};
+use crate::engine::{drawing::drawing_manager::DrawingManager, events::event_manager::{EventManager}, input::input::InputHandler, objects::{object_simplification::{ObjectSimplification}, object_update::ObjectUpdate}, types::{controller_type::{CONTROLLER_TYPE_DESTROYED, CONTROLLER_TYPE_OBJECT_COLLIDE, CONTROLLER_TYPE_UPDATE, CONTROLLER_TYPE_WORLD_COLLIDE}, object_event::ObjectEvent}, world::world_manager::WorldManager};
 
 use super::{game_object::GameObject};
 use std::collections::HashMap;
@@ -18,13 +18,13 @@ impl GameObjectManager{
     }
 
 
-    pub fn draw_objects(&mut self, drawing_manager: &mut SpriteManager) {
+    pub fn draw_objects(&mut self, drawing_manager: &mut DrawingManager) {
         for object in &mut self.game_objects {
             object.draw(drawing_manager);
         }
     }
 
-    pub fn update(&mut self, drawing_manager: &mut SpriteManager, input: &InputHandler, world: &WorldManager, event_manager: &mut EventManager, delta: f32) {
+    pub fn update(&mut self, drawing_manager: &mut DrawingManager, input: &InputHandler, world: &WorldManager, event_manager: &mut EventManager, delta: f32) {
         let object_simplifications = self.collect_object_simplifications();
 
         self.update_objects(input, world, event_manager, delta, object_simplifications);
@@ -107,7 +107,7 @@ impl GameObjectManager{
         }
     }
 
-    fn update_camera(&mut self, drawing_manager: &mut SpriteManager) {
+    fn update_camera(&mut self, drawing_manager: &mut DrawingManager) {
         for object in &self.game_objects {
             if object.is_camera_target() {
                 
