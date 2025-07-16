@@ -4,6 +4,7 @@ use std::{collections::HashMap, env, path::Path};
 use ggez::{graphics::{Canvas, DrawParam, Image, InstanceArray, Color}, Context};
 
 
+use crate::engine::drawing::text_buffer_data::GameText;
 use crate::utils::file_utils::FileUtils;
 
 use super::{draw_buffer_data::DrawBufferData, drawing_context::DrawingContext};
@@ -14,6 +15,7 @@ use super::{draw_buffer_data::DrawBufferData, drawing_context::DrawingContext};
 pub struct DrawingManager{
     sprites: HashMap<String, Image>,
     draw_buffer: Vec<DrawBufferData>,
+    font_buffer: Vec<GameText>,
     drawing_context: DrawingContext,
     // drawing layer to batch map
     draw_batches: HashMap<String, HashMap<i32, InstanceArray>>,
@@ -25,6 +27,7 @@ impl DrawingManager{
         let mut output = DrawingManager{
             sprites: HashMap::new(),
             draw_buffer: Vec::new(),
+            font_buffer: Vec::new(),
             drawing_context: DrawingContext::new(&context),
             draw_batches: HashMap::new(),
             drawing_layers: drawing_layers,
@@ -93,11 +96,14 @@ impl DrawingManager{
             }
         }
 
+        // draw text
+        for text in &self.font_buffer {
+            text.draw(canvas, &self.drawing_context);
+        }
 
         self.draw_buffer.clear();
+        self.font_buffer.clear();
     }
-
-    
 
     pub fn reload_context(&mut self, context: &Context){
         self.drawing_context.reload_context(context);
@@ -118,5 +124,9 @@ impl DrawingManager{
 
     pub fn set_camera_zoom(&mut self, zoom: f32){
         self.drawing_context.set_camera_zoom(zoom);
+    }
+
+    pub fn draw_text(&mut self, text: GameText) {
+        self.font_buffer.push(text);
     }
 }

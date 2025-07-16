@@ -22,6 +22,7 @@ use ggez::{Context, ContextBuilder, GameResult};
 use ggez::graphics::{self, Color, Sampler};
 use ggez::event::{self, EventHandler};
 
+use crate::engine::drawing::text_buffer_data::GameText;
 use crate::engine::objects::spawning::object_summon::ObjectSummonRegistration;
 
 
@@ -62,7 +63,10 @@ fn main() {
     //   3.4 [ ] Randomize graphics
     // 4 [ ] Engine
     //   4.1 [ ] Global values
-    //   4.2 [ ] Ui
+    //   4.2 [a] Ui
+    //       4.2.1 [x] Drawing text
+    //       4.2.2 [a] Ui elements
+    //       4.2.3 [ ] Passing data from entities to ui
     //   4.3 [ ] Sounds
     // 5 [ ] Game content
     // TODO : fill this in
@@ -162,7 +166,7 @@ impl EventHandler for MyGame {
     }
 
     fn draw(&mut self, context: &mut Context) -> GameResult {
-        
+        self.sprite_manager.draw_text(GameText::new("hello world", 20.0, 20.0, 6).make_static());
         let mut canvas = graphics::Canvas::from_frame(context, Color::BLACK);
         canvas.set_sampler(Sampler::nearest_clamp());
         self.world_manager.draw_world(&mut self.sprite_manager);
