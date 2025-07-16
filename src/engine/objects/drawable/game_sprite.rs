@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 use ggez::{graphics::Color};
 
-use crate::engine::drawing::drawing_manager::DrawingManager;
+use crate::engine::drawing::sprite_manager::SpriteManager;
 use crate::engine::objects::game_box::GameBox;
 use crate::engine::{objects::drawable::game_object_animation::GameObjectAnimation, world::world_constants::TILE_SIZE};
 use std::f32::consts::PI;
@@ -46,7 +46,7 @@ impl GameSprite {
         }
     }
 
-    pub fn draw(&self, drawing_manager: &mut DrawingManager) {
+    pub fn draw(&self, drawing_manager: &mut SpriteManager) {
         let mut sprite_name = &self.sprite_name;
         let x = self.position.left();
         let y = self.position.top();

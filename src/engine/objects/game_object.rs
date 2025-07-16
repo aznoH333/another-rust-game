@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use crate::engine::{drawing::drawing_manager::DrawingManager, objects::{drawable::game_object_animation::GameObjectAnimation, object_simplification::ObjectSimplification, object_update::ObjectUpdate, object_weapon::ObjectWeapon}, types::vector::Vector, world::world_manager::WorldManager};
+use crate::engine::{drawing::sprite_manager::SpriteManager, objects::{drawable::game_object_animation::GameObjectAnimation, object_simplification::ObjectSimplification, object_update::ObjectUpdate, object_weapon::ObjectWeapon}, types::vector::Vector, world::world_manager::WorldManager};
 
 use super::{game_object_controller::GameObjectController, game_object_core::GameObjectCore};
 use ggez::graphics::Color;
@@ -17,7 +17,7 @@ impl GameObject{
         }
     }
 
-    pub fn draw(&mut self, drawing_manager: &mut DrawingManager) {
+    pub fn draw(&mut self, drawing_manager: &mut SpriteManager) {
         self.core.draw(drawing_manager);
     }
 

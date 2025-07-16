@@ -11,7 +11,7 @@ use super::{draw_buffer_data::DrawBufferData, drawing_context::DrawingContext};
 
 
 
-pub struct DrawingManager{
+pub struct SpriteManager{
     sprites: HashMap<String, Image>,
     draw_buffer: Vec<DrawBufferData>,
     drawing_context: DrawingContext,
@@ -20,9 +20,9 @@ pub struct DrawingManager{
     drawing_layers: Vec<i32>,
 }
 
-impl DrawingManager{
-    pub fn new(context: &mut Context, drawing_layers: Vec<i32>) -> DrawingManager {
-        let mut output = DrawingManager{
+impl SpriteManager{
+    pub fn new(context: &mut Context, drawing_layers: Vec<i32>) -> SpriteManager {
+        let mut output = SpriteManager{
             sprites: HashMap::new(),
             draw_buffer: Vec::new(),
             drawing_context: DrawingContext::new(&context),

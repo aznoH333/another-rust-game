@@ -2,7 +2,7 @@
 use ggez::graphics::Color;
 
 use crate::engine::objects::drawable::game_sprite::GameSprite;
-use crate::{engine::{drawing::drawing_manager::DrawingManager, events::event_manager::{self, EventManager}, objects::{drawable::engine_animations::ANIMATION_HURT, drawable::game_object_animation::GameObjectAnimation, object_simplification::ObjectSimplification, object_weapon::ObjectWeapon}, types::vector::Vector, world::{world_constants::TILE_SIZE, world_manager::WorldManager}}, utils::{number_utils::NumberUtils, space_utils::SpaceUtils}};
+use crate::{engine::{drawing::sprite_manager::SpriteManager, events::event_manager::{self, EventManager}, objects::{drawable::engine_animations::ANIMATION_HURT, drawable::game_object_animation::GameObjectAnimation, object_simplification::ObjectSimplification, object_weapon::ObjectWeapon}, types::vector::Vector, world::{world_constants::TILE_SIZE, world_manager::WorldManager}}, utils::{number_utils::NumberUtils, space_utils::SpaceUtils}};
 use crate::engine::objects::game_box::GameBox;
 use crate::engine::objects::drawable::engine_animations::{ANIMATION_IDLE, ANIMATION_WALK};
 use crate::engine::utils::timer::Timer;
@@ -81,7 +81,7 @@ impl GameObjectCore {
     }
 
 
-    pub fn draw(&mut self, drawing_manager: &mut DrawingManager) {
+    pub fn draw(&mut self, drawing_manager: &mut SpriteManager) {
         if !self.is_ready_to_draw || !self.wants_to_live {
             return;
         }
