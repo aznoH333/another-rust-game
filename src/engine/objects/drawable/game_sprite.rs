@@ -66,7 +66,8 @@ impl GameSprite {
             draw_rotation -= PI;
             draw_flip = !draw_flip;
         }
-        
+
+          
         // drawing
         drawing_manager.draw_sprite(sprite_name, x + self.sprite_x_offset, y + self.sprite_y_offset, self.z_index, self.scale, draw_flip, draw_rotation, self.color, self.is_static);
     }

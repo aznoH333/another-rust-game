@@ -13,11 +13,11 @@ pub struct UIElement {
 impl UIElement {
     pub fn new(x: f32, y: f32, sprite: &str, z_index: i32) -> UIElement {
         return UIElement { 
-            sprite: GameSprite::new(x, y, sprite, z_index), 
+            sprite: GameSprite::new(x, y, sprite, z_index).make_static(), 
             visible: true, 
             children: Vec::new(),
             component: None,
-        }
+        }.set_dimension(0.0, 0.0);
     }
 
     pub fn draw(&self, drawing_manager: &mut DrawingManager, ui_values: &UIValues) {
