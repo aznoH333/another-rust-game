@@ -14,11 +14,12 @@ pub struct DrawBufferData{
     fliped: bool,
     rotation: f32,
     color: Color,
+    is_static: bool,
 }
 
 
 impl DrawBufferData{
-    pub fn new(sprite_name: String, x: f32, y: f32, z_index: i32, scale: f32, fliped: bool, rotation: f32, color: Color) -> DrawBufferData{
+    pub fn new(sprite_name: String, x: f32, y: f32, z_index: i32, scale: f32, fliped: bool, rotation: f32, color: Color, is_static: bool) -> DrawBufferData{
         return DrawBufferData{
             sprite_name: sprite_name,
             x: x,
@@ -28,6 +29,7 @@ impl DrawBufferData{
             fliped: fliped,
             rotation,
             color,
+            is_static: is_static,
         }
     }
 
@@ -37,8 +39,8 @@ impl DrawBufferData{
             .rotation(self.rotation)
             
             .dest(Vec2::new(
-                self.x * drawing_context.get_scale() - drawing_context.get_sprite_x_offset(),// - width as f32 * drawing_context.get_scale() * self.scale * NumberUtils::bool_to_f32(!self.fliped), 
-                self.y * drawing_context.get_scale() - drawing_context.get_sprite_y_offset()))
+                self.x * drawing_context.get_scale() - (NumberUtils::bool_to_f32(!self.is_static) * drawing_context.get_sprite_x_offset()),
+                self.y * drawing_context.get_scale() - (NumberUtils::bool_to_f32(!self.is_static) * drawing_context.get_sprite_y_offset())))
             .z(self.z_index)
             .color(self.color)
             .scale(Vec2::new(self.scale * drawing_context.get_scale() * NumberUtils::bool_to_minus_plus_f32(!self.fliped), self.scale * drawing_context.get_scale()));

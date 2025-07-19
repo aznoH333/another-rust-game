@@ -62,7 +62,7 @@ fn main() {
     //       3.3.3 [ ] Special levels
     //   3.4 [ ] Randomize graphics
     // 4 [ ] Engine
-    //   4.1 [ ] Global values
+    //   4.1 [a] Global values
     //   4.2 [a] Ui
     //       4.2.1 [x] Drawing text
     //       4.2.2 [a] Ui elements

@@ -40,7 +40,7 @@ impl WorldTile{
 
     // TODO : different tile colors
     pub fn draw(&self, drawing: &mut DrawingManager){
-        drawing.draw_sprite(&self.texture, self.x as f32, self.y as f32, DrawingLayer::World as i32, 1.0, false, 0.0, Color::WHITE);
+        drawing.draw_sprite(&self.texture, self.x as f32, self.y as f32, DrawingLayer::World as i32, 1.0, false, 0.0, Color::WHITE, false);
     }
 
     pub fn get_left(&self) -> f32 {

@@ -24,6 +24,7 @@ pub struct GameSprite{
     use_animations: bool,
 
     flip_with_rotation: bool,
+    is_static: bool,
 }
 
 
@@ -43,6 +44,7 @@ impl GameSprite {
             animations: HashMap::new(),
             use_animations: false,
             flip_with_rotation: false,
+            is_static: false,
         }
     }
 
@@ -66,7 +68,7 @@ impl GameSprite {
         }
         
         // drawing
-        drawing_manager.draw_sprite(sprite_name, x + self.sprite_x_offset, y + self.sprite_y_offset, self.z_index, self.scale, draw_flip, draw_rotation, self.color);
+        drawing_manager.draw_sprite(sprite_name, x + self.sprite_x_offset, y + self.sprite_y_offset, self.z_index, self.scale, draw_flip, draw_rotation, self.color, self.is_static);
     }
 
 
@@ -144,6 +146,11 @@ impl GameSprite {
 
     pub fn enable_flipping_with_rotation(mut self) -> GameSprite {
         self.flip_with_rotation = true;
+        return self;
+    }
+
+    pub fn make_static(mut self) -> GameSprite {
+        self.is_static = true;
         return self;
     }
 }
