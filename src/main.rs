@@ -22,8 +22,11 @@ use ggez::{Context, ContextBuilder, GameResult};
 use ggez::graphics::{self, Color, Sampler};
 use ggez::event::{self, EventHandler};
 
+use crate::engine::drawing::drawing_manager;
 use crate::engine::drawing::text_buffer_data::GameText;
 use crate::engine::objects::spawning::object_summon::ObjectSummonRegistration;
+use crate::engine::types::game_update::GameUpdate;
+use crate::engine::ui::ui_manager::UIManager;
 
 
 fn main() {
@@ -119,6 +122,7 @@ struct MyGame {
     world_manager: WorldManager,
     input: InputHandler,
     event_manager: EventManager,
+    ui_manager: UIManager,
 }
 
 impl MyGame {
@@ -148,7 +152,8 @@ impl MyGame {
             game_object_manager: game_object_manager,
             world_manager: WorldManager::new(&mut BasicRoomGenerator::new(theme), &mut event_manager),
             input: InputHandler::new(),
-            event_manager: event_manager
+            event_manager: event_manager,
+            ui_manager: UIManager::new(),
         }
     }
 }
@@ -158,7 +163,15 @@ impl EventHandler for MyGame {
  
         let delta = (context.time.delta().as_millis() as f32) / 16.6666;
         // Update code here...
-        self.game_object_manager.update(&mut self.sprite_manager, &self.input, &self.world_manager, &mut self.event_manager, delta);
+        let mut game_update = GameUpdate::new(
+            &self.input, 
+            &mut self.event_manager, 
+            &self.world_manager, 
+            &mut self.ui_manager, 
+            delta
+        );
+        
+        self.game_object_manager.update(&mut game_update, &mut self.sprite_manager);
         self.event_manager.update_events(&mut self.game_object_manager);
 
 

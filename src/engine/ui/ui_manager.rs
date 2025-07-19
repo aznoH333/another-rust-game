@@ -1,14 +1,18 @@
+use std::collections::HashMap;
+
+use crate::engine::ui::ui_element::UIElement;
 use crate::engine::ui::ui_values::UIValues;
 
 pub struct UIManager{
     values: UIValues,
-    // ui elements
+    ui_groups: HashMap<String, UIElement>
 }
 
 impl UIManager {
     pub fn new() -> UIManager {
         return UIManager { 
-            values: UIValues::new() 
+            values: UIValues::new(),
+            ui_groups: HashMap::new(),
         }
     }
 
@@ -18,5 +22,13 @@ impl UIManager {
 
     pub fn set_value_f32(&mut self, key: &str, value: f32) {
         self.values.set_value_f32(key, value);
+    }
+
+    pub fn add_ui_group(&mut self, group_name: &str, group: UIElement) {
+        self.ui_groups.insert(group_name.to_string(), group);
+    }
+
+    pub fn set_group_visibility(&mut self, group_name: &str, value: bool) {
+        self.ui_groups.get_mut(group_name).unwrap().set_visibility(value);
     }
 }
