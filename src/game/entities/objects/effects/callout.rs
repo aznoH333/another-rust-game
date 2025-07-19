@@ -2,7 +2,7 @@ use crate::{engine::{objects::{game_object::{GameObject, GameObjectBuilder}, spa
 
 fn callout_new(parameters: &ObjectSummonParameters) -> GameObject {
     return 
-    GameObjectBuilder::new(parameters.x, parameters.y, parameters.sprite, DrawingLayer::GameObjects.get_value())
+    GameObjectBuilder::new(parameters.x, parameters.y, parameters.sprite, DrawingLayer::Effects.get_value())
     .add_controller(CONTROLLER_TYPE_UPDATE, Box::new(FadeInAndOut::new(1000, 100, 200)))
     .set_starting_velocity(0.0, -2.5)
     .set_friction(0.001)

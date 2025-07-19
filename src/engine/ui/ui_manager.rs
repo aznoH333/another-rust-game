@@ -1,5 +1,7 @@
 use std::collections::HashMap;
 
+use crate::engine::drawing::drawing_manager;
+use crate::engine::drawing::drawing_manager::DrawingManager;
 use crate::engine::ui::ui_element::UIElement;
 use crate::engine::ui::ui_values::UIValues;
 
@@ -30,5 +32,11 @@ impl UIManager {
 
     pub fn set_group_visibility(&mut self, group_name: &str, value: bool) {
         self.ui_groups.get_mut(group_name).unwrap().set_visibility(value);
+    }
+
+    pub fn draw(&self, drawing_manager: &mut DrawingManager) {
+        for group in self.ui_groups.values() {
+            group.draw(drawing_manager, &self.values);
+        }
     }
 }

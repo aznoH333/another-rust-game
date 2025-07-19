@@ -81,7 +81,9 @@ impl DrawingManager{
             let sprite = self.sprites.get(draw_data.get_sprite_name()).expect(format!("Sprite not found {}", draw_data.get_sprite_name()).as_str());
             let target_batch = self.draw_batches.get_mut(draw_data.get_sprite_name()).expect(format!("Sprite not found {}", draw_data.get_sprite_name()).as_str());//.push(draw_data.convert_to_draw_param(&self.drawing_context));
             
-            target_batch.get_mut(&draw_data.get_z_index()).unwrap().push(draw_data.convert_to_draw_param(&self.drawing_context, sprite.width(), sprite.height()));
+            target_batch.get_mut(&draw_data.get_z_index())
+            .expect(format!("z not found {}", draw_data.get_z_index()).as_str())
+            .push(draw_data.convert_to_draw_param(&self.drawing_context, sprite.width(), sprite.height()));
         }
 
         // draw batches

@@ -13,7 +13,7 @@ pub struct UIElement {
 impl UIElement {
     pub fn new(x: f32, y: f32, sprite: &str, z_index: i32) -> UIElement {
         return UIElement { 
-            sprite: GameSprite::new(x, y, sprite, z_index).make_static(), 
+            sprite: GameSprite::new(x, y, sprite, z_index), 
             visible: true, 
             children: Vec::new(),
             component: None,

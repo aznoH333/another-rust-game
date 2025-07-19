@@ -22,10 +22,10 @@ use ggez::{Context, ContextBuilder, GameResult};
 use ggez::graphics::{self, Color, Sampler};
 use ggez::event::{self, EventHandler};
 
-use crate::engine::drawing::drawing_manager;
 use crate::engine::drawing::text_buffer_data::GameText;
 use crate::engine::objects::spawning::object_summon::ObjectSummonRegistration;
 use crate::engine::types::game_update::GameUpdate;
+use crate::engine::ui::ui_element::UIElement;
 use crate::engine::ui::ui_manager::UIManager;
 
 
@@ -87,9 +87,9 @@ fn main() {
     //   7.1 [ ] Split game object core into smaller parts
     //       7.1.1 [x] Split position
     //       7.1.2 [x] Split sprite
-    //   7.2 [ ] Reorganize drawing layers
-    //       7.2.1 [ ] Add more drawing layers
-    //       7.2.2 [ ] Change layers for existing objects
+    //   7.2 [x] Reorganize drawing layers
+    //       7.2.1 [x] Add more drawing layers
+    //       7.2.2 [x] Change layers for existing objects
 
     // set resource path
     let resource_dir = if let Ok(manifest_dir) = env::var("CARGO_MANIFEST_DIR") {
@@ -146,6 +146,11 @@ impl MyGame {
         // world theme
         let theme = initialize_blue_dungeon_theme();
 
+
+        // ui
+        let mut ui_manager = UIManager::new();
+        ui_manager.add_ui_group("hud", UIElement::new(200.0, 200.0, "hud", DrawingLayer::UI.get_value()));
+
         // construct output
         return MyGame {
             sprite_manager: sprite_manager,
@@ -153,7 +158,7 @@ impl MyGame {
             world_manager: WorldManager::new(&mut BasicRoomGenerator::new(theme), &mut event_manager),
             input: InputHandler::new(),
             event_manager: event_manager,
-            ui_manager: UIManager::new(),
+            ui_manager: ui_manager,
         }
     }
 }
@@ -174,7 +179,6 @@ impl EventHandler for MyGame {
         self.game_object_manager.update(&mut game_update, &mut self.sprite_manager);
         self.event_manager.update_events(&mut self.game_object_manager);
 
-
         Ok(())
     }
 
@@ -184,8 +188,11 @@ impl EventHandler for MyGame {
         canvas.set_sampler(Sampler::nearest_clamp());
         self.world_manager.draw_world(&mut self.sprite_manager);
         self.game_object_manager.draw_objects(&mut self.sprite_manager);
+        self.ui_manager.draw(&mut self.sprite_manager);
+
 
         self.sprite_manager.draw_buffer_to_canvas(&mut canvas);
+
         canvas.finish(context)?;
 
         return Ok(());

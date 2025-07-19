@@ -17,7 +17,7 @@ fn giblet_new(parameters: &ObjectSummonParameters) -> GameObject {
     let y_m = direction.sin() * parameters.speed;
     
     return 
-    GameObjectBuilder::new(parameters.x, parameters.y, sprite_name, DrawingLayer::GameObjects.get_value())
+    GameObjectBuilder::new(parameters.x, parameters.y, sprite_name, DrawingLayer::Effects.get_value())
     .disable_auto_flipping()
     .set_dimensions(8.0, 8.0)
     .set_sprite_offset(-8.0, -8.0)
