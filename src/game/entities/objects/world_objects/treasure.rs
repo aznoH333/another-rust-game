@@ -7,7 +7,7 @@ fn treasure_new(parameters: &ObjectSummonParameters) -> GameObject {
     .set_faction(FACTION_NEUTRAL)
     .set_health(10.0)
     .add_controller(CONTROLLER_TYPE_OBJECT_COLLIDE, Box::new(TakeDamageOnHostileCollisionController::new(200, 0.0)))
-    .add_controller(CONTROLLER_TYPE_DESTROYED, Box::new(SpawnGibletsOnDeathController::new(GIBLET_SPLINTER, 2, 5, vec!(Color::new(0.902, 0.784, 0.431, 1.0)))))
+    .add_controller(CONTROLLER_TYPE_DESTROYED, Box::new(SpawnGibletsOnDeathController::new(GIBLET_SPLINTER, 2, 5, vec!(Color::new(1.0, 0.588, 0.29, 1.0)))))
     .build();
 }
 

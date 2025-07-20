@@ -149,8 +149,7 @@ impl MyGame {
 
         // ui
         let mut ui_manager = UIManager::new();
-        ui_manager.add_ui_group("test", UIElement::new(32.0, 32.0, "hud", DrawingLayer::UI.get_value()));
-        ui_manager.add_ui_group("hud", UIElement::new(32.0, 32.0, "untitled", DrawingLayer::Effects.get_value()));
+        ui_manager.add_ui_group("hud", UIElement::new(192.0, 16.0, "hud", DrawingLayer::Effects.get_value()));
 
 
         // construct output
