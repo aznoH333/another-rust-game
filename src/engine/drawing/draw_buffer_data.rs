@@ -35,7 +35,7 @@ impl DrawBufferData{
 
     pub fn convert_to_draw_param(&self, drawing_context: &DrawingContext, width: u32, height: u32) -> graphics::DrawParam {
         return graphics::DrawParam::new()
-            .offset(Vec2::new(height as f32 / 2.0, width as f32 / 2.0))
+            .offset(Vec2::new(width as f32 / 2.0, height as f32 / 2.0))
             .rotation(self.rotation)
             
             .dest(Vec2::new(
