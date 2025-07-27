@@ -59,11 +59,11 @@ impl ScreenContext{
     }
 
     pub fn get_width(&self) -> f32{
-        return self.target_w;
+        return self.drawing_area_w;
     }
 
     pub fn get_height(&self) -> f32{
-        return self.target_h;
+        return self.drawing_area_h;
     }
 
     pub fn set_up_canvas(&mut self, canvas: &mut Canvas){
