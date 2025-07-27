@@ -17,10 +17,8 @@ pub struct ScreenContext{
 
 impl ScreenContext{
     pub fn new(context: &Context, 
-        drawing_area_x: i32,
-        drawing_area_y: i32,
-        drawing_area_w: i32,
-        drawing_area_h: i32,) -> ScreenContext{
+        game_screen_w: f32,
+        game_screen_h: f32) -> ScreenContext{
         // calculate draw area
             
         let size = context.gfx.drawable_size();
@@ -30,8 +28,8 @@ impl ScreenContext{
 
         
         // Calculate scale
-        let scale_x = 256.0 / screen_width;
-        let scale_y = 240.0 / screen_height;
+        let scale_x = game_screen_w / screen_width;
+        let scale_y = game_screen_h / screen_height;
 
         let scale = scale_x.max(scale_y);
 
@@ -39,19 +37,19 @@ impl ScreenContext{
         let new_height = screen_height * scale;
 
         // calculate screen area
-        let screen_area_width = 256.0 / scale;
-        let screen_area_height = 240.0 / scale;
+        let screen_area_width = game_screen_w / scale;
+        let screen_area_height = game_screen_h / scale;
 
-        let screen_area_offset_x = (new_width - 256.0) / scale / 2.0; // (screen_width - 256.0) / 2.0 / scale;
-        let screen_area_offset_y = (new_height - 240.0) / scale / 2.0; // (screen_width - 256.0) / 2.0 / scale;
+        let screen_area_offset_x = (new_width - game_screen_w) / scale / 2.0; // (screen_width - 256.0) / 2.0 / scale;
+        let screen_area_offset_y = (new_height - game_screen_h) / scale / 2.0; // (screen_width - 256.0) / 2.0 / scale;
 
 
         println!("screen_width {}, offset x {}", new_width, screen_area_offset_x);
         return ScreenContext{
             width: screen_width,
             height: screen_height,
-            target_w: 256.0, // drawing_area_w as f32,
-            target_h: 240.0,// drawing_area_h as f32,
+            target_w: game_screen_w, // drawing_area_w as f32,
+            target_h: game_screen_h,// drawing_area_h as f32,
             drawing_area_w: new_width,
             drawing_area_h: new_height,
             screen_space: Rect::new(screen_area_offset_x, screen_area_offset_y, screen_area_width, screen_area_height)

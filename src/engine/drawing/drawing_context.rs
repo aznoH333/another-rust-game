@@ -13,17 +13,12 @@ pub struct DrawingContext{
 impl DrawingContext {
     pub fn new(
         context: &Context, 
-        drawing_area_x: i32,
-        drawing_area_y: i32,
-        drawing_area_w: i32,
-        drawing_area_h: i32
+        game_screen_w: f32,
+        game_screen_h: f32,
     ) -> DrawingContext {
         let mut output = DrawingContext{
             camera: Camera::new(0.0, 0.0, 1.0), 
-            screen_context: ScreenContext::new(context, drawing_area_x,
-            drawing_area_y,
-            drawing_area_w,
-            drawing_area_h),
+            screen_context: ScreenContext::new(context, game_screen_w, game_screen_h),
             
         };
 

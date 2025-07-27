@@ -142,10 +142,8 @@ impl MyGame {
         let mut sprite_manager = DrawingManager::new(
             context, 
             Vec::from_iter(DrawingLayer::VALUES.iter().map(|it|{return it.get_value()})),
-            0,
-            0,
-            400,
-            400,
+            256.0,
+            240.0
         );
         sprite_manager.set_camera_zoom(1.0);
         // game object manager

@@ -1,8 +1,6 @@
 
 use std::{collections::HashMap, env, path::Path};
 
-use ggez::graphics;
-use ggez::graphics::Rect;
 use ggez::{graphics::{Canvas, DrawParam, Image, InstanceArray, Color}, Context};
 
 
@@ -26,12 +24,12 @@ pub struct DrawingManager{
 }
 
 impl DrawingManager{
-    pub fn new(context: &mut Context, drawing_layers: Vec<i32>, drawing_area_x: i32, drawing_area_y: i32, drawing_area_w: i32, drawing_area_h: i32) -> DrawingManager {
+    pub fn new(context: &mut Context, drawing_layers: Vec<i32>, game_screen_w: f32, game_screen_h: f32) -> DrawingManager {
         let mut output = DrawingManager{
             sprites: HashMap::new(),
             draw_buffer: Vec::new(),
             font_buffer: Vec::new(),
-            drawing_context: DrawingContext::new(&context, drawing_area_x, drawing_area_y, drawing_area_w, drawing_area_h),
+            drawing_context: DrawingContext::new(&context, game_screen_w, game_screen_h),
             draw_batches: HashMap::new(),
             drawing_layers: drawing_layers,
         };
