@@ -21,7 +21,7 @@ fn gremlin_new(parameters: &ObjectSummonParameters) -> GameObject {
             GameObjectAnimation::new(100)
             .add_frame("gremlin_0001"))
         .add_animation(ANIMATION_WALK, 
-            GameObjectAnimation::new(100)
+            GameObjectAnimation::new(250)
             .add_frame("gremlin_0002")
             .add_frame("gremlin_0003")
         )

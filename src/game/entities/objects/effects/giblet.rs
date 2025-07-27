@@ -5,10 +5,10 @@ fn giblet_new(parameters: &ObjectSummonParameters) -> GameObject {
     let mut sprite_name = "";
 
     if parameters.object_type == GIBLET_BLOB {
-        let rust = vec!("giblets_0001", "giblets_0002", "giblets_0003", "giblets_0004");
+        let rust = vec!("giblets_0001", "giblets_0002", "giblets_0003");
         sprite_name = VecUtils::pick_random_element_vec(&rust).to_owned();
     }else if parameters.object_type == GIBLET_SPLINTER {
-        let rust = vec!("giblets_0005", "giblets_0006", "giblets_0007", "giblets_0008", "giblets_0009");
+        let rust = vec!("giblets_0004", "giblets_0005");
         sprite_name = VecUtils::pick_random_element_vec(&rust).to_owned();
     }
 

@@ -1,6 +1,5 @@
 use std::collections::HashMap;
 
-use crate::engine::drawing::drawing_manager;
 use crate::engine::drawing::drawing_manager::DrawingManager;
 use crate::engine::ui::ui_element::UIElement;
 use crate::engine::ui::ui_values::UIValues;
