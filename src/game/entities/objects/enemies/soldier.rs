@@ -3,7 +3,7 @@ use crate::game::entities::factions::FACTION_ENEMY;
 use ggez::graphics::Color;
 use crate::game::entities::controllers::spawn_giblets_on_death::SpawnGibletsOnDeathController;
 
-fn gremlin_new(parameters: &ObjectSummonParameters) -> GameObject {
+fn soldier_new(parameters: &ObjectSummonParameters) -> GameObject {
     return 
         GameObjectBuilder::new(parameters.x, parameters.y, "gremlin_0001", DrawingLayer::GameObjects.get_value())
         .set_dimensions(10.0, 10.0)
@@ -39,5 +39,5 @@ fn gremlin_new(parameters: &ObjectSummonParameters) -> GameObject {
 }
 
 inventory::submit! {
-    ObjectSummonRegistration::new("gremlin", gremlin_new)
+    ObjectSummonRegistration::new("gremlin", soldier_new)
 }

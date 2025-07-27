@@ -1,3 +1,4 @@
+use ggez::graphics::Canvas;
 use ggez::Context;
 
 use super::{camera::Camera, screen_context::ScreenContext};
@@ -5,15 +6,29 @@ use super::{camera::Camera, screen_context::ScreenContext};
 pub struct DrawingContext{
     camera: Camera,
     screen_context: ScreenContext,
+    
 }
 
 
 impl DrawingContext {
-    pub fn new(context: &Context) -> DrawingContext {
-        return DrawingContext{
+    pub fn new(
+        context: &Context, 
+        drawing_area_x: i32,
+        drawing_area_y: i32,
+        drawing_area_w: i32,
+        drawing_area_h: i32
+    ) -> DrawingContext {
+        let mut output = DrawingContext{
             camera: Camera::new(0.0, 0.0, 1.0), 
-            screen_context: ScreenContext::new(context)
-        }
+            screen_context: ScreenContext::new(context, drawing_area_x,
+            drawing_area_y,
+            drawing_area_w,
+            drawing_area_h),
+            
+        };
+
+
+        return output;
     }
 
     // camer operations
@@ -48,7 +63,13 @@ impl DrawingContext {
 
     // context operations
     pub fn reload_context(&mut self, context: &Context){
-        self.screen_context = ScreenContext::new(context);
+        // TODO : fix this
+        // self.screen_context = ScreenContext::new(context);
     }
+
+    pub fn set_up_canvas(&mut self, canvas: &mut Canvas) {
+        self.screen_context.set_up_canvas(canvas);
+    }
+
 
 }

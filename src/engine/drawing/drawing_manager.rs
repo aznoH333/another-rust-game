@@ -1,6 +1,8 @@
 
 use std::{collections::HashMap, env, path::Path};
 
+use ggez::graphics;
+use ggez::graphics::Rect;
 use ggez::{graphics::{Canvas, DrawParam, Image, InstanceArray, Color}, Context};
 
 
@@ -20,15 +22,16 @@ pub struct DrawingManager{
     // drawing layer to batch map
     draw_batches: HashMap<String, HashMap<i32, InstanceArray>>,
     drawing_layers: Vec<i32>,
+    
 }
 
 impl DrawingManager{
-    pub fn new(context: &mut Context, drawing_layers: Vec<i32>) -> DrawingManager {
+    pub fn new(context: &mut Context, drawing_layers: Vec<i32>, drawing_area_x: i32, drawing_area_y: i32, drawing_area_w: i32, drawing_area_h: i32) -> DrawingManager {
         let mut output = DrawingManager{
             sprites: HashMap::new(),
             draw_buffer: Vec::new(),
             font_buffer: Vec::new(),
-            drawing_context: DrawingContext::new(&context),
+            drawing_context: DrawingContext::new(&context, drawing_area_x, drawing_area_y, drawing_area_w, drawing_area_h),
             draw_batches: HashMap::new(),
             drawing_layers: drawing_layers,
         };
@@ -38,6 +41,7 @@ impl DrawingManager{
         return output;
 
     }
+
 
     fn load_sprites_in_folder(&mut self, folder: &Path, context: &mut Context){
         // move current context to assets
@@ -76,6 +80,12 @@ impl DrawingManager{
     }
 
     pub fn draw_buffer_to_canvas(&mut self, canvas: &mut Canvas){
+        // setup canvas
+        self.drawing_context.set_up_canvas(canvas);
+        
+        
+        
+        
         // collect to draw batches
         for draw_data in &self.draw_buffer{
             let sprite = self.sprites.get(draw_data.get_sprite_name()).expect(format!("Sprite not found {}", draw_data.get_sprite_name()).as_str());

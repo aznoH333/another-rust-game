@@ -17,6 +17,7 @@ use game::enums::drawing_layers::DrawingLayer;
 use game::world_generators::basic_world_generator::BasicRoomGenerator;
 use game::world_generators::temes::theme_initializers::blue_dungeon_theme::initialize_blue_dungeon_theme;
 use ggez::conf::WindowMode;
+use ggez::graphics::Rect;
 use ggez::input::keyboard::KeyCode;
 use ggez::{Context, ContextBuilder, GameResult};
 use ggez::graphics::{self, Color, Sampler};
@@ -137,10 +138,16 @@ struct MyGame {
 impl MyGame {
     pub fn new(context: &mut Context) -> MyGame {
         context.gfx.set_fullscreen(ggez::conf::FullscreenType::True).unwrap();
-        
         // sprite manager
-        let mut sprite_manager = DrawingManager::new(context, Vec::from_iter(DrawingLayer::VALUES.iter().map(|it|{return it.get_value()})));
-        sprite_manager.set_camera_zoom(5.0);
+        let mut sprite_manager = DrawingManager::new(
+            context, 
+            Vec::from_iter(DrawingLayer::VALUES.iter().map(|it|{return it.get_value()})),
+            0,
+            0,
+            400,
+            400,
+        );
+        sprite_manager.set_camera_zoom(1.0);
         // game object manager
         let mut game_object_manager = GameObjectManager::new();
 
@@ -158,7 +165,7 @@ impl MyGame {
 
         // ui
         let mut ui_manager = UIManager::new();
-        ui_manager.add_ui_group("hud", UIElement::new(192.0, 16.0, "hud", DrawingLayer::UI.get_value()));
+        // ui_manager.add_ui_group("hud", UIElement::new(192.0, 16.0, "hud", DrawingLayer::UI.get_value()));
 
 
         // construct output
@@ -195,7 +202,7 @@ impl EventHandler for MyGame {
     fn draw(&mut self, context: &mut Context) -> GameResult {
         self.sprite_manager.draw_text(GameText::new("hello world", 20.0, 20.0, 6).make_static());
         let mut canvas = graphics::Canvas::from_frame(context, Color::BLACK);
-        canvas.set_sampler(Sampler::nearest_clamp());
+        
         self.world_manager.draw_world(&mut self.sprite_manager);
         self.game_object_manager.draw_objects(&mut self.sprite_manager);
         self.ui_manager.draw(&mut self.sprite_manager);
