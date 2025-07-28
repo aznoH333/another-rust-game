@@ -86,6 +86,7 @@ fn main() {
     //       6.2.5 [ ] projectile attributes
     //       6.2.6 [ ] magic
     //   6.3 [ ] dashing
+    //   6.4 [ ] destructible tiles
     // 7 [ ] Code
     //   7.1 [ ] Split game object core into smaller parts
     //       7.1.1 [x] Split position
@@ -93,12 +94,12 @@ fn main() {
     //   7.2 [x] Reorganize drawing layers
     //       7.2.1 [x] Add more drawing layers
     //       7.2.2 [x] Change layers for existing objects
-    //   7.3 [a] Stabilize drawing area
+    //   7.3 [x] Stabilize drawing area
     // 8 [ ] (f)Art
     //   8.1 [ ] Fancy light shader
-    //   8.2 [ ] Try different art style
-    //       8.2.1 [ ] High color count 32 bit
-    //       8.2.2 [ ] 8 bit
+    //   8.2 [a] Try different art style
+    //       8.2.1 [-] High color count 32 bit
+    //       8.2.2 [a] 8 bit
     //       8.2.3 [ ] 32 bit
 
     // set resource path
@@ -163,7 +164,8 @@ impl MyGame {
 
         // ui
         let mut ui_manager = UIManager::new();
-        // ui_manager.add_ui_group("hud", UIElement::new(192.0, 16.0, "hud", DrawingLayer::UI.get_value()));
+        ui_manager.add_ui_group("hud", UIElement::new(128.0, 12.0, "hud", DrawingLayer::UI.get_value()));
+        // ui_manager.add_ui_group("hud", UIElement::new(128.0, 8.0, "player_0001", DrawingLayer::UI.get_value()).set_dimension(16.0, 16.0));
 
 
         // construct output

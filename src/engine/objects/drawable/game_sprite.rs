@@ -50,8 +50,13 @@ impl GameSprite {
 
     pub fn draw(&self, drawing_manager: &mut DrawingManager) {
         let mut sprite_name = &self.sprite_name;
+        
+        
         let x = self.position.left();
         let y = self.position.top();
+
+
+
         if self.use_animations {
             let animation = self.animations.get(&self.current_animation).expect(format!("Animation not found {}", self.current_animation).as_str());
 

@@ -34,8 +34,8 @@ impl GameText {
     pub fn convert_to_draw_param(&self, drawing_context: &DrawingContext) -> DrawParam {
     return DrawParam::new()
         .dest(Vec2::new(
-            self.x * drawing_context.get_scale() - (drawing_context.get_sprite_x_offset() * NumberUtils::bool_to_f32(self.use_camera)),
-            self.y * drawing_context.get_scale() - (drawing_context.get_sprite_y_offset() * NumberUtils::bool_to_f32(self.use_camera))))
+            self.x * drawing_context.get_scale() - (drawing_context.get_sprite_x_offset(true) * NumberUtils::bool_to_f32(self.use_camera)),
+            self.y * drawing_context.get_scale() - (drawing_context.get_sprite_y_offset(true) * NumberUtils::bool_to_f32(self.use_camera))))
         .z(self.z_index)
         .color(self.color)
         .scale(Vec2::new(self.scale * drawing_context.get_scale(), self.scale * drawing_context.get_scale()));

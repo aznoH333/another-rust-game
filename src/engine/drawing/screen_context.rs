@@ -12,6 +12,9 @@ pub struct ScreenContext{
     drawing_area_w: f32,
     drawing_area_h: f32,
     screen_space: Rect,
+
+    screen_offset_left: f32,
+    screen_offset_top: f32,
 }
 
 
@@ -44,7 +47,7 @@ impl ScreenContext{
         let screen_area_offset_y = (new_height - game_screen_h) / scale / 2.0; // (screen_width - 256.0) / 2.0 / scale;
 
 
-        println!("screen_width {}, offset x {}", new_width, screen_area_offset_x);
+        println!("screen_width {}, offset x {}", new_width, game_screen_w);
         return ScreenContext{
             width: screen_width,
             height: screen_height,
@@ -52,7 +55,9 @@ impl ScreenContext{
             target_h: game_screen_h,// drawing_area_h as f32,
             drawing_area_w: new_width,
             drawing_area_h: new_height,
-            screen_space: Rect::new(screen_area_offset_x, screen_area_offset_y, screen_area_width, screen_area_height)
+            screen_space: Rect::new(screen_area_offset_x, screen_area_offset_y, screen_area_width, screen_area_height),
+            screen_offset_left: (new_width - game_screen_w) / 2.0,
+            screen_offset_top: (new_height - game_screen_h) / 2.0
         }
 
 
@@ -66,10 +71,17 @@ impl ScreenContext{
         return self.drawing_area_h;
     }
 
+    pub fn get_screen_left(&self) -> f32 {
+        return self.screen_offset_left;
+    }
+
+    pub fn get_screen_top(&self) -> f32 {
+        return self.screen_offset_top;
+    }
+
     pub fn set_up_canvas(&mut self, canvas: &mut Canvas){
         canvas.set_sampler(Sampler::nearest_clamp());
         canvas.set_screen_coordinates(Rect::new(0.0, 0.0, self.drawing_area_w, self.drawing_area_h));
         canvas.set_scissor_rect(self.screen_space);
-
     }
 }

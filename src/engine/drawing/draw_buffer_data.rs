@@ -37,10 +37,9 @@ impl DrawBufferData{
         return graphics::DrawParam::new()
             .offset(Vec2::new(width as f32 / 2.0, height as f32 / 2.0))
             .rotation(self.rotation)
-            
             .dest(Vec2::new(
-                self.x * drawing_context.get_scale() - (NumberUtils::bool_to_f32(!self.is_static) * drawing_context.get_sprite_x_offset()),
-                self.y * drawing_context.get_scale() - (NumberUtils::bool_to_f32(!self.is_static) * drawing_context.get_sprite_y_offset())))
+                self.x * drawing_context.get_scale() + drawing_context.get_sprite_x_offset(self.is_static),
+                self.y * drawing_context.get_scale() + drawing_context.get_sprite_y_offset(self.is_static)))
             .z(self.z_index)
             .color(self.color)
             .scale(Vec2::new(self.scale * drawing_context.get_scale() * NumberUtils::bool_to_minus_plus_f32(!self.fliped), self.scale * drawing_context.get_scale()));
