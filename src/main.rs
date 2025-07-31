@@ -67,11 +67,11 @@ fn main() {
     //       3.3.3 [ ] Special levels
     //   3.4 [ ] Randomize graphics
     // 4 [ ] Engine
-    //   4.1 [a] Global values
-    //   4.2 [a] Ui
+    //   4.1 [x] Global values
+    //   4.2 [x] Ui
     //       4.2.1 [x] Drawing text
-    //       4.2.2 [a] Ui elements
-    //       4.2.3 [ ] Passing data from entities to ui
+    //       4.2.2 [x] Ui elements
+    //       4.2.3 [x] Passing data from entities to ui
     //   4.3 [ ] Sounds
     // 5 [ ] Game content
     // TODO : fill this in
@@ -98,10 +98,10 @@ fn main() {
     //   7.3 [x] Stabilize drawing area
     // 8 [ ] (f)Art
     //   8.1 [ ] Fancy light shader
-    //   8.2 [a] Try different art style
+    //   8.2 [x] Try different art style
     //       8.2.1 [-] High color count 32 bit
-    //       8.2.2 [a] 8 bit
-    //       8.2.3 [ ] 32 bit
+    //       8.2.2 [x] 8 bit
+    //       8.2.3 [-] 32 bit
 
     // set resource path
     let resource_dir = if let Ok(manifest_dir) = env::var("CARGO_MANIFEST_DIR") {
@@ -162,7 +162,6 @@ impl MyGame {
         // world theme
         let theme = initialize_blue_dungeon_theme();
         
-        // TODO : Something giga fucky is going on with static sprite positions
         // ui
         let mut ui_manager = UIManager::new();
         ui_manager.add_ui_group("hud", 
@@ -170,7 +169,7 @@ impl MyGame {
         .add_child(UIElement::new(6.0, 12.0, None, DrawingLayer::UI.get_value())
             .set_component(Box::new(IndicatorBar::new("player_health", "player_health_max", "hearts_0001", "hearts_0002", false)))
         )
-        .add_child(UIElement::new(250.0, 12.0, None, DrawingLayer::UI.get_value())
+        .add_child(UIElement::new(252.0, 12.0, None, DrawingLayer::UI.get_value())
             .set_component(Box::new(IndicatorBar::new("player_mana", "player_mana_max", "hearts_0003", "hearts_0004", true)))
         )
         
