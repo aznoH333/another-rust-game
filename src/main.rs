@@ -28,6 +28,7 @@ use crate::engine::objects::spawning::object_summon::ObjectSummonRegistration;
 use crate::engine::types::game_update::GameUpdate;
 use crate::engine::ui::ui_element::UIElement;
 use crate::engine::ui::ui_manager::UIManager;
+use crate::game::ui::indicator_bar::IndicatorBar;
 
 
 fn main() {
@@ -160,12 +161,27 @@ impl MyGame {
 
         // world theme
         let theme = initialize_blue_dungeon_theme();
-
-
+        
+        // TODO : Something giga fucky is going on with static sprite positions
         // ui
         let mut ui_manager = UIManager::new();
-        ui_manager.add_ui_group("hud", UIElement::new(128.0, 12.0, "hud", DrawingLayer::UI.get_value()));
-        // ui_manager.add_ui_group("hud", UIElement::new(128.0, 8.0, "player_0001", DrawingLayer::UI.get_value()).set_dimension(16.0, 16.0));
+        ui_manager.add_ui_group("hud", 
+        UIElement::new(128.0, 12.0, Some("hud"), DrawingLayer::UI.get_value())
+        .add_child(UIElement::new(6.0, 12.0, None, DrawingLayer::UI.get_value())
+            .set_component(Box::new(IndicatorBar::new("player_health", "player_health_max", "hearts_0001", "hearts_0002", false)))
+        )
+        .add_child(UIElement::new(250.0, 12.0, None, DrawingLayer::UI.get_value())
+            .set_component(Box::new(IndicatorBar::new("player_mana", "player_mana_max", "hearts_0003", "hearts_0004", true)))
+        )
+        
+        );
+        
+
+        // set ui values
+        ui_manager.set_value_f32("player_health", 2.0);
+        ui_manager.set_value_f32("player_health_max", 3.0);
+        ui_manager.set_value_f32("player_mana", 3.0);
+        ui_manager.set_value_f32("player_mana_max", 5.0);
 
 
         // construct output

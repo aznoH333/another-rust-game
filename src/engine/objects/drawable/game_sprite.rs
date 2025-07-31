@@ -25,6 +25,7 @@ pub struct GameSprite{
 
     flip_with_rotation: bool,
     is_static: bool,
+    is_visible: bool,
 }
 
 
@@ -45,10 +46,15 @@ impl GameSprite {
             use_animations: false,
             flip_with_rotation: false,
             is_static: false,
+            is_visible: true,
         }
     }
 
     pub fn draw(&self, drawing_manager: &mut DrawingManager) {
+        if !self.is_visible {
+            return;
+        }
+        
         let mut sprite_name = &self.sprite_name;
         
         
@@ -157,6 +163,11 @@ impl GameSprite {
 
     pub fn make_static(mut self) -> GameSprite {
         self.is_static = true;
+        return self;
+    }
+
+    pub fn set_visibility(mut self, value: bool) -> GameSprite {
+        self.is_visible = value;
         return self;
     }
 }

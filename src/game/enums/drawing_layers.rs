@@ -6,12 +6,13 @@ pub enum DrawingLayer{
     GameObjects,
     Player,
     Effects,
-    UI
+    UI,
+    UIFront,
 
 }
 
 impl DrawingLayer {
-    pub const VALUES: [Self; 6] = [Self::World, Self::WorldObjects, Self::GameObjects, Self::Player, Self::Effects, Self::UI];
+    pub const VALUES: [Self; 7] = [Self::World, Self::WorldObjects, Self::GameObjects, Self::Player, Self::Effects, Self::UI, Self::UIFront];
 
     pub fn get_value(&self) -> i32 {
         return self.clone() as i32;

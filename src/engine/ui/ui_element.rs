@@ -11,9 +11,9 @@ pub struct UIElement {
 }
 
 impl UIElement {
-    pub fn new(x: f32, y: f32, sprite: &str, z_index: i32) -> UIElement {
+    pub fn new(x: f32, y: f32, sprite: Option<&str>, z_index: i32) -> UIElement {
         return UIElement { 
-            sprite: GameSprite::new(x, y, sprite, z_index).make_static(), 
+            sprite: if sprite.is_some() { GameSprite::new(x, y, sprite.unwrap(), z_index).make_static() } else { GameSprite::new(x, y, "", z_index).make_static().set_visibility(false) }, 
             visible: true, 
             children: Vec::new(),
             component: None,
@@ -24,11 +24,10 @@ impl UIElement {
         if !self.visible {
             return;
         }
-
         self.sprite.draw(drawing_manager);
 
         if self.component.is_some() {
-            self.component.as_ref().unwrap().draw(drawing_manager, ui_values);
+            self.component.as_ref().unwrap().draw(drawing_manager, ui_values, self.sprite.position.x, self.sprite.position.y);
         }
 
         // children
@@ -45,5 +44,15 @@ impl UIElement {
 
     pub fn set_visibility(&mut self, visibility: bool) {
         self.visible = visibility;
+    }
+
+    pub fn add_child(mut self, child: UIElement) -> UIElement {
+        self.children.push(child);
+        return self;
+    }
+
+    pub fn set_component(mut self, component:  Box::<dyn UIBehaviourComponent>) -> UIElement {
+        self.component = Some(component);
+        return self;
     }
 }
