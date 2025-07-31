@@ -46,7 +46,6 @@ impl ScreenContext{
         let screen_area_offset_x = (new_width - game_screen_w) / scale / 2.0; // (screen_width - 256.0) / 2.0 / scale;
         let screen_area_offset_y = (new_height - game_screen_h) / scale / 2.0; // (screen_width - 256.0) / 2.0 / scale;
 
-
         return ScreenContext{
             width: screen_width,
             height: screen_height,
